@@ -5,15 +5,15 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <map>
+#include <memory>
 #include <string>
 
 #include <Swiften/Base/API.h>
@@ -24,18 +24,18 @@ namespace Swift {
 
 class SWIFTEN_API JingleFileTransferHash : public Payload {
 public:
-	typedef boost::shared_ptr<JingleFileTransferHash> ref;
+    typedef std::shared_ptr<JingleFileTransferHash> ref;
 
-	void setFileInfo(const JingleFileTransferFileInfo& fileInfo) {
-		fileInfo_ = fileInfo;
-	}
+    void setFileInfo(const JingleFileTransferFileInfo& fileInfo) {
+        fileInfo_ = fileInfo;
+    }
 
-	JingleFileTransferFileInfo& getFileInfo() {
-		return fileInfo_;
-	}
+    JingleFileTransferFileInfo& getFileInfo() {
+        return fileInfo_;
+    }
 
 private:
-	JingleFileTransferFileInfo fileInfo_;
+    JingleFileTransferFileInfo fileInfo_;
 };
-	
+
 }

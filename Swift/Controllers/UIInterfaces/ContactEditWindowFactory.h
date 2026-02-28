@@ -9,10 +9,10 @@
 #include <Swift/Controllers/UIInterfaces/ContactEditWindow.h>
 
 namespace Swift {
-	class ContactEditWindowFactory {
-		public:
-			virtual ~ContactEditWindowFactory() {}
+    class ContactEditWindowFactory {
+        public:
+            virtual ~ContactEditWindowFactory() {}
 
-			virtual ContactEditWindow* createContactEditWindow() = 0;
-	};
+            virtual ContactEditWindow* createContactEditWindow() = 0;
+    };
 }

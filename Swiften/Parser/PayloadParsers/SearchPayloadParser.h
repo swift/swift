@@ -13,28 +13,28 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class FormParserFactory;
-	class FormParser;
+    class FormParserFactory;
+    class FormParser;
 
-	class SWIFTEN_API SearchPayloadParser : public GenericPayloadParser<SearchPayload> {
-		public:
-			SearchPayloadParser();
-			~SearchPayloadParser();
+    class SWIFTEN_API SearchPayloadParser : public GenericPayloadParser<SearchPayload> {
+        public:
+            SearchPayloadParser();
+            ~SearchPayloadParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			enum Level { 
-				TopLevel = 0, 
-				PayloadLevel = 1,
-				ItemLevel = 2
-			};
-			int level;
-			FormParserFactory* formParserFactory;
-			FormParser* formParser;
-			std::string currentText;
-			boost::optional<SearchPayload::Item> currentItem;
-	};
+        private:
+            enum Level {
+                TopLevel = 0,
+                PayloadLevel = 1,
+                ItemLevel = 2
+            };
+            int level;
+            FormParserFactory* formParserFactory;
+            FormParser* formParser;
+            std::string currentText;
+            boost::optional<SearchPayload::Item> currentItem;
+    };
 }

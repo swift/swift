@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,11 +12,11 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API CarbonsEnableSerializer : public GenericPayloadSerializer<CarbonsEnable> {
-		public:
-			CarbonsEnableSerializer();
-			virtual ~CarbonsEnableSerializer();
+    class SWIFTEN_API CarbonsEnableSerializer : public GenericPayloadSerializer<CarbonsEnable> {
+        public:
+            CarbonsEnableSerializer();
+            virtual ~CarbonsEnableSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<CarbonsEnable>)	const;
-	};
+            virtual std::string serializePayload(std::shared_ptr<CarbonsEnable>)    const;
+    };
 }

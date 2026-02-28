@@ -9,8 +9,8 @@
 #endif
 
 #include <cppunit/Outputter.h>
-#include <cppunit/portability/CppUnitDeque.h>
-#include <cppunit/portability/CppUnitMap.h>
+#include <deque>
+#include <map>
 #include <cppunit/portability/Stream.h>
 
 
@@ -46,7 +46,7 @@ public:
    */
   XmlOutputter( TestResultCollector *result,
                 OStream &stream,
-                std::string encoding = std::string("ISO-8859-1") );
+                const std::string& encoding = std::string("ISO-8859-1") );
 
   /// Destructor.
   virtual ~XmlOutputter();
@@ -85,7 +85,7 @@ public:
    */
   virtual void setStandalone( bool standalone );
 
-  typedef CppUnitMap<Test *,TestFailure*, std::less<Test*> > FailedTests;
+  typedef std::map<Test *,TestFailure*, std::less<Test*> > FailedTests;
 
   /*! \brief Sets the root element and adds its children.
    *
@@ -137,7 +137,7 @@ protected:
   virtual void fillFailedTestsMap( FailedTests &failedTests );
 
 protected:
-  typedef CppUnitDeque<XmlOutputterHook *> Hooks;
+  typedef std::deque<XmlOutputterHook *> Hooks;
 
   TestResultCollector *m_result;
   OStream &m_stream;

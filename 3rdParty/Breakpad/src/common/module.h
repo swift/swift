@@ -44,6 +44,7 @@
 #include <string>
 #include <vector>
 
+#include "common/symbol_data.h"
 #include "common/using_std_string.h"
 #include "google_breakpad/common/breakpad_types.h"
 
@@ -60,7 +61,7 @@ using std::map;
 class Module {
  public:
   // The type of addresses and sizes in a symbol table.
-  typedef u_int64_t Address;
+  typedef uint64_t Address;
   struct File;
   struct Function;
   struct Line;
@@ -73,8 +74,10 @@ class Module {
 
   // A source file.
   struct File {
+    explicit File(const string &name_input) : name(name_input), source_id(0) {}
+
     // The name of the source file.
-    string name;
+    const string name;
 
     // The file's source id.  The Write member function clears this
     // field and assigns source ids a fresh, so any value placed here
@@ -84,6 +87,9 @@ class Module {
 
   // A function.
   struct Function {
+    Function(const string &name_input, const Address &address_input) :
+        name(name_input), address(address_input), size(0), parameter_size(0) {}
+
     // For sorting by address.  (Not style-guide compliant, but it's
     // stupid not to put this in the struct.)
     static bool CompareByAddress(const Function *x, const Function *y) {
@@ -91,10 +97,11 @@ class Module {
     }
 
     // The function's name.
-    string name;
+    const string name;
 
     // The start address and length of the function's code.
-    Address address, size;
+    const Address address;
+    Address size;
 
     // The function's parameter size.
     Address parameter_size;
@@ -119,7 +126,8 @@ class Module {
 
   // An exported symbol.
   struct Extern {
-    Address address;
+    explicit Extern(const Address &address_input) : address(address_input) {}
+    const Address address;
     string name;
   };
 
@@ -171,7 +179,7 @@ class Module {
   // Create a new module with the given name, operating system,
   // architecture, and ID string.
   Module(const string &name, const string &os, const string &architecture,
-         const string &id);
+         const string &id, const string &code_id = "");
   ~Module();
 
   // Set the module's load address to LOAD_ADDRESS; addresses given
@@ -246,7 +254,7 @@ class Module {
   // effectively a copy of the stack frame entry list, this is mostly
   // useful for testing; other uses should probably get
   // a more appropriate interface.)
-  void GetStackFrameEntries(vector<StackFrameEntry *> *vec);
+  void GetStackFrameEntries(vector<StackFrameEntry *> *vec) const;
 
   // Find those files in this module that are actually referred to by
   // functions' line number data, and assign them source id numbers.
@@ -259,13 +267,21 @@ class Module {
   // breakpad symbol format. Return true if all goes well, or false if
   // an error occurs. This method writes out:
   // - a header based on the values given to the constructor,
+  // If symbol_data is not ONLY_CFI then:
   // - the source files added via FindFile,
   // - the functions added via AddFunctions, each with its lines,
   // - all public records,
-  // - and if CFI is true, all CFI records.
+  // If symbol_data is not NO_CFI then:
+  // - all CFI records.
   // Addresses in the output are all relative to the load address
   // established by SetLoadAddress.
-  bool Write(std::ostream &stream, bool cfi);
+  bool Write(std::ostream &stream, SymbolData symbol_data);
+
+  string name() const { return name_; }
+  string os() const { return os_; }
+  string architecture() const { return architecture_; }
+  string identifier() const { return id_; }
+  string code_identifier() const { return code_id_; }
 
  private:
   // Report an error that has occurred writing the symbol file, using
@@ -278,7 +294,7 @@ class Module {
   static bool WriteRuleMap(const RuleMap &rule_map, std::ostream &stream);
 
   // Module header entries.
-  string name_, os_, architecture_, id_;
+  string name_, os_, architecture_, id_, code_id_;
 
   // The module's nominal load address.  Addresses for functions and
   // lines are absolute, assuming the module is loaded at this
@@ -288,7 +304,7 @@ class Module {
   // Relation for maps whose keys are strings shared with some other
   // structure.
   struct CompareStringPtrs {
-    bool operator()(const string *x, const string *y) { return *x < *y; }
+    bool operator()(const string *x, const string *y) const { return *x < *y; }
   };
 
   // A map from filenames to File structures.  The map's keys are

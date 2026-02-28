@@ -1,0 +1,8 @@
+[CppFiles]
+	files = Swiften/**/*.(cpp|h),Swift/**/*.(cpp|h),SwifTools/**/*.(cpp|h),Sluift/**/*.(cpp|h)
+	ignore = Swift/QtUI/Swift.app/**/*,Swiften/Config/swiften-config.h,Sluift/iTunes.h
+
+	bears = SpaceConsistencyBear
+	use_spaces = yes
+	allow_trailing_whitespace = no
+	enforce_newline_at_EOF = yes

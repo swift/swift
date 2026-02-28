@@ -9,14 +9,14 @@
 #include <Swiften/Avatars/AvatarManager.h>
 
 namespace Swift {
-	class NullAvatarManager : public AvatarManager {
-		public:
-			virtual boost::filesystem::path getAvatarPath(const JID&) const {
-				return boost::filesystem::path();
-			}
+    class NullAvatarManager : public AvatarManager {
+        public:
+            virtual boost::filesystem::path getAvatarPath(const JID&) const {
+                return boost::filesystem::path();
+            }
 
-			virtual ByteArray getAvatar(const JID&) const {
-				return ByteArray();
-			}
-	};
+            virtual ByteArray getAvatar(const JID&) const {
+                return ByteArray();
+            }
+    };
 }

@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2013 Isode Limited.
+	Copyright (c) 2013-2016 Isode Limited.
 	All rights reserved.
 	See the COPYING file for more information.
 --]]
@@ -90,3 +90,15 @@ assert(type(text_multi_field['value']) == 'table')
 
 
 --print(sluift.to_xml({type = 'form', data = form}))
+
+-- test parsing an empty form -- this had issues as reported in SWIFT-174
+empty_form = [[<x xmlns='jabber:x:data' type='form'/>]]
+form = sluift.from_xml(empty_form)
+-- and check if we can access all fields without problems
+assert(type(form._type))
+assert(type(form.title))
+assert(type(form.instructions))
+assert(type(form.type))
+assert(type(form.fields))
+assert(type(form.items))
+assert(type(form.reported_items))

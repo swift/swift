@@ -34,6 +34,7 @@
 // Author: Dan Waylonis
 
 #include <fcntl.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -45,7 +46,7 @@ using MacFileUtilities::MachoID;
 namespace google_breakpad {
 
 FileID::FileID(const char *path) {
-  strlcpy(path_, path, sizeof(path_));
+  snprintf(path_, sizeof(path_), "%s", path);
 }
 
 bool FileID::FileIdentifier(unsigned char identifier[16]) {
@@ -61,7 +62,7 @@ bool FileID::FileIdentifier(unsigned char identifier[16]) {
   unsigned char buffer[4096 * 2];
   size_t buffer_size = sizeof(buffer);
   while ((buffer_size = read(fd, buffer, buffer_size) > 0)) {
-    MD5Update(&md5, buffer, buffer_size);
+    MD5Update(&md5, buffer, static_cast<unsigned>(buffer_size));
   }
 
   close(fd);
@@ -70,13 +71,15 @@ bool FileID::FileIdentifier(unsigned char identifier[16]) {
   return true;
 }
 
-bool FileID::MachoIdentifier(int cpu_type, unsigned char identifier[16]) {
+bool FileID::MachoIdentifier(cpu_type_t cpu_type,
+                             cpu_subtype_t cpu_subtype,
+                             unsigned char identifier[16]) {
   MachoID macho(path_);
 
-  if (macho.UUIDCommand(cpu_type, identifier))
+  if (macho.UUIDCommand(cpu_type, cpu_subtype, identifier))
     return true;
 
-  return macho.MD5(cpu_type, identifier);
+  return macho.MD5(cpu_type, cpu_subtype, identifier);
 }
 
 // static
@@ -90,8 +93,10 @@ void FileID::ConvertIdentifierToString(const unsigned char identifier[16],
     if (idx == 4 || idx == 6 || idx == 8 || idx == 10)
       buffer[buffer_idx++] = '-';
 
-    buffer[buffer_idx++] = (hi >= 10) ? 'A' + hi - 10 : '0' + hi;
-    buffer[buffer_idx++] = (lo >= 10) ? 'A' + lo - 10 : '0' + lo;
+    buffer[buffer_idx++] =
+        static_cast<char>((hi >= 10) ? ('A' + hi - 10) : ('0' + hi));
+    buffer[buffer_idx++] =
+        static_cast<char>((lo >= 10) ? ('A' + lo - 10) : ('0' + lo));
   }
 
   // NULL terminate

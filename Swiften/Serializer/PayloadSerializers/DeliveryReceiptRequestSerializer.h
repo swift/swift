@@ -4,17 +4,23 @@
  * See http://www.opensource.org/licenses/bsd-license.php for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <Swiften/Serializer/GenericPayloadSerializer.h>
-#include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/Base/API.h>
+#include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API DeliveryReceiptRequestSerializer : public GenericPayloadSerializer<DeliveryReceiptRequest> {
-		public:
-			DeliveryReceiptRequestSerializer();
+    class SWIFTEN_API DeliveryReceiptRequestSerializer : public GenericPayloadSerializer<DeliveryReceiptRequest> {
+        public:
+            DeliveryReceiptRequestSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<DeliveryReceiptRequest> request) const;
-	};
+            virtual std::string serializePayload(std::shared_ptr<DeliveryReceiptRequest> request) const;
+    };
 }

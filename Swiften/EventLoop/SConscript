@@ -1,23 +1,23 @@
 Import("swiften_env")
 
 sources = [
-		"BoostASIOEventLoop.cpp",
-		"DummyEventLoop.cpp",
-		"Event.cpp",
-		"EventLoop.cpp",
-		"EventOwner.cpp",
-		"SimpleEventLoop.cpp",
-		"SingleThreadedEventLoop.cpp",
-	]
+        "BoostASIOEventLoop.cpp",
+        "DummyEventLoop.cpp",
+        "Event.cpp",
+        "EventLoop.cpp",
+        "EventOwner.cpp",
+        "SimpleEventLoop.cpp",
+        "SingleThreadedEventLoop.cpp",
+    ]
 
 objects = swiften_env.SwiftenObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
 if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native" or swiften_env["target"] == 'xcode':
-	myenv = swiften_env.Clone()
-	myenv.Append(CXXFLAGS = myenv["OBJCCFLAGS"])
-	objects = myenv.SwiftenObject([
-			"Cocoa/CocoaEventLoop.mm",
-			"Cocoa/CocoaEvent.mm"
-		])
-	swiften_env.Append(SWIFTEN_OBJECTS = [objects])
+    myenv = swiften_env.Clone()
+    myenv.Append(CXXFLAGS = myenv["OBJCCFLAGS"])
+    objects = myenv.SwiftenObject([
+            "Cocoa/CocoaEventLoop.mm",
+            "Cocoa/CocoaEvent.mm"
+        ])
+    swiften_env.Append(SWIFTEN_OBJECTS = [objects])

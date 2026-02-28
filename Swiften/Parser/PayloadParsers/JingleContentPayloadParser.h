@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,17 +21,17 @@ namespace Swift {
 class PayloadParserFactoryCollection;
 
 class SWIFTEN_API JingleContentPayloadParser : public GenericPayloadParser<JingleContentPayload> {
-	public:
-		JingleContentPayloadParser(PayloadParserFactoryCollection* factories);
+    public:
+        JingleContentPayloadParser(PayloadParserFactoryCollection* factories);
 
-		virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-		virtual void handleEndElement(const std::string& element, const std::string&);
-		virtual void handleCharacterData(const std::string& data);	
+        virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+        virtual void handleEndElement(const std::string& element, const std::string&);
+        virtual void handleCharacterData(const std::string& data);
 
-	private:
-		PayloadParserFactoryCollection* factories;
-		int level;
-		boost::shared_ptr<PayloadParser> currentPayloadParser;
+    private:
+        PayloadParserFactoryCollection* factories;
+        int level;
+        std::shared_ptr<PayloadParser> currentPayloadParser;
 };
 
 }

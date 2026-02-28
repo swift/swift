@@ -1,48 +1,67 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#pragma once 
+#pragma once
 
 #include <cassert>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Elements/Message.h>
 
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
 
 namespace Swift {
-	class MessageEvent : public StanzaEvent {
-		public:
-			typedef boost::shared_ptr<MessageEvent> ref;
+    class MessageEvent : public StanzaEvent {
+        public:
+            class SystemNotification {
+            public:
+                SystemNotification(const std::string& title, const std::string& message) : title(title), message(message) {
+                }
 
-			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza), targetsMe_(true) {}
+            public:
+                std::string title;
+                std::string message;
+            };
 
-			boost::shared_ptr<Message> getStanza() {return stanza_;}
+        public:
+            typedef std::shared_ptr<MessageEvent> ref;
 
-			bool isReadable() {
-				return getStanza()->isError() || !getStanza()->getBody().get_value_or("").empty();
-			}
+            MessageEvent(std::shared_ptr<Message> stanza) : stanza_(stanza), targetsMe_(true) {}
 
-			void read() {
-				assert (isReadable());
-				conclude();
-			}
+            std::shared_ptr<Message> getStanza() {return stanza_;}
 
-			void setTargetsMe(bool targetsMe) {
-				targetsMe_ = targetsMe;
-			}
+            bool isReadable() {
+                return getStanza()->isError() || !getStanza()->getBody().get_value_or("").empty();
+            }
 
-			bool targetsMe() const {
-				return targetsMe_;
-			}
+            void addNotification(const std::string& title, const std::string& message) {
+                systemNotifications_.push_back(SystemNotification(title, message));
+            }
 
-		private:
-			boost::shared_ptr<Message> stanza_;
-			bool targetsMe_;
-	};
+            const std::vector<SystemNotification>& getNotifications() const {
+                return systemNotifications_;
+            }
+
+            void read() {
+                assert (isReadable());
+                conclude();
+            }
+
+            void setTargetsMe(bool targetsMe) {
+                targetsMe_ = targetsMe;
+            }
+
+            bool targetsMe() const {
+                return targetsMe_;
+            }
+
+        private:
+            std::shared_ptr<Message> stanza_;
+            std::vector<SystemNotification> systemNotifications_;
+            bool targetsMe_;
+    };
 }
 

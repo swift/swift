@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2010-2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <SwifTools/Application/CocoaApplication.h>
 
 #include <AppKit/AppKit.h>
@@ -6,19 +12,17 @@
 namespace Swift {
 
 class CocoaApplication::Private {
-	public:
-		NSAutoreleasePool* autoReleasePool_;
+    public:
+        NSAutoreleasePool* autoReleasePool_;
 };
 
-CocoaApplication::CocoaApplication() {
-	d = new CocoaApplication::Private();
-	NSApplicationLoad();
-	d->autoReleasePool_ = [[NSAutoreleasePool alloc] init];
+CocoaApplication::CocoaApplication() : d(new Private()) {
+    NSApplicationLoad();
+    d->autoReleasePool_ = [[NSAutoreleasePool alloc] init];
 }
 
 CocoaApplication::~CocoaApplication() {
-	[d->autoReleasePool_ release];
-	delete d;
+    [d->autoReleasePool_ release];
 }
 
 }

@@ -17,15 +17,15 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API DeliveryReceiptParser : public GenericPayloadParser<DeliveryReceipt> {
-		public:
-			DeliveryReceiptParser();
+    class SWIFTEN_API DeliveryReceiptParser : public GenericPayloadParser<DeliveryReceipt> {
+        public:
+            DeliveryReceiptParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributeMap);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributeMap);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			int level_;
-	};
+        private:
+            int level_;
+    };
 }

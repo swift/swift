@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,19 +14,14 @@ const SettingsProvider::Setting<bool> SettingConstants::SHOW_NOTIFICATIONS = Set
 const SettingsProvider::Setting<bool> SettingConstants::REQUEST_DELIVERYRECEIPTS = SettingsProvider::Setting<bool>("requestDeliveryReceipts", false);
 const SettingsProvider::Setting<bool> SettingConstants::FORGET_PASSWORDS = SettingsProvider::Setting<bool>("forgetPasswords", false);
 const SettingsProvider::Setting<bool> SettingConstants::REMEMBER_RECENT_CHATS = SettingsProvider::Setting<bool>("rememberRecentChats", true);
-const SettingsProvider::Setting<std::string> SettingConstants::LAST_LOGIN_JID = SettingsProvider::Setting<std::string>("lastLoginJID", "");
-const SettingsProvider::Setting<bool> SettingConstants::LOGIN_AUTOMATICALLY = SettingsProvider::Setting<bool>("loginAutomatically", false);
 const SettingsProvider::Setting<bool> SettingConstants::SHOW_OFFLINE("showOffline", false);
 const SettingsProvider::Setting<std::string> SettingConstants::EXPANDED_ROSTER_GROUPS("GroupExpandiness", "");
 const SettingsProvider::Setting<bool> SettingConstants::PLAY_SOUNDS("playSounds", true);
 const SettingsProvider::Setting<std::string> SettingConstants::HIGHLIGHT_RULES("highlightRules", "@");
-const SettingsProvider::Setting<bool> SettingConstants::SPELL_CHECKER("spellChecker", false);
-const SettingsProvider::Setting<std::string> SettingConstants::DICT_PATH("dictPath", "/usr/share/myspell/dicts/");
-const SettingsProvider::Setting<std::string> SettingConstants::PERSONAL_DICT_PATH("personaldictPath", "/home/");
-const SettingsProvider::Setting<std::string> SettingConstants::DICT_FILE("dictFile", "en_US.dic");
+const SettingsProvider::Setting<std::string> SettingConstants::HIGHLIGHT_RULES_V2("highlightRulesV2", "@");
 const SettingsProvider::Setting<std::string> SettingConstants::INVITE_AUTO_ACCEPT_MODE("inviteAutoAcceptMode", "presence");
-const SettingsProvider::Setting<std::string> SettingConstants::TRELLIS_GRID_SIZE("trellisGridSize", "");
-const SettingsProvider::Setting<std::string> SettingConstants::TRELLIS_GRID_POSITIONS("trellisGridPositions", "");
 const SettingsProvider::Setting<bool> SettingConstants::DISCONNECT_ON_CARD_REMOVAL("disconnectOnCardRemoval", true);
-const SettingsProvider::Setting<bool> SettingConstants::SINGLE_SIGN_ON("singleSignOn", false);
+const SettingsProvider::Setting<bool> SettingConstants::MUC_MARKING_ELISION("mucMarkingElision", true);
+const SettingsProvider::Setting<bool> SettingConstants::FUTURE("future", false);
+
 }

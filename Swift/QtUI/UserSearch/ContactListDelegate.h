@@ -13,18 +13,18 @@
 namespace Swift {
 
 class ContactListDelegate : public QStyledItemDelegate {
-	public:
-		ContactListDelegate(bool compact);
-		virtual ~ContactListDelegate();
+    public:
+        ContactListDelegate(bool compact);
+        virtual ~ContactListDelegate();
 
-		QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
-		void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
-	public slots:
-		void setCompact(bool compact);
+    public slots:
+        void setCompact(bool compact);
 
-	private:
-		bool compact_;
-		DelegateCommons common_;
+    private:
+        bool compact_;
+        DelegateCommons common_;
 };
 }

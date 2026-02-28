@@ -16,7 +16,7 @@
 
 QT_TRANSLATE_NOOP("CloseButton", "Close Tab");
 
-QT_TRANSLATE_NOOP3("QApplication", "QT_LAYOUT_DIRECTION", "Translate this to LTR for left-to-right or RTL for right-to-left languages");
+QT_TRANSLATE_NOOP3("QGuiApplication", "QT_LAYOUT_DIRECTION", "Translate this to LTR for left-to-right or RTL for right-to-left languages");
 
 QT_TRANSLATE_NOOP("QLineEdit", "Select All");
 QT_TRANSLATE_NOOP("QLineEdit", "&Undo");
@@ -25,6 +25,14 @@ QT_TRANSLATE_NOOP("QLineEdit", "Cu&t");
 QT_TRANSLATE_NOOP("QLineEdit", "&Copy");
 QT_TRANSLATE_NOOP("QLineEdit", "&Paste");
 QT_TRANSLATE_NOOP("QLineEdit", "Delete");
+
+QT_TRANSLATE_NOOP("QWidgetTextControl", "Select All");
+QT_TRANSLATE_NOOP("QWidgetTextControl", "&Undo");
+QT_TRANSLATE_NOOP("QWidgetTextControl", "&Redo");
+QT_TRANSLATE_NOOP("QWidgetTextControl", "Cu&t");
+QT_TRANSLATE_NOOP("QWidgetTextControl", "&Copy");
+QT_TRANSLATE_NOOP("QWidgetTextControl", "&Paste");
+QT_TRANSLATE_NOOP("QWidgetTextControl", "Delete");
 
 QT_TRANSLATE_NOOP("QScrollBar", "Scroll here");
 QT_TRANSLATE_NOOP("QScrollBar", "Top");
@@ -75,6 +83,10 @@ QT_TRANSLATE_NOOP("QDialogButtonBox", "Cancel");
 
 QT_TRANSLATE_NOOP("QMessageBox", "Show Details...");
 QT_TRANSLATE_NOOP("QMessageBox", "Hide Details...");
+
+QT_TRANSLATE_NOOP("QPlatformTheme", "OK");
+QT_TRANSLATE_NOOP("QPlatformTheme", "Cancel");
+QT_TRANSLATE_NOOP("QPlatformTheme", "Restore Defaults");
 
 QT_TRANSLATE_NOOP("MAC_APPLICATION_MENU", "Services");
 QT_TRANSLATE_NOOP("MAC_APPLICATION_MENU", "Hide %1");

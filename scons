@@ -7,17 +7,17 @@
 function is_supported_python
 {
 	local exe=$1
-	$exe -c 'import sys; (major, minor, a, b, c) = sys.version_info; python_version = (major, minor); exit(not ((2, 4) <= python_version <= (2, 7)))' 2>/dev/null
+	$exe -c 'import sys; (major, minor, a, b, c) = sys.version_info; python_version = (major, minor); exit(not (((2, 7) <= python_version) or ((3, 5) <= python_version)))' 2>/dev/null
 }
 
 declare -a supported_python_versions=(python python2.7 python2.6 python2.5 python2.4)
 
 for exe in ${supported_python_versions[*]}; do
 	if is_supported_python "$exe"; then
-		exec $exe `dirname $0`/3rdParty/SCons/scons-2.4.0/script/scons "$@"
+		exec $exe `dirname $0`/3rdParty/SCons/scons-3.0.1/script/scons.py "$@"
 		exit
 	fi
 done
 
-echo "No suitable Python interpreter found! Swift build system supports Python 2.4 to Python 2.7.!!!" >&2
+echo "No suitable Python interpreter found! Swift build system supports Python 2.7.* and Python 3.5 or higher!" >&2
 exit 1

@@ -19,9 +19,9 @@
 namespace Swift {
 
 class ContactProvider {
-	public:
-		virtual ~ContactProvider();
-		virtual std::vector<Contact::ref> getContacts(bool withMUCNicks) = 0;
+    public:
+        virtual ~ContactProvider();
+        virtual std::vector<Contact::ref> getContacts(bool withMUCNicks) = 0;
 };
 
 }

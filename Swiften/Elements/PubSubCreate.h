@@ -1,47 +1,46 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubConfigure.h>
 #include <Swiften/Elements/PubSubPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubCreate : public PubSubPayload {
-		public:
-			
-			PubSubCreate();
-			PubSubCreate(const std::string& node) : node(node) {}
-			virtual ~PubSubCreate();
+    class SWIFTEN_API PubSubCreate : public PubSubPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubCreate();
+            PubSubCreate(const std::string& node) : node(node) {}
+            virtual ~PubSubCreate();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			boost::shared_ptr<PubSubConfigure> getConfigure() const {
-				return configure;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void setConfigure(boost::shared_ptr<PubSubConfigure> value) {
-				this->configure = value ;
-			}
+            std::shared_ptr<PubSubConfigure> getConfigure() const {
+                return configure;
+            }
+
+            void setConfigure(std::shared_ptr<PubSubConfigure> value) {
+                this->configure = value ;
+            }
 
 
-		private:
-			std::string node;
-			boost::shared_ptr<PubSubConfigure> configure;
-	};
+        private:
+            std::string node;
+            std::shared_ptr<PubSubConfigure> configure;
+    };
 }

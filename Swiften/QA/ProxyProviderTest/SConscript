@@ -7,5 +7,5 @@ myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
 myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
 
 myenv.Program("ProxyProviderTest", [
-		"ProxyProviderTest.cpp",
-	])
+        "ProxyProviderTest.cpp",
+    ])

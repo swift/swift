@@ -166,17 +166,18 @@
 #define CPPUNIT_TEST_SUITE_END()                                               \
     }                                                                          \
                                                                                \
+public:									       \
     static CPPUNIT_NS::TestSuite *suite()                                      \
     {                                                                          \
       const CPPUNIT_NS::TestNamer &namer = getTestNamer__();                   \
-      std::auto_ptr<CPPUNIT_NS::TestSuite> suite(                              \
-             new CPPUNIT_NS::TestSuite( namer.getFixtureName() ));             \
+      std::unique_ptr<CPPUNIT_NS::TestSuite> guard(                            \
+              new CPPUNIT_NS::TestSuite( namer.getFixtureName() ));            \
       CPPUNIT_NS::ConcretTestFixtureFactory<TestFixtureType> factory;          \
-      CPPUNIT_NS::TestSuiteBuilderContextBase context( *suite.get(),           \
+      CPPUNIT_NS::TestSuiteBuilderContextBase context( *guard.get(),           \
                                                        namer,                  \
                                                        factory );              \
       TestFixtureType::addTestsToSuite( context );                             \
-      return suite.release();                                                  \
+      return guard.release();                                                  \
     }                                                                          \
   private: /* dummy typedef so that the macro can still end with ';'*/         \
     typedef int CppUnitDummyTypedefForSemiColonEnding__
@@ -300,6 +301,17 @@
                   &TestFixtureType::testMethod,           \
                   context.makeFixture() ) ) )
 
+#define CPPUNIT_TEST_PARAMETERIZED( testMethod, ... )    \
+    for (auto& i : __VA_ARGS__)                                  \
+    {                                                           \
+        TestFixtureType* fixture = context.makeFixture();       \
+        CPPUNIT_TEST_SUITE_ADD_TEST(                            \
+        ( new CPPUNIT_NS::TestCaller<TestFixtureType>(          \
+                    context.getTestNameFor(#testMethod, i),     \
+                    std::bind(&TestFixtureType::testMethod, fixture, i),          \
+                    fixture)));                                  \
+    }
+
 /*! \brief Add a test which fail if the specified exception is not caught.
  *
  * Example:
@@ -308,13 +320,13 @@
  * #include <vector>
  * class MyTest : public CppUnit::TestFixture {
  *   CPPUNIT_TEST_SUITE( MyTest );
- *   CPPUNIT_TEST_EXCEPTION( testVectorAtThrow, std::invalid_argument );
+ *   CPPUNIT_TEST_EXCEPTION( testVectorAtThrow, std::out_of_range );
  *   CPPUNIT_TEST_SUITE_END();
  * public:
  *   void testVectorAtThrow()
  *   {
  *     std::vector<int> v;
- *     v.at( 1 );     // must throw exception std::invalid_argument
+ *     v.at( 1 );     // must throw exception std::out_of_range
  *   }
  * };
  * \endcode

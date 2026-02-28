@@ -7,9 +7,9 @@
 #pragma once
 
 namespace Swift {
-	enum StreamType {
-		ClientStreamType,
-		ServerStreamType,
-		ComponentStreamType
-	};
+    enum StreamType {
+        ClientStreamType,
+        ServerStreamType,
+        ComponentStreamType
+    };
 }

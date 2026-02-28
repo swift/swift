@@ -1,58 +1,58 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 
+#include <boost/optional.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubEventAssociate.h>
 #include <Swiften/Elements/PubSubEventDisassociate.h>
 #include <Swiften/Elements/PubSubEventPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEventCollection : public PubSubEventPayload {
-		public:
-			
-			PubSubEventCollection();
-			
-			virtual ~PubSubEventCollection();
+    class SWIFTEN_API PubSubEventCollection : public PubSubEventPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubEventCollection();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubEventCollection();
 
-			boost::shared_ptr<PubSubEventDisassociate> getDisassociate() const {
-				return disassociate;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			void setDisassociate(boost::shared_ptr<PubSubEventDisassociate> value) {
-				this->disassociate = value ;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			boost::shared_ptr<PubSubEventAssociate> getAssociate() const {
-				return associate;
-			}
+            std::shared_ptr<PubSubEventDisassociate> getDisassociate() const {
+                return disassociate;
+            }
 
-			void setAssociate(boost::shared_ptr<PubSubEventAssociate> value) {
-				this->associate = value ;
-			}
+            void setDisassociate(std::shared_ptr<PubSubEventDisassociate> value) {
+                this->disassociate = value ;
+            }
+
+            std::shared_ptr<PubSubEventAssociate> getAssociate() const {
+                return associate;
+            }
+
+            void setAssociate(std::shared_ptr<PubSubEventAssociate> value) {
+                this->associate = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			boost::shared_ptr<PubSubEventDisassociate> disassociate;
-			boost::shared_ptr<PubSubEventAssociate> associate;
-	};
+        private:
+            boost::optional< std::string > node;
+            std::shared_ptr<PubSubEventDisassociate> disassociate;
+            std::shared_ptr<PubSubEventAssociate> associate;
+    };
 }

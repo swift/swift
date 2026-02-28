@@ -5,53 +5,53 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class JingleSessionManager;
-	class IQRouter;
-	class FileTransferTransporterFactory;
-	class OutgoingFileTransfer;
-	class JID;
-	class IDGenerator;
-	class ReadBytestream;
-	class JingleFileTransferFileInfo;
-	class CryptoProvider;
-	class FileTransferOptions;
-	class TimerFactory;
+    class JingleSessionManager;
+    class IQRouter;
+    class FileTransferTransporterFactory;
+    class OutgoingFileTransfer;
+    class JID;
+    class IDGenerator;
+    class ReadBytestream;
+    class JingleFileTransferFileInfo;
+    class CryptoProvider;
+    class FileTransferOptions;
+    class TimerFactory;
 
-	class SWIFTEN_API OutgoingFileTransferManager {
-		public:
-			OutgoingFileTransferManager(
-					JingleSessionManager* jingleSessionManager, 
-					IQRouter* router, 
-					FileTransferTransporterFactory* transporterFactory,
-					TimerFactory* timerFactory,
-					CryptoProvider* crypto);
-			~OutgoingFileTransferManager();
-			
-			boost::shared_ptr<OutgoingFileTransfer> createOutgoingFileTransfer(
-					const JID& from, 
-					const JID& to, 
-					boost::shared_ptr<ReadBytestream>, 
-					const JingleFileTransferFileInfo&,
-					const FileTransferOptions&);
+    class SWIFTEN_API OutgoingFileTransferManager {
+        public:
+            OutgoingFileTransferManager(
+                    JingleSessionManager* jingleSessionManager,
+                    IQRouter* router,
+                    FileTransferTransporterFactory* transporterFactory,
+                    TimerFactory* timerFactory,
+                    CryptoProvider* crypto);
+            ~OutgoingFileTransferManager();
 
-		private:
-			JingleSessionManager* jingleSessionManager;
-			IQRouter* iqRouter;
-			FileTransferTransporterFactory* transporterFactory;
-			TimerFactory* timerFactory;
-			IDGenerator* idGenerator;
-			CryptoProvider* crypto;
-	};
+            std::shared_ptr<OutgoingFileTransfer> createOutgoingFileTransfer(
+                    const JID& from,
+                    const JID& to,
+                    std::shared_ptr<ReadBytestream>,
+                    const JingleFileTransferFileInfo&,
+                    const FileTransferOptions&);
+
+        private:
+            JingleSessionManager* jingleSessionManager;
+            IQRouter* iqRouter;
+            FileTransferTransporterFactory* transporterFactory;
+            TimerFactory* timerFactory;
+            IDGenerator* idGenerator;
+            CryptoProvider* crypto;
+    };
 }

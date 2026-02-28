@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Elements/VCard.h>
 
 namespace Swift {
-	class VCardCollection {
-		public:
-			virtual ~VCardCollection();
+    class VCardCollection {
+        public:
+            virtual ~VCardCollection();
 
-			virtual boost::shared_ptr<VCard> getOwnVCard() const = 0;
-			virtual void setOwnVCard(boost::shared_ptr<VCard> vcard) = 0;
-	};
+            virtual std::shared_ptr<VCard> getOwnVCard() const = 0;
+            virtual void setOwnVCard(std::shared_ptr<VCard> vcard) = 0;
+    };
 }

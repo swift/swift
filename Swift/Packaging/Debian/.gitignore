@@ -1,3 +1,7 @@
 /swift-*
 /swift_*
 /libswiften*
+/out/
+/swift-src/
+swift-im*.orig.tar.gz
+*.tmp.package

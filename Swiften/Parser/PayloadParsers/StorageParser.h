@@ -13,23 +13,23 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StorageParser : public GenericPayloadParser<Storage> {
-		public:
-			StorageParser();
+    class SWIFTEN_API StorageParser : public GenericPayloadParser<Storage> {
+        public:
+            StorageParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			enum Level { 
-				TopLevel = 0, 
-				BookmarkLevel = 1,
-				DetailLevel = 2
-			};
-			int level;
-			std::string currentText;
-			boost::optional<Storage::Room> room;
-			boost::optional<Storage::URL> url;
-	};
+        private:
+            enum Level {
+                TopLevel = 0,
+                BookmarkLevel = 1,
+                DetailLevel = 2
+            };
+            int level;
+            std::string currentText;
+            boost::optional<Storage::Room> room;
+            boost::optional<Storage::URL> url;
+    };
 }

@@ -12,18 +12,18 @@
 #include <Swiften/Parser/SerializingParser.h>
 
 namespace Swift {
-	class SerializingParser;
+    class SerializingParser;
 
-	class SWIFTEN_API RawXMLPayloadParser : public GenericPayloadParser<RawXMLPayload> {
-		public:
-			RawXMLPayloadParser();
+    class SWIFTEN_API RawXMLPayloadParser : public GenericPayloadParser<RawXMLPayload> {
+        public:
+            RawXMLPayloadParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			int level_;
-			SerializingParser serializingParser_;
-	};
+        private:
+            int level_;
+            SerializingParser serializingParser_;
+    };
 }

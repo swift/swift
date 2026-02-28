@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,15 +12,15 @@
 
 namespace Swift {
 
-LowLayer::LowLayer() : parentLayer(NULL) {
+LowLayer::LowLayer() : parentLayer(nullptr) {
 }
 
 LowLayer::~LowLayer() {
 }
 
 void LowLayer::writeDataToParentLayer(const SafeByteArray& data) {
-	assert(parentLayer);
-	parentLayer->handleDataRead(data);
+    assert(parentLayer);
+    parentLayer->handleDataRead(data);
 }
 
 }

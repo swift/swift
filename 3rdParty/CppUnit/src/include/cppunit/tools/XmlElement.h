@@ -8,7 +8,7 @@
 #pragma warning( disable: 4251 )  // X needs to have dll-interface to be used by clients of class Z
 #endif
 
-#include <cppunit/portability/CppUnitDeque.h>
+#include <deque>
 #include <string>
 
 
@@ -131,10 +131,10 @@ private:
   std::string m_name;
   std::string m_content;
 
-  typedef CppUnitDeque<Attribute> Attributes;
+  typedef std::deque<Attribute> Attributes;
   Attributes m_attributes;
 
-  typedef CppUnitDeque<XmlElement *> Elements;
+  typedef std::deque<XmlElement *> Elements;
   Elements m_elements;
 };
 

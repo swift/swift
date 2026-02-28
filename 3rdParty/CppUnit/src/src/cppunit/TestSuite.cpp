@@ -8,6 +8,7 @@ CPPUNIT_NS_BEGIN
 /// Default constructor
 TestSuite::TestSuite( std::string name )
     : TestComposite( name )
+    , m_tests()
 {
 }
 
@@ -39,7 +40,7 @@ TestSuite::addTest( Test *test )
 }
 
 
-const CppUnitVector<Test *> &
+const std::vector<Test *> &
 TestSuite::getTests() const
 {
   return m_tests;

@@ -19,19 +19,19 @@ const long Exception::UNKNOWNLINENUMBER = -1;
 
 Exception::Exception( const Exception &other )
    : std::exception( other )
+   , m_message(other.m_message)
+   , m_sourceLine(other.m_sourceLine)
+   , m_whatMessage(other.m_whatMessage)
 { 
-  m_message = other.m_message; 
-  m_sourceLine = other.m_sourceLine;
 } 
-
 
 Exception::Exception( const Message &message, 
                       const SourceLine &sourceLine )
     : m_message( message )
     , m_sourceLine( sourceLine )
+    , m_whatMessage()
 {
 }
-
 
 #ifdef CPPUNIT_ENABLE_SOURCELINE_DEPRECATED
 Exception::Exception( std::string message, 

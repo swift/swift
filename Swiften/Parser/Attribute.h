@@ -9,25 +9,33 @@
 #include <string>
 
 namespace Swift {
-	class Attribute {
-		public:
-			Attribute(const std::string& name, const std::string& ns) : name(name), ns(ns) {
-			}
+    class Attribute {
+        public:
+            Attribute(const std::string& name, const std::string& ns) : name(name), ns(ns) {
+            }
 
-			const std::string& getName() const {
-				return name;
-			}
+            Attribute(const std::string& name, const std::string& ns, const std::string& prefix) : name(name), ns(ns), prefix(prefix) {
+            }
 
-			const std::string& getNamespace() const {
-				return ns;
-			}
+            const std::string& getName() const {
+                return name;
+            }
 
-			bool operator==(const Attribute& o) const {
-				return o.name == name && o.ns == ns;
-			}
+            const std::string& getNamespace() const {
+                return ns;
+            }
 
-		private:
-			std::string name;
-			std::string ns;
-	};
+            const std::string& getPrefix() const {
+                return prefix;
+            }
+
+            bool operator==(const Attribute& o) const {
+                return o.name == name && o.ns == ns;
+            }
+
+        private:
+            std::string name;
+            std::string ns;
+            std::string prefix;
+    };
 }

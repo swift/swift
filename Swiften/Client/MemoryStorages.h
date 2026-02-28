@@ -10,29 +10,29 @@
 #include <Swiften/Client/Storages.h>
 
 namespace Swift {
-	class VCardMemoryStorage;
-	class CryptoProvider;
+    class VCardMemoryStorage;
+    class CryptoProvider;
 
-	/**
-	 * An implementation of Storages for storing all
-	 * controller data in memory.
-	 */
-	class SWIFTEN_API MemoryStorages : public Storages {
-		public:
-			MemoryStorages(CryptoProvider*);
-			virtual ~MemoryStorages();
+    /**
+     * An implementation of Storages for storing all
+     * controller data in memory.
+     */
+    class SWIFTEN_API MemoryStorages : public Storages {
+        public:
+            MemoryStorages(CryptoProvider*);
+            virtual ~MemoryStorages();
 
-			virtual VCardStorage* getVCardStorage() const;
-			virtual AvatarStorage* getAvatarStorage() const;
-			virtual CapsStorage* getCapsStorage() const;
-			virtual RosterStorage* getRosterStorage() const;
-			virtual HistoryStorage* getHistoryStorage() const;
+            virtual VCardStorage* getVCardStorage() const;
+            virtual AvatarStorage* getAvatarStorage() const;
+            virtual CapsStorage* getCapsStorage() const;
+            virtual RosterStorage* getRosterStorage() const;
+            virtual HistoryStorage* getHistoryStorage() const;
 
-		private:
-			VCardMemoryStorage* vcardStorage;
-			AvatarStorage* avatarStorage;
-			CapsStorage* capsStorage;
-			RosterStorage* rosterStorage;
-			HistoryStorage* historyStorage;
-	};
+        private:
+            VCardMemoryStorage* vcardStorage;
+            AvatarStorage* avatarStorage;
+            CapsStorage* capsStorage;
+            RosterStorage* rosterStorage;
+            HistoryStorage* historyStorage;
+    };
 }

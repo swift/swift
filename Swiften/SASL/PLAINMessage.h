@@ -14,28 +14,28 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API PLAINMessage {
-		public:
-			PLAINMessage(const std::string& authcid, const SafeByteArray& password, const std::string& authzid = "");
-			PLAINMessage(const SafeByteArray& value);
+    class SWIFTEN_API PLAINMessage {
+        public:
+            PLAINMessage(const std::string& authcid, const SafeByteArray& password, const std::string& authzid = "");
+            PLAINMessage(const SafeByteArray& value);
 
-			SafeByteArray getValue() const;
+            SafeByteArray getValue() const;
 
-			const std::string& getAuthenticationID() const {
-				return authcid;
-			}
+            const std::string& getAuthenticationID() const {
+                return authcid;
+            }
 
-			const SafeByteArray& getPassword() const {
-				return password;
-			}
+            const SafeByteArray& getPassword() const {
+                return password;
+            }
 
-			const std::string& getAuthorizationID() const {
-				return authzid;
-			}
+            const std::string& getAuthorizationID() const {
+                return authzid;
+            }
 
-		private:
-			std::string authcid;
-			std::string authzid;
-			SafeByteArray password;
-	};
+        private:
+            std::string authcid;
+            std::string authzid;
+            SafeByteArray password;
+    };
 }

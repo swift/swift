@@ -1,52 +1,51 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubOwnerAffiliation.h>
 #include <Swiften/Elements/PubSubOwnerPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerAffiliations : public PubSubOwnerPayload {
-		public:
-			
-			PubSubOwnerAffiliations();
-			
-			virtual ~PubSubOwnerAffiliations();
+    class SWIFTEN_API PubSubOwnerAffiliations : public PubSubOwnerPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubOwnerAffiliations();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubOwnerAffiliations();
 
-			const std::vector< boost::shared_ptr<PubSubOwnerAffiliation> >& getAffiliations() const {
-				return affiliations;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			void setAffiliations(const std::vector< boost::shared_ptr<PubSubOwnerAffiliation> >& value) {
-				this->affiliations = value ;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void addAffiliation(boost::shared_ptr<PubSubOwnerAffiliation> value) {
-				this->affiliations.push_back(value);
-			}
+            const std::vector< std::shared_ptr<PubSubOwnerAffiliation> >& getAffiliations() const {
+                return affiliations;
+            }
+
+            void setAffiliations(const std::vector< std::shared_ptr<PubSubOwnerAffiliation> >& value) {
+                this->affiliations = value ;
+            }
+
+            void addAffiliation(std::shared_ptr<PubSubOwnerAffiliation> value) {
+                this->affiliations.push_back(value);
+            }
 
 
-		private:
-			std::string node;
-			std::vector< boost::shared_ptr<PubSubOwnerAffiliation> > affiliations;
-	};
+        private:
+            std::string node;
+            std::vector< std::shared_ptr<PubSubOwnerAffiliation> > affiliations;
+    };
 }

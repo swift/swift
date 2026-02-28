@@ -1,30 +1,31 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/FileTransfer/IBBReceiveSession.h>
+#include <Swiften/FileTransfer/TransportSession.h>
 
 namespace Swift {
 
 class SWIFTEN_API IBBReceiveTransportSession : public TransportSession {
-	public:
-		IBBReceiveTransportSession(boost::shared_ptr<IBBReceiveSession> session);
-		virtual ~IBBReceiveTransportSession();
+    public:
+        IBBReceiveTransportSession(std::shared_ptr<IBBReceiveSession> session);
+        virtual ~IBBReceiveTransportSession() override;
 
-		virtual void start() SWIFTEN_OVERRIDE;
-		virtual void stop() SWIFTEN_OVERRIDE;
+        virtual void start() override;
+        virtual void stop() override;
 
-	private:
-		boost::shared_ptr<IBBReceiveSession> session;
-		boost::bsignals::scoped_connection finishedConnection;
-		boost::bsignals::scoped_connection bytesSentConnection;
+    private:
+        std::shared_ptr<IBBReceiveSession> session;
+        boost::signals2::scoped_connection finishedConnection;
+        boost::signals2::scoped_connection bytesSentConnection;
 };
 
 }

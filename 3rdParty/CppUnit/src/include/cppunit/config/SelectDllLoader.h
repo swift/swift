@@ -15,9 +15,6 @@
  * CPPUNIT_HAVE_WIN32_DLL_LOADER
  * If defined, Win32 implementation of DynamicLibraryManager will be used.
  * 
- * CPPUNIT_HAVE_BEOS_DLL_LOADER
- * If defined, BeOs implementation of DynamicLibraryManager will be used.
- * 
  * CPPUNIT_HAVE_UNIX_DLL_LOADER
  * If defined, Unix implementation (dlfcn.h) of DynamicLibraryManager will be used.
  */
@@ -49,10 +46,6 @@
 #define CPPUNIT_HAVE_WIN32_DLL_LOADER 1
 #undef CPPUNIT_PLUGIN_EXPORT
 #define CPPUNIT_PLUGIN_EXPORT extern "C" __declspec(dllexport)
-
-// Is BeOS platform ?
-#elif defined(__BEOS__)
-#define CPPUNIT_HAVE_BEOS_DLL_LOADER 1
 
 // Is Unix platform and have shl_load() (hp-ux)
 #elif defined(CPPUNIT_HAVE_SHL_LOAD)

@@ -4,6 +4,7 @@ APP=$1
 TEMPLATE=$2
 TARGET=$3
 QTDIR=$4
+CODESIGN_IDENTITY=$5
 
 if [[ ! -f "$TEMPLATE" || ! -d "$APP" || ! -d "$QTDIR" || -z "$TARGET" ]]; then
 	echo "Error"
@@ -29,6 +30,11 @@ rm "$WC_DIR"/`basename $APP`/Contents/PlugIns/bearer/*.dylib
 
 # Remove debugging symbols from the application bundle
 rm -rf "$WC_DIR"/`basename $APP`/Contents/MacOS/*.dSYM
+
+# Codesign the app bundle if requested by caller
+if [ ! -z "$CODESIGN_IDENTITY" ]; then
+	codesign --verbose --force --deep --sign "$CODESIGN_IDENTITY" "$WC_DIR"/`basename $APP`
+fi
 
 hdiutil detach "$WC_DIR" -quiet -force
 rm -f $TARGET

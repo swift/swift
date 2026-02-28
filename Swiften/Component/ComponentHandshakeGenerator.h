@@ -11,11 +11,11 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class CryptoProvider;
+    class CryptoProvider;
 
-	class SWIFTEN_API ComponentHandshakeGenerator {
-		public:
-			static std::string getHandshake(const std::string& streamID, const std::string& secret, CryptoProvider* crypto);
-	};
+    class SWIFTEN_API ComponentHandshakeGenerator {
+        public:
+            static std::string getHandshake(const std::string& streamID, const std::string& secret, CryptoProvider* crypto);
+    };
 
 }

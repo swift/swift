@@ -10,11 +10,11 @@
 #include <Swiften/Compress/ZLibCodecompressor.h>
 
 namespace Swift {
-	class SWIFTEN_API ZLibDecompressor : public ZLibCodecompressor {
-		public:
-			ZLibDecompressor();
-			virtual ~ZLibDecompressor();
+    class SWIFTEN_API ZLibDecompressor : public ZLibCodecompressor {
+        public:
+            ZLibDecompressor();
+            virtual ~ZLibDecompressor();
 
-			virtual int processZStream();
-	};
+            virtual int processZStream();
+    };
 }

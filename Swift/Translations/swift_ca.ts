@@ -704,7 +704,7 @@
     </message>
 </context>
 <context>
-    <name>QApplication</name>
+    <name>QGuiApplication</name>
     <message>
         <location filename="../QtUI/QtStrings.h" line="19"/>
         <source>QT_LAYOUT_DIRECTION</source>

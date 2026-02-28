@@ -4,34 +4,40 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <Swift/Controllers/UIEvents/UIEvent.h>
-
 #include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
 
 class RequestChangeBlockStateUIEvent : public UIEvent {
-	public:
-		enum BlockState {
-			Blocked,
-			Unblocked
-		};
+    public:
+        enum BlockState {
+            Blocked,
+            Unblocked
+        };
 
-	public:
-		RequestChangeBlockStateUIEvent(BlockState newState, const JID& contact) : state_(newState), contact_(contact) {}
+    public:
+        RequestChangeBlockStateUIEvent(BlockState newState, const JID& contact) : state_(newState), contact_(contact) {}
 
-		BlockState getBlockState() const {
-			return state_;
-		}
+        BlockState getBlockState() const {
+            return state_;
+        }
 
-		JID getContact() const {
-			return contact_;
-		}
-	private:
-		BlockState state_;
-		JID contact_;
+        JID getContact() const {
+            return contact_;
+        }
+    private:
+        BlockState state_;
+        JID contact_;
 };
 
 }

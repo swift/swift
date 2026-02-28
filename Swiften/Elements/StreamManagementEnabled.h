@@ -12,29 +12,29 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamManagementEnabled : public ToplevelElement {
-		public:
-			StreamManagementEnabled();
-			~StreamManagementEnabled();
+    class SWIFTEN_API StreamManagementEnabled : public ToplevelElement {
+        public:
+            StreamManagementEnabled();
+            ~StreamManagementEnabled();
 
-			void setResumeSupported() {
-				resumeSupported = true;
-			}
+            void setResumeSupported() {
+                resumeSupported = true;
+            }
 
-			bool getResumeSupported() const {
-				return resumeSupported;
-			}
+            bool getResumeSupported() const {
+                return resumeSupported;
+            }
 
-			void setResumeID(const std::string& id) {
-				resumeID = id;
-			}
+            void setResumeID(const std::string& id) {
+                resumeID = id;
+            }
 
-			const std::string& getResumeID() const {
-				return resumeID;
-			}
+            const std::string& getResumeID() const {
+                return resumeID;
+            }
 
-		private:
-			bool resumeSupported;
-			std::string resumeID;
-	};
+        private:
+            bool resumeSupported;
+            std::string resumeID;
+    };
 }

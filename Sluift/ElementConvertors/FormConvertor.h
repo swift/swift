@@ -1,23 +1,22 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-
-#include <Sluift/GenericLuaElementConvertor.h>
 #include <Swiften/Elements/Form.h>
 
-namespace Swift {
-	class FormConvertor : public GenericLuaElementConvertor<Form> {
-		public:
-			FormConvertor();
-			virtual ~FormConvertor();
+#include <Sluift/GenericLuaElementConvertor.h>
 
-			virtual boost::shared_ptr<Form> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<Form>) SWIFTEN_OVERRIDE;
-	};
+namespace Swift {
+    class FormConvertor : public GenericLuaElementConvertor<Form> {
+        public:
+            FormConvertor();
+            virtual ~FormConvertor() override;
+
+            virtual std::shared_ptr<Form> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Form>) override;
+    };
 }

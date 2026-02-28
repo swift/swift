@@ -1,6 +1,6 @@
-/* $Id: natpmp.h,v 1.19 2014/04/01 09:39:29 nanard Exp $ */
+/* $Id: natpmp.h,v 1.20 2014/04/22 09:15:40 nanard Exp $ */
 /* libnatpmp
-Copyright (c) 2007-2013, Thomas BERNARD
+Copyright (c) 2007-2014, Thomas BERNARD
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -48,10 +48,18 @@ typedef unsigned short uint16_t;
 #define in_addr_t uint32_t
 #include "declspec.h"
 #else	/* WIN32 */
+#define LIBSPEC
 #include <netinet/in.h>
 #endif	/* WIN32 */
 
-#include "declspec.h"
+/* causes problem when installing. Maybe should it be inlined ? */
+/* #include "declspec.h" */
+
+#ifdef ANDROID
+#include <arpa/inet.h>
+#define in_addr_t uint32_t
+#endif
+
 
 #ifdef ANDROID
 #include <arpa/inet.h>

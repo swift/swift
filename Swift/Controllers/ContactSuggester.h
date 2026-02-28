@@ -20,24 +20,24 @@
 class ContactSuggesterTest;
 
 namespace Swift {
-	class ContactProvider;
+    class ContactProvider;
 
-	class ContactSuggester {
-	public:
-		ContactSuggester();
-		~ContactSuggester();
+    class ContactSuggester {
+    public:
+        ContactSuggester();
+        ~ContactSuggester();
 
-		void addContactProvider(ContactProvider* provider);
+        void addContactProvider(ContactProvider* provider);
 
-		std::vector<Contact::ref> getSuggestions(const std::string& search, bool withMUCNicks) const;
-	public:
-		static bool matchContact(const std::string& search, const Contact::ref& c);
-		/**
-		 * Performs fuzzy matching on the string text. Matches when each character of match string is present in sequence in text string.
-		 */
-		static bool fuzzyMatch(std::string text, std::string match);
+        std::vector<Contact::ref> getSuggestions(const std::string& search, bool withMUCNicks) const;
+    public:
+        static bool matchContact(const std::string& search, const Contact::ref& c);
+        /**
+         * Performs fuzzy matching on the string text. Matches when each character of match string is present in sequence in text string.
+         */
+        static bool fuzzyMatch(std::string text, std::string match);
 
-	private:
-		std::vector<ContactProvider*> contactProviders_;
-	};
+    private:
+        std::vector<ContactProvider*> contactProviders_;
+    };
 }

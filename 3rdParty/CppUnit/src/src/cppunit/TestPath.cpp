@@ -8,11 +8,13 @@ CPPUNIT_NS_BEGIN
 
 
 TestPath::TestPath()
+    : m_tests()
 {
 }
 
 
 TestPath::TestPath( Test *root )
+    : m_tests()
 {
   add( root );
 }
@@ -21,6 +23,7 @@ TestPath::TestPath( Test *root )
 TestPath::TestPath( const TestPath &other, 
                     int indexFirst, 
                     int count )
+    : m_tests()
 {
   int countAdjustment = 0;
   if ( indexFirst < 0 )
@@ -42,6 +45,7 @@ TestPath::TestPath( const TestPath &other,
 
 TestPath::TestPath( Test *searchRoot, 
                     const std::string &pathAsString )
+    : m_tests()
 {
   PathTestNames testNames;
 

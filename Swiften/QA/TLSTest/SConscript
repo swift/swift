@@ -3,22 +3,25 @@ import os
 Import("env")
 
 if env["TEST"] :
-	myenv = env.Clone()
-	myenv.MergeFlags(myenv["CHECKER_FLAGS"])
-	myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
-	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
-	myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
-	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
-	
-	if myenv.get("HAVE_OPENSSL", 0) :
-		myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
-	elif myenv.get("HAVE_SCHANNEL", 0) :
-		myenv.Append(CPPDEFINES = "HAVE_SCHANNEL")
-	elif myenv.get("HAVE_SECURETRANSPORT", 0) :
-		myenv.Append(CPPDEFINES = "HAVE_SECURETRANSPORT")
-	
-	tester = myenv.Program("TLSTest", [
-			"CertificateTest.cpp",
-			"CertificateErrorTest.cpp"
-		])
-	myenv.Test(tester, "system")
+    myenv = env.Clone()
+    myenv.MergeFlags(myenv["CHECKER_FLAGS"])
+    myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
+    myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+    myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
+    myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+    myenv.MergeFlags(myenv["GOOGLETEST_FLAGS"])
+
+    if myenv.get("HAVE_OPENSSL", 0) :
+        myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
+        myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
+    elif myenv.get("HAVE_SCHANNEL", 0) :
+        myenv.Append(CPPDEFINES = "HAVE_SCHANNEL")
+    elif myenv.get("HAVE_SECURETRANSPORT", 0) :
+        myenv.Append(CPPDEFINES = "HAVE_SECURETRANSPORT")
+
+    tester = myenv.Program("TLSTest", [
+            "CertificateTest.cpp",
+            # Reenable if either http://www.tls-o-matic.com/ is fixed or we have setup a replacement.
+            #"CertificateErrorTest.cpp"
+        ])
+    myenv.Test(tester, "system")

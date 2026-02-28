@@ -1,0 +1,53 @@
+version: 2
+jobs:
+  build-gcc:
+    docker:
+      - image: tfar/swift-gcc:latest
+    working_directory: ~/swift
+    steps:
+      - checkout
+      - run:
+          name: Version information
+          command: |
+            lsb_release -a
+            qmake --version
+      - run:
+          name: Build and run unit tests
+          # Disable QtUtilitiesTest.testDSTawareness test because it fails on this system.
+          command: |
+            export GTEST_FILTER=-QtUtilitiesTest.testDSTawareness
+            ./scons cc=gcc cxx=g++ link=g++ test=unit max_jobs=0 allow_warnings=0 -j 2
+  build-clang:
+    docker:
+      - image: tfar/swift-clang:latest
+    working_directory: ~/swift
+    steps:
+      - checkout
+      - run:
+          name: Version information
+          command: |
+            lsb_release -a
+            qmake --version
+      - run:
+          name: Build and run unit tests
+          # Disable QtUtilitiesTest.testDSTawareness test because it fails on this system.
+          command: |
+            export GTEST_FILTER=-QtUtilitiesTest.testDSTawareness
+            ./scons cc=clang-3.9 cxx=clang++-3.9 link=clang++-3.9 test=unit max_jobs=0 allow_warnings=0 -j 2
+  build-coala:
+    docker:
+      - image: tfar/swift-coala:latest
+    working_directory: ~/swift
+    steps:
+      - checkout
+      - run:
+          name: Check basic source code style
+          command: coala --non-interactive
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-clang
+      - build-gcc
+      - build-coala

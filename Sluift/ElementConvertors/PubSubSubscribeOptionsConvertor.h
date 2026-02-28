@@ -1,29 +1,25 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-
-#include <Sluift/GenericLuaElementConvertor.h>
 #include <Swiften/Elements/PubSubSubscribeOptions.h>
 
+#include <Sluift/GenericLuaElementConvertor.h>
+
 namespace Swift {
-	class LuaElementConvertors;
+    class LuaElementConvertors;
 
-	class PubSubSubscribeOptionsConvertor : public GenericLuaElementConvertor<PubSubSubscribeOptions> {
-		public:
-			PubSubSubscribeOptionsConvertor(LuaElementConvertors* convertors);
-			virtual ~PubSubSubscribeOptionsConvertor();
+    class PubSubSubscribeOptionsConvertor : public GenericLuaElementConvertor<PubSubSubscribeOptions> {
+        public:
+            PubSubSubscribeOptionsConvertor();
+            virtual ~PubSubSubscribeOptionsConvertor() override;
 
-			virtual boost::shared_ptr<PubSubSubscribeOptions> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<PubSubSubscribeOptions>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
-
-		private:
-			LuaElementConvertors* convertors;
-	};
+            virtual std::shared_ptr<PubSubSubscribeOptions> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubSubscribeOptions>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
+    };
 }

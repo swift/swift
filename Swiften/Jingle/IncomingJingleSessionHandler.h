@@ -10,10 +10,10 @@
 #include <Swiften/Jingle/JingleSession.h>
 
 namespace Swift {
-	class SWIFTEN_API IncomingJingleSessionHandler {
-		public:
-			virtual ~IncomingJingleSessionHandler();
+    class SWIFTEN_API IncomingJingleSessionHandler {
+        public:
+            virtual ~IncomingJingleSessionHandler();
 
-			virtual bool handleIncomingJingleSession(JingleSession::ref, const std::vector<JingleContentPayload::ref>& contents, const JID& recipient) = 0;
-	};
+            virtual bool handleIncomingJingleSession(JingleSession::ref, const std::vector<JingleContentPayload::ref>& contents, const JID& recipient) = 0;
+    };
 }

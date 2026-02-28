@@ -9,6 +9,6 @@
 #include <string>
 
 namespace Swift {
-	std::string selectCAPICertificate();
-	bool isCAPIURI(std::string uri);
+    std::string selectCAPICertificate();
+    bool isCAPIURI(std::string uri);
 }

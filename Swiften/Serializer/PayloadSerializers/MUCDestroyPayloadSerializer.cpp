@@ -1,15 +1,13 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/PayloadSerializers/MUCDestroyPayloadSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
@@ -18,17 +16,17 @@ namespace Swift {
 MUCDestroyPayloadSerializer::MUCDestroyPayloadSerializer() : GenericPayloadSerializer<MUCDestroyPayload>() {
 }
 
-std::string MUCDestroyPayloadSerializer::serializePayload(boost::shared_ptr<MUCDestroyPayload> payload)  const {
-	XMLElement mucElement("destroy", "");
-	if (!payload->getReason().empty()) {
-		XMLElement::ref reason = boost::make_shared<XMLElement>("reason", "");
-		reason->addNode(boost::make_shared<XMLTextNode>(payload->getReason()));
-		mucElement.addNode(reason);
-	}
-	if (payload->getNewVenue().isValid()) {
-		mucElement.setAttribute("jid", payload->getNewVenue().toString());
-	}
-	return mucElement.serialize();
+std::string MUCDestroyPayloadSerializer::serializePayload(std::shared_ptr<MUCDestroyPayload> payload)  const {
+    XMLElement mucElement("destroy", "");
+    if (!payload->getReason().empty()) {
+        XMLElement::ref reason = std::make_shared<XMLElement>("reason", "");
+        reason->addNode(std::make_shared<XMLTextNode>(payload->getReason()));
+        mucElement.addNode(reason);
+    }
+    if (payload->getNewVenue().isValid()) {
+        mucElement.setAttribute("jid", payload->getNewVenue().toString());
+    }
+    return mucElement.serialize();
 }
 
 

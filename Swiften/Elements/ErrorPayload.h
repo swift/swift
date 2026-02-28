@@ -1,87 +1,87 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API ErrorPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<ErrorPayload> ref;
+    class SWIFTEN_API ErrorPayload : public Payload {
+        public:
+            typedef std::shared_ptr<ErrorPayload> ref;
 
-			enum Type { Cancel, Continue, Modify, Auth, Wait };
+            enum Type { Cancel, Continue, Modify, Auth, Wait };
 
-			enum Condition {
-				BadRequest,
-				Conflict,
-				FeatureNotImplemented,
-				Forbidden,
-				Gone,
-				InternalServerError,
-				ItemNotFound,
-				JIDMalformed,
-				NotAcceptable,
-				NotAllowed,
-				NotAuthorized,
-				PaymentRequired,
-				RecipientUnavailable,
-				Redirect,
-				RegistrationRequired,
-				RemoteServerNotFound,
-				RemoteServerTimeout,
-				ResourceConstraint,
-				ServiceUnavailable,
-				SubscriptionRequired,
-				UndefinedCondition,
-				UnexpectedRequest
-			};
+            enum Condition {
+                BadRequest,
+                Conflict,
+                FeatureNotImplemented,
+                Forbidden,
+                Gone,
+                InternalServerError,
+                ItemNotFound,
+                JIDMalformed,
+                NotAcceptable,
+                NotAllowed,
+                NotAuthorized,
+                PaymentRequired,
+                RecipientUnavailable,
+                Redirect,
+                RegistrationRequired,
+                RemoteServerNotFound,
+                RemoteServerTimeout,
+                ResourceConstraint,
+                ServiceUnavailable,
+                SubscriptionRequired,
+                UndefinedCondition,
+                UnexpectedRequest
+            };
 
-			ErrorPayload(Condition condition = UndefinedCondition, Type type = Cancel, const std::string& text = std::string()) : type_(type), condition_(condition), text_(text) { }
+            ErrorPayload(Condition condition = UndefinedCondition, Type type = Cancel, const std::string& text = std::string()) : type_(type), condition_(condition), text_(text) { }
 
-			Type getType() const {
-				return type_; 
-			}
+            Type getType() const {
+                return type_;
+            }
 
-			void setType(Type type) {
-				type_ = type;
-			}
+            void setType(Type type) {
+                type_ = type;
+            }
 
-			Condition getCondition() const { 
-				return condition_; 
-			}
+            Condition getCondition() const {
+                return condition_;
+            }
 
-			void setCondition(Condition condition) { 
-				condition_ = condition;
-			}
+            void setCondition(Condition condition) {
+                condition_ = condition;
+            }
 
-			void setText(const std::string& text) {
-				text_ = text;
-			}
+            void setText(const std::string& text) {
+                text_ = text;
+            }
 
-			const std::string& getText() const { 
-				return text_; 
-			}
+            const std::string& getText() const {
+                return text_;
+            }
 
-			void setPayload(boost::shared_ptr<Payload> payload) {
-				payload_ = payload;
-			}
+            void setPayload(std::shared_ptr<Payload> payload) {
+                payload_ = payload;
+            }
 
-			boost::shared_ptr<Payload> getPayload() const {
-				return payload_;
-			}
+            std::shared_ptr<Payload> getPayload() const {
+                return payload_;
+            }
 
-		private:
-			Type type_;
-			Condition condition_;
-			std::string text_;
-			boost::shared_ptr<Payload> payload_;
-	};
+        private:
+            Type type_;
+            Condition condition_;
+            std::string text_;
+            std::shared_ptr<Payload> payload_;
+    };
 }

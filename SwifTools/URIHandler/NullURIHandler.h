@@ -9,12 +9,12 @@
 #include <SwifTools/URIHandler/URIHandler.h>
 
 namespace Swift {
-	class NullURIHandler : public URIHandler {
-		public:
-			virtual void start() {
-			}
+    class NullURIHandler : public URIHandler {
+        public:
+            virtual void start() {
+            }
 
-			virtual void stop() {
-			}
-	};
+            virtual void stop() {
+            }
+    };
 }

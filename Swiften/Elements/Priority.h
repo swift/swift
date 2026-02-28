@@ -10,20 +10,20 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API Priority : public Payload {
-		public:
-			Priority(int priority = 0) : priority_(priority) {
-			}
+    class SWIFTEN_API Priority : public Payload {
+        public:
+            Priority(int priority = 0) : priority_(priority) {
+            }
 
-			void setPriority(int priority) {
-				priority_ = priority;
-			}
+            void setPriority(int priority) {
+                priority_ = priority;
+            }
 
-			int getPriority() const {
-				return priority_;
-			}
+            int getPriority() const {
+                return priority_;
+            }
 
-		private:
-			int priority_;
-	};
+        private:
+            int priority_;
+    };
 }

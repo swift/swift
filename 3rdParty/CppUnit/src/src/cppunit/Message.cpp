@@ -4,19 +4,16 @@
 
 CPPUNIT_NS_BEGIN
 
-
-Message::Message()
-{
-}
-
 Message::Message( const Message &other )
+    : m_shortDescription()
+    , m_details()
 {
    *this = other;
 }
 
-
 Message::Message( const std::string &shortDescription )
     : m_shortDescription( shortDescription )
+    , m_details()
 {
 }
 
@@ -24,6 +21,7 @@ Message::Message( const std::string &shortDescription )
 Message::Message( const std::string &shortDescription,
                   const std::string &detail1 )
     : m_shortDescription( shortDescription )
+    , m_details()
 {
   addDetail( detail1 );
 }
@@ -33,6 +31,7 @@ Message::Message( const std::string &shortDescription,
                   const std::string &detail1,
                   const std::string &detail2 )
     : m_shortDescription( shortDescription )
+    , m_details()
 {
   addDetail( detail1, detail2 );
 }
@@ -43,8 +42,13 @@ Message::Message( const std::string &shortDescription,
                   const std::string &detail2,
                   const std::string &detail3 )
     : m_shortDescription( shortDescription )
+    , m_details()
 {
   addDetail( detail1, detail2, detail3 );
+}
+
+Message::~Message()
+{
 }
 
 Message &

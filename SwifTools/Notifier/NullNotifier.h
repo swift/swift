@@ -9,11 +9,11 @@
 #include <SwifTools/Notifier/Notifier.h>
 
 namespace Swift {
-	class NullNotifier : public Notifier {
-		public:
-			virtual void showMessage(Type, const std::string&, const std::string&, const boost::filesystem::path&, boost::function<void()>) {
-			}
-			virtual void purgeCallbacks() {
-			}
-	};
+    class NullNotifier : public Notifier {
+        public:
+            virtual void showMessage(Type, const std::string&, const std::string&, const boost::filesystem::path&, boost::function<void()>) {
+            }
+            virtual void purgeCallbacks() {
+            }
+    };
 }

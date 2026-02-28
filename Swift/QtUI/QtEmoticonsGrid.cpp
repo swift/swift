@@ -1,59 +1,40 @@
 /*
- * Copyright (c) 2015 Daniel Baczynski
- * Licensed under the Simplified BSD license.
- * See Documentation/Licenses/BSD-simplified.txt for more information.
+ * Copyright (c) 2017 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
  */
 
-#include "QtEmoticonsGrid.h"
+#include <Swift/QtUI/QtEmoticonsGrid.h>
 
-#include <set>
+#include <unordered_set>
 
-#include <QPushButton>
+#include <SwifTools/EmojiMapper.h>
 
-#include <Swiften/Base/foreach.h>
-
+#include <Swift/QtUI/QtEmojiCell.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
-typedef std::map<std::string, std::string> EmoticonsMap; // Without this typedef compiler complains when using foreach
+    QtEmoticonsGrid::QtEmoticonsGrid(const std::map<std::string, std::string>& emoticonsMap) : QtEmojisGrid() {
+        std::unordered_set<std::string> usedEmoticons;
+        for (const auto& emoticonPair : emoticonsMap) {
+            if (usedEmoticons.find(emoticonPair.second) == usedEmoticons.end()) {
+                usedEmoticons.insert(emoticonPair.second);
 
-QtEmoticonsGrid::QtEmoticonsGrid(const std::map<std::string, std::string>& emoticons, QWidget* parent) : QGridLayout(parent) {
-	makeUniqueEmoticonsMap(emoticons);
+                auto filePath = P2QSTRING(emoticonPair.second);
+                if (filePath.startsWith("qrc:/")) {
+                    filePath.remove(0, 3);
+                }
+                auto icon = QIcon(filePath);
+                auto text = P2QSTRING(emoticonPair.first);
 
-	// Create grid: 3 columns, [uniqueEmoticons_.size()/3] rows
-	int row = 0;
-	int column = 0;
+                addEmoticon(icon, text);
+            }
+        }
+    }
 
-	foreach(EmoticonsMap::value_type emoticon, uniqueEmoticons_) {
-		QtEmoticonCell* newCell = new QtEmoticonCell(P2QSTRING(emoticon.first), P2QSTRING(emoticon.second));
-		addWidget(newCell, row, column);
-		connect(newCell, SIGNAL(emoticonClicked(QString)), this, SLOT(emoticonClickedSlot(QString)));
+    QtEmoticonsGrid::~QtEmoticonsGrid() {
 
-		column++;
-		if (column >= 3) {
-			column = 0;
-			row++;
-		}
-	}
-}
-
-QtEmoticonsGrid::~QtEmoticonsGrid() {
-
-}
-
-void QtEmoticonsGrid::makeUniqueEmoticonsMap(const std::map<std::string, std::string>& emoticons) {
-	std::set<std::string> paths;
-	reverse_foreach(EmoticonsMap::value_type emoticon, emoticons) {
-		if (paths.find(emoticon.second) == paths.end()) {
-			uniqueEmoticons_.insert(emoticon);
-			paths.insert(emoticon.second);
-		}
-	}
-}
-
-void QtEmoticonsGrid::emoticonClickedSlot(QString emoticonAsText) {
-	emit emoticonClicked(emoticonAsText);
-}
+    }
 
 }

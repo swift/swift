@@ -7,30 +7,11 @@ example_env.UseFlags(example_env["SWIFTEN_DEP_FLAGS"])
 # Precompile Swiften header
 # This is useful to slightly speed up compilation.
 # if example_env["PLATFORM"] == "win32":
-# 	example_env.WriteVal("Swiften.cpp", example_env.Value("#include <Swiften/Swiften.h>\n"))
-# 	example_env["PCH"] = example_env.PCH("Swiften.cpp")[0]
-# 	example_env["PCHSTOP"] = "Swiften/Swiften.h"
+#   example_env.WriteVal("Swiften.cpp", example_env.Value("#include <Swiften/Swiften.h>\n"))
+#   example_env["PCH"] = example_env.PCH("Swiften.cpp")[0]
+#   example_env["PCHSTOP"] = "Swiften/Swiften.h"
 
 for i in range(1,7) :
-	example_env.Program("EchoBot" + str(i), ["EchoBot" + str(i) + ".cpp"])
+    example_env.Program("EchoBot" + str(i), ["EchoBot" + str(i) + ".cpp"])
+example_env.Program("EchoBot0x", "EchoBot0x.cpp")
 example_env.Program("EchoComponent", "EchoComponent.cpp")
-
-# C++0x
-cpp0x = False
-cpp0x_env = example_env.Clone()
-if env["PLATFORM"] == "win32" :
-	if int(env["MSVS_VERSION"].split(".")[0]) >= 10 :
-		cpp0x = True
-elif env["PLATFORM"] == "hpux" :
-	pass
-elif env["PLATFORM"] == "sunos" :
-	pass
-else :
-	if env["CCVERSION"].split(".") >= ["4", "5", "0"] :
-		# Temporarily disabling c++0x mode because of problems with boost::thread
-		# on some platforms
-		#cpp0x = True
-		cpp0x_env.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if flag != "-Werror"])
-		cpp0x_env.Append(CXXFLAGS = ["-std=c++0x"])
-if cpp0x :
-	cpp0x_env.Program("EchoBot0x", "EchoBot0x.cpp")

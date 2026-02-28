@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,14 +7,15 @@
 #pragma once
 
 #include <string>
-#include <Swiften/Base/boost_bsignals.h>
+
+#include <boost/signals2.hpp>
 
 namespace Swift {
-	class URIHandler {
-		public:
-			URIHandler();
-			virtual ~URIHandler();
+    class URIHandler {
+        public:
+            URIHandler();
+            virtual ~URIHandler();
 
-			boost::signal<void (const std::string&)> onURI;
-	};
+            boost::signals2::signal<void (const std::string&)> onURI;
+    };
 }

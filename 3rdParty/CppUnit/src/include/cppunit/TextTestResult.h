@@ -26,6 +26,8 @@ public:
   virtual void addFailure( const TestFailure &failure );
   virtual void startTest( Test *test );
   virtual void print( OStream &stream );
+
+  using TestResult::addFailure;
 };
 
 /** insertion operator for easy output */

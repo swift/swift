@@ -5,6 +5,7 @@ CPPUNIT_NS_BEGIN
 
 
 SourceLine::SourceLine() :
+    m_fileName(),
     m_lineNumber( -1 )
 {
 }

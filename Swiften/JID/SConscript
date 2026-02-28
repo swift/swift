@@ -2,6 +2,6 @@ Import("swiften_env")
 
 myenv = swiften_env.Clone()
 objects = myenv.SwiftenObject([
-			"JID.cpp",
-		])
+            "JID.cpp",
+        ])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

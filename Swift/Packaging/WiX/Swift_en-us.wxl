@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="InstallScopeDlgPerUserDescription">[ProductName] will be installed in a user folder and auto-updates will be enabled. The application be installed only for your user and you do not need to be an Administrator. </String>
+</WixLocalization>

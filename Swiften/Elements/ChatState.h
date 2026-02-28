@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,20 +12,20 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API ChatState : public Payload {
-		public:
-			typedef boost::shared_ptr<ChatState> ref;
+    class SWIFTEN_API ChatState : public Payload {
+        public:
+            typedef std::shared_ptr<ChatState> ref;
 
-		public:
-			enum ChatStateType {Active, Composing, Paused, Inactive, Gone};
-			ChatState(ChatStateType state = Active) {
-				state_ = state;
-			}
+        public:
+            enum ChatStateType {Active, Composing, Paused, Inactive, Gone};
+            ChatState(ChatStateType state = Active) {
+                state_ = state;
+            }
 
-			ChatStateType getChatState() const { return state_; }
-			void setChatState(ChatStateType state) {state_ = state;}
+            ChatStateType getChatState() const { return state_; }
+            void setChatState(ChatStateType state) {state_ = state;}
 
-		private:
-			ChatStateType state_;
-	};
+        private:
+            ChatStateType state_;
+    };
 }

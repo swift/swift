@@ -7,13 +7,13 @@
 #pragma once
 
 namespace Swift {
-	class CertificateStorage;
-	class JID;
+    class CertificateStorage;
+    class JID;
 
-	class CertificateStorageFactory {
-		public:
-			virtual ~CertificateStorageFactory();
+    class CertificateStorageFactory {
+        public:
+            virtual ~CertificateStorageFactory();
 
-			virtual CertificateStorage* createCertificateStorage(const JID& profile) const = 0;
-	};
+            virtual CertificateStorage* createCertificateStorage(const JID& profile) const = 0;
+    };
 }

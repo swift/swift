@@ -10,6 +10,6 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API StanzaAckRequest : public ToplevelElement {
-	};
+    class SWIFTEN_API StanzaAckRequest : public ToplevelElement {
+    };
 }

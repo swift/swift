@@ -20,7 +20,7 @@
 
 // Version number of package
 #ifndef CPPUNIT_VERSION 
-#define CPPUNIT_VERSION  "1.12.0"
+#define CPPUNIT_VERSION  "1.14.0"
 #endif
  
 #include <cppunit/config/CppUnitApi.h>    // define CPPUNIT_API & CPPUNIT_NEED_DLL_DECL
@@ -60,20 +60,6 @@
 #  define CPPUNIT_NO_STD_NAMESPACE 1
 # endif // !defined(CPPUNIT_NO_STD_NAMESPACE)
 #endif // !defined(CPPUNIT_HAVE_NAMESPACES)
-
-/* Define CPPUNIT_STD_NEED_ALLOCATOR to 1 if you need to specify
- * the allocator you used when instantiating STL container. Typically
- * used for compilers that do not support template default parameter.
- * CPPUNIT_STD_ALLOCATOR will be used as the allocator. Default is
- * std::allocator. On some compilers, you may need to change this to
- * std::allocator<T>.
- */
-#if CPPUNIT_STD_NEED_ALLOCATOR
-# if !defined(CPPUNIT_STD_ALLOCATOR)
-#  define CPPUNIT_STD_ALLOCATOR std::allocator
-# endif // !defined(CPPUNIT_STD_ALLOCATOR)
-#endif // defined(CPPUNIT_STD_NEED_ALLOCATOR)
-
 
 // Compiler error location format for CompilerOutputter
 // If not define, assumes that it's gcc
@@ -162,11 +148,17 @@
 /// \internal
 #define _CPPUNIT_DO_JOIN2( symbol1, symbol2 ) symbol1##symbol2
 
+/// \internal Unique suffix for variable name. Can be overridden in platform specific
+/// config-*.h. Default to line number.
+#ifndef CPPUNIT_UNIQUE_COUNTER
+# define CPPUNIT_UNIQUE_COUNTER __LINE__
+#endif
+
 /*! Adds the line number to the specified string to create a unique identifier.
  * \param prefix Prefix added to the line number to create a unique identifier.
  * \see CPPUNIT_TEST_SUITE_REGISTRATION for an example of usage.
  */
-#define CPPUNIT_MAKE_UNIQUE_NAME( prefix ) CPPUNIT_JOIN( prefix, __LINE__ )
+#define CPPUNIT_MAKE_UNIQUE_NAME( prefix ) CPPUNIT_JOIN( prefix, CPPUNIT_UNIQUE_COUNTER )
 
 /*! Defines wrap colunm for %CppUnit. Used by CompilerOuputter.
  */

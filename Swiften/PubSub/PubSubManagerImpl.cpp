@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,18 +14,18 @@
 
 using namespace Swift;
 
-PubSubManagerImpl::PubSubManagerImpl(StanzaChannel* stanzaChannel, IQRouter* router) : 
-		stanzaChannel(stanzaChannel),
-		router(router) {
-	stanzaChannel->onMessageReceived.connect(boost::bind(&PubSubManagerImpl::handleMessageRecevied, this, _1));
+PubSubManagerImpl::PubSubManagerImpl(StanzaChannel* stanzaChannel, IQRouter* router) :
+        stanzaChannel(stanzaChannel),
+        router(router) {
+    stanzaChannel->onMessageReceived.connect(boost::bind(&PubSubManagerImpl::handleMessageRecevied, this, _1));
 }
 
 PubSubManagerImpl::~PubSubManagerImpl() {
-	stanzaChannel->onMessageReceived.disconnect(boost::bind(&PubSubManagerImpl::handleMessageRecevied, this, _1));
+    stanzaChannel->onMessageReceived.disconnect(boost::bind(&PubSubManagerImpl::handleMessageRecevied, this, _1));
 }
 
-void PubSubManagerImpl::handleMessageRecevied(boost::shared_ptr<Message> message) {
-	if (boost::shared_ptr<PubSubEvent> event = message->getPayload<PubSubEvent>()) {
-		onEvent(message->getFrom(), event->getPayload());
-	}
+void PubSubManagerImpl::handleMessageRecevied(std::shared_ptr<Message> message) {
+    if (std::shared_ptr<PubSubEvent> event = message->getPayload<PubSubEvent>()) {
+        onEvent(message->getFrom(), event->getPayload());
+    }
 }

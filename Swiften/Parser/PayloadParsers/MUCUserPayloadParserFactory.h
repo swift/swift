@@ -11,20 +11,20 @@
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCUserPayloadParserFactory : public PayloadParserFactory {
-		public:
-			MUCUserPayloadParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
-			}
+    class SWIFTEN_API MUCUserPayloadParserFactory : public PayloadParserFactory {
+        public:
+            MUCUserPayloadParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
+            }
 
-			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
-				return element == "x" && ns == "http://jabber.org/protocol/muc#user";
-			}
+            virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
+                return element == "x" && ns == "http://jabber.org/protocol/muc#user";
+            }
 
-			virtual PayloadParser* createPayloadParser() {
-				return new MUCUserPayloadParser(factories);
-			}
+            virtual PayloadParser* createPayloadParser() {
+                return new MUCUserPayloadParser(factories);
+            }
 
-		private:
-			PayloadParserFactoryCollection* factories;
-	};
+        private:
+            PayloadParserFactoryCollection* factories;
+    };
 }

@@ -1,34 +1,35 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
+#include <mutex>
+
 #include <boost/asio/io_service.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/Event.h>
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	class SWIFTEN_API BoostASIOEventLoop : public EventLoop {
-		public:
-			BoostASIOEventLoop(boost::shared_ptr<boost::asio::io_service> ioService);
-			virtual ~BoostASIOEventLoop();
+    class SWIFTEN_API BoostASIOEventLoop : public EventLoop {
+        public:
+            BoostASIOEventLoop(std::shared_ptr<boost::asio::io_service> ioService);
+            virtual ~BoostASIOEventLoop();
 
-		protected:
-			void handleASIOEvent();
+        protected:
+            void handleASIOEvent();
 
-			virtual void eventPosted();
+            virtual void eventPosted();
 
-		private:
-			boost::shared_ptr<boost::asio::io_service> ioService_;
+        private:
+            std::shared_ptr<boost::asio::io_service> ioService_;
 
-			bool isEventInASIOEventLoop_;
-			boost::recursive_mutex isEventInASIOEventLoopMutex_;
-	};
+            bool isEventInASIOEventLoop_ = false;
+            std::recursive_mutex isEventInASIOEventLoopMutex_;
+    };
 }

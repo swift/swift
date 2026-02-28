@@ -1,13 +1,13 @@
 Import("swiften_env")
 
 SConscript(dirs = [
-		"NetworkTest",
-#		"ReconnectTest",
-		"ClientTest",
-#		"DNSSDTest",
-		"StorageTest",
-		"TLSTest",
-		"ScriptedTests",
-		"ProxyProviderTest",
-		"FileTransferTest",
-	])
+        "NetworkTest",
+#       "ReconnectTest",
+        "ClientTest",
+#       "DNSSDTest",
+        "StorageTest",
+        "TLSTest",
+        "ScriptedTests",
+        "ProxyProviderTest",
+        "FileTransferTest",
+    ])

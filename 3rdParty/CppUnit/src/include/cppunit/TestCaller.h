@@ -4,8 +4,10 @@
 #include <cppunit/Exception.h>
 #include <cppunit/TestCase.h>
 
+#include <functional>
 
-#if CPPUNIT_USE_TYPEINFO_NAME
+
+#if defined(CPPUNIT_USE_TYPEINFO_NAME)
 #  include <cppunit/extensions/TypeInfoHelper.h>
 #endif
 
@@ -33,7 +35,7 @@ struct ExpectedExceptionTraits
 {
   static void expectedException()
   {
-#if CPPUNIT_USE_TYPEINFO_NAME
+#if defined(CPPUNIT_USE_TYPEINFO_NAME)
     throw Exception( Message(
                          "expected exception not thrown",
                          "Expected exception type: " + 
@@ -116,7 +118,7 @@ public:
 	    TestCase( name ), 
 	    m_ownFixture( true ),
 	    m_fixture( new Fixture() ),
-	    m_test( test )
+	    m_test_function( std::bind(test, m_fixture) )
   {
   }
 
@@ -133,7 +135,7 @@ public:
 	    TestCase( name ), 
 	    m_ownFixture( false ),
 	    m_fixture( &fixture ),
-	    m_test( test )
+	    m_test_function( std::bind(test, &fixture) )
   {
   }
     
@@ -150,9 +152,17 @@ public:
 	    TestCase( name ), 
 	    m_ownFixture( true ),
 	    m_fixture( fixture ),
-	    m_test( test )
+	    m_test_function( std::bind(test, fixture) )
   {
   }
+
+  TestCaller(std::string name, std::function<void()> test_function, Fixture* fixture):
+      TestCase(name),
+      m_ownFixture(true),
+      m_fixture(fixture),
+      m_test_function(test_function)
+    {
+    }
     
   ~TestCaller() 
   {
@@ -162,14 +172,7 @@ public:
 
   void runTest()
   { 
-//	  try {
-	    (m_fixture->*m_test)();
-//	  }
-//	  catch ( ExpectedException & ) {
-//	    return;
-//	  }
-
-//  	ExpectedExceptionTraits<ExpectedException>::expectedException();
+      m_test_function();
   }  
 
   void setUp()
@@ -194,7 +197,7 @@ private:
 private:
   bool m_ownFixture;
   Fixture *m_fixture;
-  TestMethod m_test;
+  std::function<void()> m_test_function;
 };
 
 

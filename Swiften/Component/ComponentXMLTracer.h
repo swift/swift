@@ -10,12 +10,12 @@
 #include <Swiften/Component/Component.h>
 
 namespace Swift {
-	class SWIFTEN_API ComponentXMLTracer {
-		public:
-			ComponentXMLTracer(CoreComponent* component);
+    class SWIFTEN_API ComponentXMLTracer {
+        public:
+            ComponentXMLTracer(CoreComponent* component);
 
-		private:
-			static void printData(char direction, const SafeByteArray& data);
-			static void printLine(char c);
-	};
+        private:
+            static void printData(char direction, const SafeByteArray& data);
+            static void printLine(char c);
+    };
 }

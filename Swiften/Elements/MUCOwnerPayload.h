@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,30 +9,30 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCOwnerPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<MUCOwnerPayload> ref;
+    class SWIFTEN_API MUCOwnerPayload : public Payload {
+        public:
+            typedef std::shared_ptr<MUCOwnerPayload> ref;
 
-			MUCOwnerPayload() {
-			}
+            MUCOwnerPayload() {
+            }
 
-			boost::shared_ptr<Payload> getPayload() const {
-				return payload;
-			}
+            std::shared_ptr<Payload> getPayload() const {
+                return payload;
+            }
 
-			void setPayload(boost::shared_ptr<Payload> p) {
-				payload = p;
-			}
+            void setPayload(std::shared_ptr<Payload> p) {
+                payload = p;
+            }
 
-			Form::ref getForm() {
-				return boost::dynamic_pointer_cast<Form>(payload);
-			}
+            Form::ref getForm() {
+                return std::dynamic_pointer_cast<Form>(payload);
+            }
 
-		private:
-			boost::shared_ptr<Payload> payload;
-	};
+        private:
+            std::shared_ptr<Payload> payload;
+    };
 }

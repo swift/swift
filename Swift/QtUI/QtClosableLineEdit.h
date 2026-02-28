@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,20 +24,20 @@ namespace Swift {
 
 class QtClosableLineEdit : public QLineEdit
 {
-	Q_OBJECT
-	public:
-		QtClosableLineEdit(QWidget *parent = 0);
+    Q_OBJECT
+    public:
+        QtClosableLineEdit(QWidget *parent = nullptr);
 
-	protected:
-		void resizeEvent(QResizeEvent *);
+    protected:
+        void resizeEvent(QResizeEvent *);
 
-	private slots:
-		void updateCloseButton(const QString &text);
-		void handleCloseButtonClicked();
+    private slots:
+        void updateCloseButton(const QString &text);
+        void handleCloseButtonClicked();
 
-	private:
-		static const int clearButtonPadding;
-		QToolButton *clearButton;
+    private:
+        static const int clearButtonPadding;
+        QToolButton *clearButton;
 };
 
 }

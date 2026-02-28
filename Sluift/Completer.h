@@ -10,10 +10,10 @@
 #include <vector>
 
 namespace Swift {
-	class Completer {
-		public:
-			virtual ~Completer();
+    class Completer {
+        public:
+            virtual ~Completer();
 
-			virtual std::vector<std::string> getCompletions(const std::string& buffer, int start, int end) = 0;
-	};
+            virtual std::vector<std::string> getCompletions(const std::string& buffer, int start, int end) = 0;
+    };
 }

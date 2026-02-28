@@ -8,7 +8,7 @@
 
 namespace Swift {
 
-XMLParser::XMLParser(XMLParserClient* client) : client_(client) {
+XMLParser::XMLParser(XMLParserClient* client, bool allowComments) : client_(client), allowComments_(allowComments){
 }
 
 XMLParser::~XMLParser() {

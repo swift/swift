@@ -20,15 +20,15 @@ Certificate::~Certificate() {
 }
 
 std::string Certificate::getSHA1Fingerprint(Certificate::ref certificate, CryptoProvider* crypto) {
-	ByteArray hash = crypto->getSHA1Hash(certificate->toDER());
-	std::ostringstream s;
-	for (size_t i = 0; i < hash.size(); ++i) {
-		if (i > 0) {
-			s << ":";
-		}
-		s << Hexify::hexify(hash[i]);
-	}
-	return std::string(s.str());
+    ByteArray hash = crypto->getSHA1Hash(certificate->toDER());
+    std::ostringstream s;
+    for (size_t i = 0; i < hash.size(); ++i) {
+        if (i > 0) {
+            s << ":";
+        }
+        s << Hexify::hexify(hash[i]);
+    }
+    return std::string(s.str());
 }
 
 }

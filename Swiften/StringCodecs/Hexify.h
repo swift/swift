@@ -10,10 +10,10 @@
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API Hexify {
-		public:
-			static std::string hexify(unsigned char byte);
-			static std::string hexify(const ByteArray& data);
-			static ByteArray unhexify(const std::string& hexstring);
-	};
+    class SWIFTEN_API Hexify {
+        public:
+            static std::string hexify(unsigned char byte);
+            static std::string hexify(const ByteArray& data);
+            static ByteArray unhexify(const std::string& hexstring);
+    };
 }

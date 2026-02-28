@@ -9,18 +9,18 @@
 #include <SwifTools/Application/ApplicationPathProvider.h>
 
 namespace Swift {
-	class MacOSXApplicationPathProvider : public ApplicationPathProvider {
-		public:
-			MacOSXApplicationPathProvider(const std::string& name);
+    class MacOSXApplicationPathProvider : public ApplicationPathProvider {
+        public:
+            MacOSXApplicationPathProvider(const std::string& name);
 
-			virtual boost::filesystem::path getHomeDir() const;
-			boost::filesystem::path getDataDir() const;
+            virtual boost::filesystem::path getHomeDir() const;
+            boost::filesystem::path getDataDir() const;
 
-			virtual std::vector<boost::filesystem::path> getResourceDirs() const {
-				return resourceDirs;
-			}
+            virtual std::vector<boost::filesystem::path> getResourceDirs() const {
+                return resourceDirs;
+            }
 
-		private:
-			std::vector<boost::filesystem::path> resourceDirs;
-	};
+        private:
+            std::vector<boost::filesystem::path> resourceDirs;
+    };
 }

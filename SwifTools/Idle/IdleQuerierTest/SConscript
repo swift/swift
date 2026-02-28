@@ -1,12 +1,12 @@
 Import("env")
 
 if env["TEST"] :
-	myenv = env.Clone()
-	myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
-	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
-	myenv.MergeFlags(myenv["BOOST_FLAGS"])
-	if myenv["HAVE_XSS"] :
-		myenv.MergeFlags(myenv.get("XSS_FLAGS", {}))
-		myenv.Append(LIBS = ["X11"])
-	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
-	tester = myenv.Program("IdleQuerierTest", ["IdleQuerierTest.cpp"])
+    myenv = env.Clone()
+    myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
+    myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+    myenv.MergeFlags(myenv["BOOST_FLAGS"])
+    if myenv["HAVE_XSS"] :
+        myenv.MergeFlags(myenv.get("XSS_FLAGS", {}))
+        myenv.Append(LIBS = ["X11"])
+    myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
+    tester = myenv.Program("IdleQuerierTest", ["IdleQuerierTest.cpp"])

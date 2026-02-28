@@ -17,14 +17,14 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API ReplaceParser : public GenericPayloadParser<Replace> {
-		public:
-			ReplaceParser();
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+    class SWIFTEN_API ReplaceParser : public GenericPayloadParser<Replace> {
+        public:
+            ReplaceParser();
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			int level_;
-	};
+        private:
+            int level_;
+    };
 }

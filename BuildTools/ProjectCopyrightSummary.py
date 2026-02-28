@@ -17,7 +17,7 @@ def CopyrightNames(filename):
     names = []
     with open(filename, 'r') as file:
         data = file.read()
-        p = re.compile(ur'\* Copyright.*\d\d\d\d (.*?)\.?$', re.MULTILINE)
+        p = re.compile(r'\* Copyright.*\d\d\d\d (.*?)\.?$', re.MULTILINE)
         names = re.findall(p, data)
     return names
 

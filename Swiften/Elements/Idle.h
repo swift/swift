@@ -5,14 +5,15 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
+
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
 #include <Swiften/Base/API.h>
@@ -20,25 +21,25 @@
 
 namespace Swift {
 
-	class SWIFTEN_API Idle : public Payload {
-	public:
-		typedef boost::shared_ptr<Idle> ref;
+    class SWIFTEN_API Idle : public Payload {
+    public:
+        typedef std::shared_ptr<Idle> ref;
 
-	public:
-		Idle() {}
-		Idle(boost::posix_time::ptime since) : since_(since) {
-		}
+    public:
+        Idle() {}
+        Idle(boost::posix_time::ptime since) : since_(since) {
+        }
 
-		void setSince(boost::posix_time::ptime since) {
-			since_ = since;
-		}
+        void setSince(boost::posix_time::ptime since) {
+            since_ = since;
+        }
 
-		boost::posix_time::ptime getSince() const {
-			return since_;
-		}
+        boost::posix_time::ptime getSince() const {
+            return since_;
+        }
 
-	private:
-		boost::posix_time::ptime since_;
-	};
+    private:
+        boost::posix_time::ptime since_;
+    };
 
 }

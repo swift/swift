@@ -30,20 +30,6 @@
 #define CPPUNIT_HAVE_NAMESPACES  1 
 #endif
 
-/* define if the compiler supports Run-Time Type Identification */
-#ifndef CPPUNIT_HAVE_RTTI
-# ifdef _CPPRTTI // Defined by the compiler option /GR
-#  define CPPUNIT_HAVE_RTTI 1
-# else
-#  define CPPUNIT_HAVE_RTTI 0
-# endif
-#endif
-
-/* Define to 1 to use type_info::name() for class names */
-#ifndef CPPUNIT_USE_TYPEINFO_NAME 
-#define CPPUNIT_USE_TYPEINFO_NAME  CPPUNIT_HAVE_RTTI 
-#endif
-
 #define CPPUNIT_HAVE_SSTREAM 1
 
 /* Name of package */
@@ -73,11 +59,12 @@
 // Uncomment to turn on STL wrapping => use this to test compilation. 
 // This will make CppUnit subclass std::vector & co to provide default
 // parameter.
-/*#define CPPUNIT_STD_NEED_ALLOCATOR 1
-#define CPPUNIT_STD_ALLOCATOR std::allocator<T>
-//#define CPPUNIT_NO_NAMESPACE 1
+/*#define CPPUNIT_NO_NAMESPACE 1
 */
 
+#if _MSC_VER >= 1300    // VS 7.0
+#define CPPUNIT_UNIQUE_COUNTER __COUNTER__
+#endif // if _MSC_VER >= 1300    // VS 7.0
 
 /* _INCLUDE_CPPUNIT_CONFIG_MSVC6_H */
 #endif

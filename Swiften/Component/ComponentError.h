@@ -9,23 +9,23 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API ComponentError {
-		public:
-			enum Type {
-				UnknownError,
-				ConnectionError,
-				ConnectionReadError,
-				ConnectionWriteError,
-				XMLError,
-				AuthenticationFailedError,
-				UnexpectedElementError
-			};
+    class SWIFTEN_API ComponentError {
+        public:
+            enum Type {
+                UnknownError,
+                ConnectionError,
+                ConnectionReadError,
+                ConnectionWriteError,
+                XMLError,
+                AuthenticationFailedError,
+                UnexpectedElementError
+            };
 
-			ComponentError(Type type = UnknownError) : type_(type) {}
+            ComponentError(Type type = UnknownError) : type_(type) {}
 
-			Type getType() const { return type_; }
+            Type getType() const { return type_; }
 
-		private:
-			Type type_;
-	};
+        private:
+            Type type_;
+    };
 }

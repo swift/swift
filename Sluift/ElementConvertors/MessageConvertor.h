@@ -1,33 +1,33 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Sluift/ElementConvertors/StanzaConvertor.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Message.h>
 
+#include <Sluift/ElementConvertors/StanzaConvertor.h>
+
 namespace Swift {
-	class LuaElementConvertors;
+    class LuaElementConvertors;
 
-	class MessageConvertor : public StanzaConvertor<Message> {
-		public:
-			MessageConvertor(LuaElementConvertors* convertors);
-			virtual ~MessageConvertor();
+    class MessageConvertor : public StanzaConvertor<Message> {
+        public:
+            MessageConvertor(LuaElementConvertors* convertors);
+            virtual ~MessageConvertor() override;
 
-			virtual boost::shared_ptr<Message> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<Message>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Message> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Message>) override;
 
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+            virtual boost::optional<Documentation> getDocumentation() const override;
 
-			static std::string convertMessageTypeToString(Message::Type type);
-			static Message::Type convertMessageTypeFromString(const std::string& type);
+            static std::string convertMessageTypeToString(Message::Type type);
+            static Message::Type convertMessageTypeFromString(const std::string& type);
 
-		private:
-			LuaElementConvertors* convertors;
-	};
+        private:
+            LuaElementConvertors* convertors;
+    };
 }
 

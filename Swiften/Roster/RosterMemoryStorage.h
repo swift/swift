@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,17 +10,17 @@
 #include <Swiften/Roster/RosterStorage.h>
 
 namespace Swift {
-	class SWIFTEN_API RosterMemoryStorage : public RosterStorage {
-		public:
-			RosterMemoryStorage();
+    class SWIFTEN_API RosterMemoryStorage : public RosterStorage {
+        public:
+            RosterMemoryStorage();
 
-			virtual boost::shared_ptr<RosterPayload> getRoster() const {
-				return roster;
-			}
+            virtual std::shared_ptr<RosterPayload> getRoster() const {
+                return roster;
+            }
 
-			virtual void setRoster(boost::shared_ptr<RosterPayload>);
+            virtual void setRoster(std::shared_ptr<RosterPayload>);
 
-		private:
-			boost::shared_ptr<RosterPayload> roster;
-	};
+        private:
+            std::shared_ptr<RosterPayload> roster;
+    };
 }

@@ -9,15 +9,10 @@
 #endif
 
 #include <cppunit/TestSuccessListener.h>
-#include <cppunit/portability/CppUnitDeque.h>
+#include <deque>
 
 
 CPPUNIT_NS_BEGIN
-
-#if CPPUNIT_NEED_DLL_DECL
-//  template class CPPUNIT_API std::deque<TestFailure *>;
-//  template class CPPUNIT_API std::deque<Test *>;
-#endif
 
 
 /*! \brief Collects test result.
@@ -36,8 +31,8 @@ CPPUNIT_NS_BEGIN
 class CPPUNIT_API TestResultCollector : public TestSuccessListener
 {
 public:
-  typedef CppUnitDeque<TestFailure *> TestFailures;
-  typedef CppUnitDeque<Test *> Tests;
+  typedef std::deque<TestFailure *> TestFailures;
+  typedef std::deque<Test *> Tests;
 
 
   /*! Constructs a TestResultCollector object.

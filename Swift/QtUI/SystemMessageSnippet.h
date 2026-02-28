@@ -8,23 +8,23 @@
 
 #include <QString>
 
-#include "ChatSnippet.h"
+#include <Swift/QtUI/ChatSnippet.h>
 
 class QDateTime;
 
 namespace Swift {
-	class SystemMessageSnippet : public ChatSnippet {
-		public:
-			SystemMessageSnippet(const QString& message, const QDateTime& time, bool appendToPrevious, QtChatTheme* theme, const QString& id, Direction direction);
-			virtual ~SystemMessageSnippet();
+    class SystemMessageSnippet : public ChatSnippet {
+        public:
+            SystemMessageSnippet(const QString& message, const QDateTime& time, bool appendToPrevious, QtChatTheme* theme, const QString& id, Direction direction);
+            virtual ~SystemMessageSnippet();
 
-			const QString& getContent() const {return content_;}
+            const QString& getContent() const {return content_;}
 
-			/*QString getContinuationElementID() const {
-				return "insert";
-			};*/
+            /*QString getContinuationElementID() const {
+                return "insert";
+            };*/
 
-		private:
-			QString content_;
-	};
+        private:
+            QString content_;
+    };
 }

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,38 +16,38 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class SWIFTEN_API NATPortMapping {
-	public:
-		enum Protocol {
-			TCP,
-			UDP
-		};
+    class SWIFTEN_API NATPortMapping {
+    public:
+        enum Protocol {
+            TCP,
+            UDP
+        };
 
-		NATPortMapping(int localPort, int publicPort, Protocol protocol = TCP, int leaseInSeconds = 60 * 60 * 24) : 
-			publicPort(publicPort), localPort(localPort), protocol(protocol), leaseInSeconds(leaseInSeconds) {
+        NATPortMapping(unsigned short localPort, unsigned short publicPort, Protocol protocol = TCP, uint32_t leaseInSeconds = 60 * 60 * 24) :
+            publicPort(publicPort), localPort(localPort), protocol(protocol), leaseInSeconds(leaseInSeconds) {
 
-		}
+        }
 
-		int getPublicPort() const {
-			return publicPort;
-		}
+        unsigned short getPublicPort() const {
+            return publicPort;
+        }
 
-		int getLocalPort() const {
-			return localPort;
-		}
+        unsigned short getLocalPort() const {
+            return localPort;
+        }
 
-		Protocol getProtocol() const {
-			return protocol;
-		}
+        Protocol getProtocol() const {
+            return protocol;
+        }
 
-		int getLeaseInSeconds() const {
-			return leaseInSeconds;
-		}
+        uint32_t getLeaseInSeconds() const {
+            return leaseInSeconds;
+        }
 
-	private:
-		int publicPort;
-		int localPort;
-		Protocol protocol;
-		int leaseInSeconds;
-	};
+    private:
+        unsigned short publicPort;
+        unsigned short localPort;
+        Protocol protocol;
+        uint32_t leaseInSeconds;
+    };
 }

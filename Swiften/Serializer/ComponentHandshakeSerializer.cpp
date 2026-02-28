@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,9 +13,9 @@ namespace Swift {
 ComponentHandshakeSerializer::ComponentHandshakeSerializer() {
 }
 
-SafeByteArray ComponentHandshakeSerializer::serialize(boost::shared_ptr<ToplevelElement> element)  const {
-	boost::shared_ptr<ComponentHandshake> handshake(boost::dynamic_pointer_cast<ComponentHandshake>(element));
-	return createSafeByteArray("<handshake>" + handshake->getData() + "</handshake>");
+SafeByteArray ComponentHandshakeSerializer::serialize(std::shared_ptr<ToplevelElement> element)  const {
+    std::shared_ptr<ComponentHandshake> handshake(std::dynamic_pointer_cast<ComponentHandshake>(element));
+    return createSafeByteArray("<handshake>" + handshake->getData() + "</handshake>");
 }
 
 }

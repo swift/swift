@@ -1,5 +1,5 @@
 Import("env")
 
 env.Append(UNITTEST_SOURCES = [
-		File("ActualIdleDetectorTest.cpp")
-	])
+        File("ActualIdleDetectorTest.cpp")
+    ])

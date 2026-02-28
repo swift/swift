@@ -21,7 +21,7 @@ DefaultProtector::protect( const Functor &functor,
   catch ( std::exception &e )
   {
     std::string shortDescription( "uncaught exception of type " );
-#if CPPUNIT_USE_TYPEINFO_NAME
+#if defined(CPPUNIT_USE_TYPEINFO_NAME)
     shortDescription += TypeInfoHelper::getClassName( typeid(e) );
 #else
     shortDescription += "std::exception (or derived).";

@@ -7,12 +7,12 @@
 #include <string>
 
 namespace Swift {
-	class AutoUpdater;
+    class AutoUpdater;
 
-	class PlatformAutoUpdaterFactory {
-		public:
-			bool isSupported() const;
+    class PlatformAutoUpdaterFactory {
+        public:
+            bool isSupported() const;
 
-			AutoUpdater* createAutoUpdater(const std::string& appcastURL);
-	};
+            AutoUpdater* createAutoUpdater(const std::string& appcastURL);
+    };
 }

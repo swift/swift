@@ -17,26 +17,26 @@
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParser.h>
 
 namespace Swift {
-	
-	class PayloadParserFactoryCollection;
 
-	class SWIFTEN_API JingleFileTransferDescriptionParserFactory : public PayloadParserFactory {
-		public:
-			JingleFileTransferDescriptionParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
-			}
+    class PayloadParserFactoryCollection;
 
-			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
-				return element == "description" && ns == "urn:xmpp:jingle:apps:file-transfer:4";
-			}
+    class SWIFTEN_API JingleFileTransferDescriptionParserFactory : public PayloadParserFactory {
+        public:
+            JingleFileTransferDescriptionParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
+            }
 
-			virtual PayloadParser* createPayloadParser() {
-				return new JingleFileTransferDescriptionParser(factories);
-			}
+            virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
+                return element == "description" && ns == "urn:xmpp:jingle:apps:file-transfer:4";
+            }
 
-		private:
-			PayloadParserFactoryCollection* factories;
-			
-	};
+            virtual PayloadParser* createPayloadParser() {
+                return new JingleFileTransferDescriptionParser(factories);
+            }
+
+        private:
+            PayloadParserFactoryCollection* factories;
+
+    };
 }
 
 

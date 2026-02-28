@@ -4,7 +4,7 @@
 export PYTHONDONTWRITEBYTECODE=1
 export QT_SELECT=qt5
 
-SCONS_FLAGS=V=1 qt5=1 optimize=1 debug=1 allow_warnings=1 swiften_dll=1 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 linkflags="$(shell dpkg-buildflags --get LDFLAGS)" ccflags="$(shell dpkg-buildflags --get CPPFLAGS) $(shell dpkg-buildflags --get CFLAGS)"
+SCONS_FLAGS=V=1 qt5=1 optimize=1 debug=1 allow_warnings=1 swiften_dll=1 help2man=1 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 linkflags="$(shell dpkg-buildflags --get LDFLAGS)" ccflags="$(shell dpkg-buildflags --get CPPFLAGS) $(shell dpkg-buildflags --get CFLAGS)"
 SCONS_INSTALL_BASE=$(CURDIR)/debian/tmp
 SCONS_INSTALL_FLAGS=SWIFT_INSTALLDIR=$(SCONS_INSTALL_BASE)/usr SWIFTEN_INSTALLDIR=$(SCONS_INSTALL_BASE)/usr
 SWIFT_INSTALLDIR=$(SCONS_INSTALL_BASE)/usr SWIFTEN_INSTALLDIR=$(SCONS_INSTALL_BASE)/usr
@@ -21,7 +21,7 @@ override_dh_clean:
 override_dh_configure:
 
 override_dh_auto_build:
-	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) Swift Swiften
+	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) Swift Swiften debian/swift-im.1 debian/swiften-config.1
 
 override_dh_auto_install:
 	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) $(SCONS_INSTALL_FLAGS) $(SCONS_INSTALL_BASE)

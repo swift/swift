@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -17,16 +17,16 @@ namespace Swift {
 MUCOwnerPayloadSerializer::MUCOwnerPayloadSerializer(PayloadSerializerCollection* serializers) : GenericPayloadSerializer<MUCOwnerPayload>(), serializers(serializers) {
 }
 
-std::string MUCOwnerPayloadSerializer::serializePayload(boost::shared_ptr<MUCOwnerPayload> mucOwner)  const {
-	XMLElement mucElement("query", "http://jabber.org/protocol/muc#owner");
-	boost::shared_ptr<Payload> payload = mucOwner->getPayload();
-	if (payload) {
-		PayloadSerializer* serializer = serializers->getPayloadSerializer(payload);
-		if (serializer) {
-			mucElement.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(payload)));
-		}
-	}
-	return mucElement.serialize();
+std::string MUCOwnerPayloadSerializer::serializePayload(std::shared_ptr<MUCOwnerPayload> mucOwner)  const {
+    XMLElement mucElement("query", "http://jabber.org/protocol/muc#owner");
+    std::shared_ptr<Payload> payload = mucOwner->getPayload();
+    if (payload) {
+        PayloadSerializer* serializer = serializers->getPayloadSerializer(payload);
+        if (serializer) {
+            mucElement.addNode(std::make_shared<XMLRawTextNode>(serializer->serialize(payload)));
+        }
+    }
+    return mucElement.serialize();
 }
 
 }

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
@@ -15,36 +15,36 @@
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
-	class SWIFTEN_API DummyConnection : public Connection, public EventOwner,	public boost::enable_shared_from_this<DummyConnection> {
-		public:
-			DummyConnection(EventLoop* eventLoop);
+    class SWIFTEN_API DummyConnection : public Connection, public EventOwner,    public std::enable_shared_from_this<DummyConnection> {
+        public:
+            DummyConnection(EventLoop* eventLoop);
 
-			void listen();
-			void connect(const HostAddressPort&);
+            void listen();
+            void connect(const HostAddressPort&);
 
-			void disconnect() {
-				//assert(false);
-			}
+            void disconnect() {
+                //assert(false);
+            }
 
-			void write(const SafeByteArray& data) {
-				eventLoop->postEvent(boost::ref(onDataWritten), shared_from_this());
-				onDataSent(data);
-			}
+            void write(const SafeByteArray& data) {
+                eventLoop->postEvent(boost::ref(onDataWritten), shared_from_this());
+                onDataSent(data);
+            }
 
-			void receive(const SafeByteArray& data);
+            void receive(const SafeByteArray& data);
 
-			HostAddressPort getLocalAddress() const {
-				return localAddress;
-			}
+            HostAddressPort getLocalAddress() const {
+                return localAddress;
+            }
 
-			HostAddressPort getRemoteAddress() const {
-				return remoteAddress;
-			}
+            HostAddressPort getRemoteAddress() const {
+                return remoteAddress;
+            }
 
-			boost::signal<void (const SafeByteArray&)> onDataSent;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataSent;
 
-			EventLoop* eventLoop;
-			HostAddressPort localAddress;
-			HostAddressPort remoteAddress;
-	};
+            EventLoop* eventLoop;
+            HostAddressPort localAddress;
+            HostAddressPort remoteAddress;
+    };
 }

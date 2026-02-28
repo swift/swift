@@ -1,18 +1,15 @@
 #include <cppunit/Portability.h>
 #include <cppunit/extensions/TypeInfoHelper.h>
-#include <stdlib.h>
-
-#if CPPUNIT_HAVE_RTTI
 
 #include <string>
 
 #if CPPUNIT_HAVE_GCC_ABI_DEMANGLE
+#include <cstdlib>
 #include <cxxabi.h>
 #endif
 
 
 CPPUNIT_NS_BEGIN
-
 
 std::string 
 TypeInfoHelper::getClassName( const std::type_info &info )
@@ -22,10 +19,21 @@ TypeInfoHelper::getClassName( const std::type_info &info )
   int status = 0;
   char* c_name = 0;
 
-  c_name = abi::__cxa_demangle( info.name(), 0, 0, &status );
-  
-  std::string name( c_name );
-  free( c_name );  
+  const char* c_origName = info.name();
+  if(c_origName[0] == '*')
+      ++c_origName;
+  c_name = abi::__cxa_demangle( c_origName, 0, 0, &status ); 
+
+  std::string name;
+  if(c_name)
+  {
+      name = std::string( c_name );
+      free( c_name );  
+  }
+  else
+  {
+      name = std::string( c_origName );
+  }
 
 #else   // CPPUNIT_HAVE_GCC_ABI_DEMANGLE
 
@@ -48,7 +56,4 @@ TypeInfoHelper::getClassName( const std::type_info &info )
   return name;
 }
 
-
 CPPUNIT_NS_END
-
-#endif // CPPUNIT_HAVE_RTTI

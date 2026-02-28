@@ -9,7 +9,7 @@
 #endif
 
 #include <cppunit/TestComposite.h>
-#include <cppunit/portability/CppUnitVector.h>
+#include <vector>
 
 CPPUNIT_NS_BEGIN
 
@@ -56,7 +56,7 @@ public:
    *             TestComposite interface instead.
    * \return Reference on a vector that contains the tests of the suite.
    */
-  const CppUnitVector<Test *> &getTests() const;
+  const std::vector<Test *> &getTests() const;
 
   /*! Destroys all the tests of the suite.
    */
@@ -67,7 +67,7 @@ public:
   Test *doGetChildTestAt( int index ) const;
 
 private:
-  CppUnitVector<Test *> m_tests;
+  std::vector<Test *> m_tests;
 };
 
 

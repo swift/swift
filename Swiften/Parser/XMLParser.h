@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,20 +11,25 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class XMLParserClient;
+    class XMLParserClient;
 
-	class SWIFTEN_API XMLParser {
-		public:
-			XMLParser(XMLParserClient* client);
-			virtual ~XMLParser();
+    class SWIFTEN_API XMLParser {
+        public:
+            XMLParser(XMLParserClient* client, bool allowComments = false);
+            virtual ~XMLParser();
 
-			virtual bool parse(const std::string& data) = 0;
+            virtual bool parse(const std::string& data, bool finalData = false) = 0;
 
-			XMLParserClient* getClient() const {
-				return client_;
-			}
+            XMLParserClient* getClient() const {
+                return client_;
+            }
 
-		private:
-			XMLParserClient* client_;
-	};
+            bool allowsComments() const {
+                return allowComments_;
+            }
+
+        private:
+            XMLParserClient* client_;
+            const bool allowComments_ = false;
+    };
 }

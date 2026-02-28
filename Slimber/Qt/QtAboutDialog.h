@@ -9,6 +9,6 @@
 #include <QDialog>
 
 class QtAboutDialog : public QDialog {
-	public:
-		QtAboutDialog();	
+    public:
+        QtAboutDialog();
 };

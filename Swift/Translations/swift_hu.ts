@@ -454,7 +454,7 @@
     </message>
 </context>
 <context>
-    <name>QApplication</name>
+    <name>QGuiApplication</name>
     <message>
         <source>QT_LAYOUT_DIRECTION</source>
         <comment>Translate this to LTR for left-to-right or RTL for right-to-left languages</comment>

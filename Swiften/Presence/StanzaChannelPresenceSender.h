@@ -10,17 +10,17 @@
 #include <Swiften/Presence/PresenceSender.h>
 
 namespace Swift {
-	class StanzaChannel;
+    class StanzaChannel;
 
-	class SWIFTEN_API StanzaChannelPresenceSender : public PresenceSender {
-		public:
-			StanzaChannelPresenceSender(StanzaChannel*);
+    class SWIFTEN_API StanzaChannelPresenceSender : public PresenceSender {
+        public:
+            StanzaChannelPresenceSender(StanzaChannel*);
 
-			void sendPresence(Presence::ref);
+            void sendPresence(Presence::ref);
 
-			bool isAvailable() const;
+            bool isAvailable() const;
 
-		private:
-			StanzaChannel* channel;
-	};
+        private:
+            StanzaChannel* channel;
+    };
 }

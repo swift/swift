@@ -8,6 +8,6 @@ myenv.UseFlags(env["SWIFTEN_FLAGS"])
 myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
 
 myenv.Program("slimber", [
-		"main.cpp",
-		"DummyMenulet.cpp",
-	])
+        "main.cpp",
+        "DummyMenulet.cpp",
+    ])

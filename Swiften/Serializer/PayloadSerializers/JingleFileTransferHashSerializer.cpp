@@ -5,44 +5,41 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
 
-#include <string>
 #include <map>
+#include <memory>
+#include <string>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Serializer/XML/XMLNode.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
-#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferFileInfoSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLNode.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 namespace Swift {
 
 JingleFileTransferHashSerializer::JingleFileTransferHashSerializer() {
 }
 
-std::string JingleFileTransferHashSerializer::serializePayload(boost::shared_ptr<JingleFileTransferHash> payload) const {
-	// code for version urn:xmpp:jingle:apps:file-transfer:2
-	//XMLElement hash("hash", "urn:xmpp:jingle:apps:file-transfer:info:2", payload->getHash());
+std::string JingleFileTransferHashSerializer::serializePayload(std::shared_ptr<JingleFileTransferHash> payload) const {
+    // code for version urn:xmpp:jingle:apps:file-transfer:2
+    //XMLElement hash("hash", "urn:xmpp:jingle:apps:file-transfer:info:2", payload->getHash());
 
-	// code for version urn:xmpp:jingle:apps:file-transfer:4
-	XMLElement checksum("checksum", "urn:xmpp:jingle:apps:file-transfer:4");
+    // code for version urn:xmpp:jingle:apps:file-transfer:4
+    XMLElement checksum("checksum", "urn:xmpp:jingle:apps:file-transfer:4");
 
-	JingleFileTransferFileInfoSerializer  fileSerializer;
+    JingleFileTransferFileInfoSerializer  fileSerializer;
 
-	boost::shared_ptr<XMLRawTextNode> file = boost::make_shared<XMLRawTextNode>(fileSerializer.serialize(boost::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
+    std::shared_ptr<XMLRawTextNode> file = std::make_shared<XMLRawTextNode>(fileSerializer.serialize(std::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
 
-	checksum.addNode(file);
+    checksum.addNode(file);
 
-	return checksum.serialize();
+    return checksum.serialize();
 }
 
 }

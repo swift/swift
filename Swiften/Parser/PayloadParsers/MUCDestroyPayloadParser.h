@@ -13,8 +13,8 @@
 #include <Swiften/Parser/GenericPayloadTreeParser.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCDestroyPayloadParser : public GenericPayloadTreeParser<MUCDestroyPayload> {
-		public:
-			virtual void handleTree(ParserElement::ref root);
-	};
+    class SWIFTEN_API MUCDestroyPayloadParser : public GenericPayloadTreeParser<MUCDestroyPayload> {
+        public:
+            virtual void handleTree(ParserElement::ref root);
+    };
 }

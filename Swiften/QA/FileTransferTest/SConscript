@@ -3,18 +3,18 @@ import os
 Import("env")
 
 if env["TEST"] :
-	myenv = env.Clone()
-	myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
-	myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
+    myenv = env.Clone()
+    myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
+    myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
 
-	for i in ["SWIFT_FILETRANSFERTEST_JID", "SWIFT_FILETRANSFERTEST_PASS", "SWIFT_FILETRANSFERTEST2_JID", "SWIFT_FILETRANSFERTEST2_PASS"]:
-		if ARGUMENTS.get(i.lower(), False) :
-			myenv["ENV"][i] = ARGUMENTS[i.lower()]
-		elif os.environ.get(i, "") :
-			myenv["ENV"][i] = os.environ[i]
+    for i in ["SWIFT_FILETRANSFERTEST_JID", "SWIFT_FILETRANSFERTEST_PASS", "SWIFT_FILETRANSFERTEST2_JID", "SWIFT_FILETRANSFERTEST2_PASS"]:
+        if ARGUMENTS.get(i.lower(), False) :
+            myenv["ENV"][i] = ARGUMENTS[i.lower()]
+        elif os.environ.get(i, "") :
+            myenv["ENV"][i] = os.environ[i]
 
-	# test in-band transfers, direct SOCKS5 bytestream transfers and proxied SOCKS5 bytestream transfers
-	myenv["ENV"]["SWIFT_FILETRANSFERTEST_CONFIG"] = "1:1|2:2|4:4"
+    # test in-band transfers, direct SOCKS5 bytestream transfers and proxied SOCKS5 bytestream transfers
+    myenv["ENV"]["SWIFT_FILETRANSFERTEST_CONFIG"] = "1:1|2:2|4:4"
 
-	tester = myenv.Program("FileTransferTest", ["FileTransferTest.cpp"])
-	myenv.Test(tester, "system")
+    tester = myenv.Program("FileTransferTest", ["FileTransferTest.cpp"])
+    myenv.Test(tester, "system")

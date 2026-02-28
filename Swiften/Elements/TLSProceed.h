@@ -10,8 +10,8 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API TLSProceed : public ToplevelElement {
-		public:
-			TLSProceed() {}
-	};
+    class SWIFTEN_API TLSProceed : public ToplevelElement {
+        public:
+            TLSProceed() {}
+    };
 }

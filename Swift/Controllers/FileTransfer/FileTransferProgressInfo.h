@@ -4,27 +4,34 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016-2018 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
-#include <boost/cstdint.hpp>
+#include <cstddef>
+
+#include <boost/signals2.hpp>
 
 namespace Swift {
 
 class FileTransferProgressInfo {
 public:
-	FileTransferProgressInfo(boost::uintmax_t completeBytes);
+    FileTransferProgressInfo(size_t completeBytes);
 
 public:
-	void setBytesProcessed(int processedBytes);
+    void setBytesProcessed(size_t processedBytes);
 
-	int getPercentage() const;
-	boost::signal<void (int)> onProgressPercentage;
+    int getPercentage() const;
+    boost::signals2::signal<void (int)> onProgressPercentage;
 
 private:
-	boost::uintmax_t completeBytes;
-	boost::uintmax_t completedBytes;
-	int percentage;
+    size_t completeBytes;
+    size_t completedBytes;
+    int percentage;
 };
 
 }

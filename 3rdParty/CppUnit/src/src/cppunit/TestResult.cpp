@@ -3,6 +3,7 @@
 #include <cppunit/TestListener.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/tools/Algorithm.h>
+#include <cppunit/portability/Stream.h>
 #include <algorithm>
 #include "DefaultProtector.h"
 #include "ProtectorChain.h"
@@ -13,7 +14,8 @@ CPPUNIT_NS_BEGIN
 
 TestResult::TestResult( SynchronizationObject *syncObject )
     : SynchronizedObject( syncObject )
-    , m_protectorChain( new ProtectorChain() )
+    , m_listeners()
+    , m_protectorChain( new ProtectorChain )
     , m_stop( false )
 { 
   m_protectorChain->push( new DefaultProtector() );
@@ -22,6 +24,8 @@ TestResult::TestResult( SynchronizationObject *syncObject )
 
 TestResult::~TestResult()
 {
+  stdCOut().flush();
+  stdCErr().flush();
   delete m_protectorChain;
 }
 

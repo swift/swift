@@ -3,15 +3,15 @@ import os
 Import("env")
 
 if env["TEST"] :
-	myenv = env.Clone()
-	myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
-	myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
+    myenv = env.Clone()
+    myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
+    myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
 
-	for i in ["SWIFT_FILETRANSFERTEST_JID", "SWIFT_FILETRANSFERTEST_PASS", "SWIFT_FILETRANSFERTEST2_JID", "SWIFT_FILETRANSFERTEST2_PASS"]:
-		if ARGUMENTS.get(i.lower(), False) :
-			myenv["ENV"][i] = ARGUMENTS[i.lower()]
-		elif os.environ.get(i, "") :
-			myenv["ENV"][i] = os.environ[i]
+    for i in ["SWIFT_FILETRANSFERTEST_JID", "SWIFT_FILETRANSFERTEST_PASS", "SWIFT_FILETRANSFERTEST2_JID", "SWIFT_FILETRANSFERTEST2_PASS"]:
+        if ARGUMENTS.get(i.lower(), False) :
+            myenv["ENV"][i] = ARGUMENTS[i.lower()]
+        elif os.environ.get(i, "") :
+            myenv["ENV"][i] = os.environ[i]
 
-	tester = myenv.Program("ConcurrentFileTransferTest", ["ConcurrentFileTransferTest.cpp"])
-	myenv.Test(tester, "system")
+    tester = myenv.Program("ConcurrentFileTransferTest", ["ConcurrentFileTransferTest.cpp"])
+    myenv.Test(tester, "system")

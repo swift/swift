@@ -1,56 +1,56 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/StreamStack/TLSLayer.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
 
-#include <Swiften/TLS/TLSContextFactory.h>
 #include <Swiften/TLS/TLSContext.h>
+#include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
 
-TLSLayer::TLSLayer(TLSContextFactory* factory, const TLSOptions& tlsOptions) {
-	context = factory->createTLSContext(tlsOptions);
-	context->onDataForNetwork.connect(boost::bind(&TLSLayer::writeDataToChildLayer, this, _1));
-	context->onDataForApplication.connect(boost::bind(&TLSLayer::writeDataToParentLayer, this, _1));
-	context->onConnected.connect(onConnected);
-	context->onError.connect(onError);
+TLSLayer::TLSLayer(std::unique_ptr<TLSContext> tlsContext) : context_(std::move(tlsContext)) {
+    context_->onDataForNetwork.connect(boost::bind(&TLSLayer::writeDataToChildLayer, this, _1));
+    context_->onDataForApplication.connect(boost::bind(&TLSLayer::writeDataToParentLayer, this, _1));
+    context_->onConnected.connect(onConnected);
+    context_->onError.connect(onError);
 }
 
 TLSLayer::~TLSLayer() {
-	delete context;
 }
 
 void TLSLayer::connect() {
-	context->connect();
+    context_->connect();
 }
 
 void TLSLayer::writeData(const SafeByteArray& data) {
-	context->handleDataFromApplication(data);
+    context_->handleDataFromApplication(data);
 }
 
 void TLSLayer::handleDataRead(const SafeByteArray& data) {
-	context->handleDataFromNetwork(data);
+    context_->handleDataFromNetwork(data);
 }
 
 bool TLSLayer::setClientCertificate(CertificateWithKey::ref certificate) {
-	return context->setClientCertificate(certificate);
+    return context_->setClientCertificate(certificate);
 }
 
 Certificate::ref TLSLayer::getPeerCertificate() const {
-	return context->getPeerCertificate();
+    return context_->getPeerCertificate();
 }
 
 std::vector<Certificate::ref> TLSLayer::getPeerCertificateChain() const {
-	return context->getPeerCertificateChain();
+    return context_->getPeerCertificateChain();
 }
 
-boost::shared_ptr<CertificateVerificationError> TLSLayer::getPeerCertificateVerificationError() const {
-	return context->getPeerCertificateVerificationError();
+std::shared_ptr<CertificateVerificationError> TLSLayer::getPeerCertificateVerificationError() const {
+    return context_->getPeerCertificateVerificationError();
 }
 
 }

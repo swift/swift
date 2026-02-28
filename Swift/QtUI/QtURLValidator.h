@@ -7,11 +7,11 @@
 #include <QValidator>
 
 namespace Swift {
-	class QtURLValidator : public QValidator {
-		Q_OBJECT
-		public:
-			QtURLValidator(QObject* parent);
-			virtual QValidator::State validate(QString& input, int& pos) const;
-	};
+    class QtURLValidator : public QValidator {
+        Q_OBJECT
+        public:
+            QtURLValidator(QObject* parent);
+            virtual QValidator::State validate(QString& input, int& pos) const;
+    };
 }
 

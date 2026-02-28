@@ -12,17 +12,17 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API Thread : public Payload {
-		public:
-			Thread(const std::string& text = "", const std::string& parent = "");
-			virtual ~Thread();
-			void setText(const std::string& text);
-			const std::string& getText() const;
-			void setParent(const std::string& parent);
-			const std::string& getParent() const;
+    class SWIFTEN_API Thread : public Payload {
+        public:
+            Thread(const std::string& text = "", const std::string& parent = "");
+            virtual ~Thread();
+            void setText(const std::string& text);
+            const std::string& getText() const;
+            void setParent(const std::string& parent);
+            const std::string& getParent() const;
 
-		private:
-			std::string text_;
-			std::string parent_;
-	};
+        private:
+            std::string text_;
+            std::string parent_;
+    };
 }

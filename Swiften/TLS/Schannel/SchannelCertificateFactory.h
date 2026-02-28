@@ -10,10 +10,10 @@
 #include <Swiften/TLS/Schannel/SchannelCertificate.h>
 
 namespace Swift {
-	class SchannelCertificateFactory : public CertificateFactory {
-		public:
-			virtual Certificate* createCertificateFromDER(const ByteArray& der) {
-				return new SchannelCertificate(der);
-			}
-	};
+    class SchannelCertificateFactory : public CertificateFactory {
+        public:
+            virtual Certificate* createCertificateFromDER(const ByteArray& der) {
+                return new SchannelCertificate(der);
+            }
+    };
 }

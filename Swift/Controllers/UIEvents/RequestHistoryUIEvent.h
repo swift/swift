@@ -9,6 +9,6 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class RequestHistoryUIEvent : public UIEvent {
-	};
+    class RequestHistoryUIEvent : public UIEvent {
+    };
 }

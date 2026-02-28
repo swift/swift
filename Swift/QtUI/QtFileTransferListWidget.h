@@ -27,33 +27,33 @@ class FileTransferOverview;
 class QtFileTransferListItemModel;
 
 class QtFileTransferListWidget : public QtTabbable, public FileTransferListWidget {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	QtFileTransferListWidget();
-	virtual ~QtFileTransferListWidget();
+    QtFileTransferListWidget();
+    virtual ~QtFileTransferListWidget();
 
-	void show();
-	void activate();
+    void show();
+    void activate();
 
-	void setFileTransferOverview(FileTransferOverview *);
+    void setFileTransferOverview(FileTransferOverview *);
 
-	virtual std::string getID() const;
+    virtual std::string getID() const;
 
 private:
-	virtual void closeEvent(QCloseEvent* event);
-	virtual void showEvent(QShowEvent* event);
-	void handleFileTransferListChanged();
+    virtual void closeEvent(QCloseEvent* event);
+    virtual void showEvent(QShowEvent* event);
+    void handleFileTransferListChanged();
 
 private slots:
-	void clearInactiveTransfers();
+    void clearInactiveTransfers();
 
 private:
-	QTreeView* treeView;
+    QTreeView* treeView;
 
-	QtFileTransferListItemModel* itemModel;
-	FileTransferOverview* fileTransferOverview;
-	QPushButton* clearFinished;
+    QtFileTransferListItemModel* itemModel;
+    FileTransferOverview* fileTransferOverview;
+    QPushButton* clearFinished;
 };
 
 }

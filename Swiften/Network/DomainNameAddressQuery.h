@@ -1,27 +1,28 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <memory>
+
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Network/DomainNameResolveError.h>
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class DomainNameAddressQuery {
-		public:
-			typedef boost::shared_ptr<DomainNameAddressQuery> ref;
+    class DomainNameAddressQuery {
+        public:
+            typedef std::shared_ptr<DomainNameAddressQuery> ref;
 
-			virtual ~DomainNameAddressQuery();
+            virtual ~DomainNameAddressQuery();
 
-			virtual void run() = 0;
+            virtual void run() = 0;
 
-			boost::signal<void (const std::vector<HostAddress>&, boost::optional<DomainNameResolveError>)> onResult;
-	};
+            boost::signals2::signal<void (const std::vector<HostAddress>&, boost::optional<DomainNameResolveError>)> onResult;
+    };
 }

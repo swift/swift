@@ -1,36 +1,37 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/Payload.h>
-#include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Elements/MUCItem.h>
+#include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCAdminPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<MUCAdminPayload> ref;
+    class SWIFTEN_API MUCAdminPayload : public Payload {
+        public:
+            typedef std::shared_ptr<MUCAdminPayload> ref;
 
 
-			MUCAdminPayload() {
-			}
+            MUCAdminPayload() {
+            }
 
-			void addItem(const MUCItem& item) {items_.push_back(item);}
+            void addItem(const MUCItem& item) {items_.push_back(item);}
 
-			const std::vector<MUCItem>& getItems() const {return items_;}
+            const std::vector<MUCItem>& getItems() const {return items_;}
 
-		private:
-			std::vector<MUCItem> items_;
-	};
+        private:
+            std::vector<MUCItem> items_;
+    };
 }

@@ -21,11 +21,20 @@ public:
   }
 
 private:
+  // disable copying
+  ProtectFunctor( const ProtectFunctor& );
+  // disable copying
+  ProtectFunctor& operator=( const ProtectFunctor& );
+
   Protector *m_protector;
   const Functor &m_functor;
   const ProtectorContext &m_context;
 };
 
+ProtectorChain::ProtectorChain()
+    : m_protectors(0)
+{
+}
 
 ProtectorChain::~ProtectorChain()
 {

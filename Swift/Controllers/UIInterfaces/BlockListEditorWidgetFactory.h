@@ -8,13 +8,13 @@
 
 namespace Swift {
 
-	class BlockListEditorWidget;
+    class BlockListEditorWidget;
 
-	class BlockListEditorWidgetFactory {
-		public:
-			virtual ~BlockListEditorWidgetFactory() {}
+    class BlockListEditorWidgetFactory {
+        public:
+            virtual ~BlockListEditorWidgetFactory() {}
 
-			virtual BlockListEditorWidget* createBlockListEditorWidget() = 0;
-	};
+            virtual BlockListEditorWidget* createBlockListEditorWidget() = 0;
+    };
 
 }

@@ -1,31 +1,25 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
+#include <memory>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/UserTune.h>
-#include <boost/shared_ptr.hpp>
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API UserTuneSerializer : public GenericPayloadSerializer<UserTune> {
-		public:
-			UserTuneSerializer(PayloadSerializerCollection* serializers);
-			virtual ~UserTuneSerializer();
+    class SWIFTEN_API UserTuneSerializer : public GenericPayloadSerializer<UserTune> {
+        public:
+            UserTuneSerializer(PayloadSerializerCollection* serializers);
+            virtual ~UserTuneSerializer() override;
 
-			virtual std::string serializePayload(boost::shared_ptr<UserTune>) const SWIFTEN_OVERRIDE;
-
-		private:
-			
-
-		private:
-			PayloadSerializerCollection* serializers;
-	};
+            virtual std::string serializePayload(std::shared_ptr<UserTune>) const override;
+    };
 }

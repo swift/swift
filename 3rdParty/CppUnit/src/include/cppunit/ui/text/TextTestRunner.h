@@ -86,6 +86,12 @@ protected:
   virtual void wait( bool doWait );
   virtual void printResult( bool doPrintResult );
 
+private:
+  // prohibit copying
+  TextTestRunner( const TextTestRunner& );
+  // prohibit copying
+  TextTestRunner& operator=( const TextTestRunner& );
+
   TestResultCollector *m_result;
   TestResult *m_eventManager;
   Outputter *m_outputter;

@@ -10,11 +10,11 @@
 #include <Swiften/TLS/SecureTransport/SecureTransportCertificate.h>
 
 namespace Swift {
-	
+
 class SecureTransportCertificateFactory : public CertificateFactory {
-	public:
-		virtual Certificate* createCertificateFromDER(const ByteArray& der) {
-			return new SecureTransportCertificate(der);
-		}
-	};
+    public:
+        virtual Certificate* createCertificateFromDER(const ByteArray& der) {
+            return new SecureTransportCertificate(der);
+        }
+    };
 }

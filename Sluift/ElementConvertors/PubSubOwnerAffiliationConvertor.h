@@ -1,29 +1,25 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-
-#include <Sluift/GenericLuaElementConvertor.h>
 #include <Swiften/Elements/PubSubOwnerAffiliation.h>
 
+#include <Sluift/GenericLuaElementConvertor.h>
+
 namespace Swift {
-	class LuaElementConvertors;
+    class LuaElementConvertors;
 
-	class PubSubOwnerAffiliationConvertor : public GenericLuaElementConvertor<PubSubOwnerAffiliation> {
-		public:
-			PubSubOwnerAffiliationConvertor(LuaElementConvertors* convertors);
-			virtual ~PubSubOwnerAffiliationConvertor();
+    class PubSubOwnerAffiliationConvertor : public GenericLuaElementConvertor<PubSubOwnerAffiliation> {
+        public:
+            PubSubOwnerAffiliationConvertor();
+            virtual ~PubSubOwnerAffiliationConvertor() override;
 
-			virtual boost::shared_ptr<PubSubOwnerAffiliation> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<PubSubOwnerAffiliation>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
-
-		private:
-			LuaElementConvertors* convertors;
-	};
+            virtual std::shared_ptr<PubSubOwnerAffiliation> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubOwnerAffiliation>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
+    };
 }

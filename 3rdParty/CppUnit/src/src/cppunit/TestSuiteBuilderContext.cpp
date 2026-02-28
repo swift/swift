@@ -13,6 +13,7 @@ TestSuiteBuilderContextBase::TestSuiteBuilderContextBase(
   : m_suite( suite )
   , m_namer( namer )
   , m_factory( factory )
+  , m_properties()
 {
 }
 

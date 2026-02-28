@@ -1,48 +1,47 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <map>
-
-#include <Swiften/Network/ConnectionServer.h>
+#include <memory>
 #include <string>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Network/ConnectionServer.h>
 
 namespace Swift {
-	class SOCKS5BytestreamServerSession;
-	class CryptoProvider;
+    class SOCKS5BytestreamServerSession;
 
-	class SWIFTEN_API SOCKS5BytestreamServer {
-		public:
-			SOCKS5BytestreamServer(
-					boost::shared_ptr<ConnectionServer> connectionServer, 
-					SOCKS5BytestreamRegistry* registry);
+    class SWIFTEN_API SOCKS5BytestreamServer {
+        public:
+            SOCKS5BytestreamServer(
+                    std::shared_ptr<ConnectionServer> connectionServer,
+                    SOCKS5BytestreamRegistry* registry);
 
-			HostAddressPort getAddressPort() const;
+            HostAddressPort getAddressPort() const;
 
-			void start();
-			void stop();
+            void start();
+            void stop();
 
-			std::vector< boost::shared_ptr<SOCKS5BytestreamServerSession> > getSessions(const std::string& id) const;
+            std::vector< std::shared_ptr<SOCKS5BytestreamServerSession> > getSessions(const std::string& id) const;
 
-		private:
-			void handleNewConnection(boost::shared_ptr<Connection> connection);
-			void handleSessionFinished(boost::shared_ptr<SOCKS5BytestreamServerSession>);
+        private:
+            void handleNewConnection(std::shared_ptr<Connection> connection);
+            void handleSessionFinished(std::shared_ptr<SOCKS5BytestreamServerSession>);
 
-		private:
-			friend class SOCKS5BytestreamServerSession;
+        private:
+            friend class SOCKS5BytestreamServerSession;
 
-			boost::shared_ptr<ConnectionServer> connectionServer;
-			SOCKS5BytestreamRegistry* registry;
-			std::vector<boost::shared_ptr<SOCKS5BytestreamServerSession> > sessions;
-	};
+            std::shared_ptr<ConnectionServer> connectionServer;
+            SOCKS5BytestreamRegistry* registry;
+            std::vector<std::shared_ptr<SOCKS5BytestreamServerSession> > sessions;
+    };
 }
 

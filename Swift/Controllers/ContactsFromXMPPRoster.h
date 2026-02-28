@@ -21,15 +21,15 @@ class AvatarManager;
 class XMPPRoster;
 
 class ContactsFromXMPPRoster : public ContactProvider {
-	public:
-		ContactsFromXMPPRoster(XMPPRoster* roster, AvatarManager* avatarManager, PresenceOracle* presenceOracle);
-		virtual ~ContactsFromXMPPRoster();
+    public:
+        ContactsFromXMPPRoster(XMPPRoster* roster, AvatarManager* avatarManager, PresenceOracle* presenceOracle);
+        virtual ~ContactsFromXMPPRoster();
 
-		virtual std::vector<Contact::ref> getContacts(bool withMUCNicks);
-	private:
-		XMPPRoster* roster_;
-		AvatarManager* avatarManager_;
-		PresenceOracle* presenceOracle_;
+        virtual std::vector<Contact::ref> getContacts(bool withMUCNicks);
+    private:
+        XMPPRoster* roster_;
+        AvatarManager* avatarManager_;
+        PresenceOracle* presenceOracle_;
 };
 
 }

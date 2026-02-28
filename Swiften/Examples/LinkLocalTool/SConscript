@@ -5,5 +5,5 @@ myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
 myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
 
 linkLocalTool = myenv.Program("LinkLocalTool", [
-		"main.cpp"
-	])
+        "main.cpp"
+    ])

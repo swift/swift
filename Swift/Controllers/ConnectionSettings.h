@@ -9,32 +9,32 @@
 #include <string>
 
 struct ConnectionSettings {
-		enum Method {
-			Automatic,
-			Manual,
-			BOSH
-		};
-		enum ProxyType {
-			None,
-			System,
-			SOCKS5,
-			HTTPConnect
-		};
+        enum Method {
+            Automatic,
+            Manual,
+            BOSH
+        };
+        enum ProxyType {
+            None,
+            System,
+            SOCKS5,
+            HTTPConnect
+        };
 
-		Method method;
-		struct {
-				bool useManualServer;
-				std::string manualServerHostname;
-				int manualServerPort;
-				ProxyType proxyType;
-				bool useManualProxy;
-				std::string manualProxyHostname;
-				int manualProxyPort;
-		} manualSettings;
-		struct {
-				std::string boshURI;
-				bool useManualProxy;
-				std::string manualProxyHostname;
-				int manualProxyPort;
-		} boshSettings;
+        Method method;
+        struct {
+                bool useManualServer;
+                std::string manualServerHostname;
+                int manualServerPort;
+                ProxyType proxyType;
+                bool useManualProxy;
+                std::string manualProxyHostname;
+                int manualProxyPort;
+        } manualSettings;
+        struct {
+                std::string boshURI;
+                bool useManualProxy;
+                std::string manualProxyHostname;
+                int manualProxyPort;
+        } boshSettings;
 };

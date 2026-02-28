@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,10 +10,12 @@
 #include <Swiften/TLS/OpenSSL/OpenSSLCertificate.h>
 
 namespace Swift {
-	class OpenSSLCertificateFactory : public CertificateFactory {
-		public:
-			virtual Certificate* createCertificateFromDER(const ByteArray& der) {
-				return new OpenSSLCertificate(der);
-			}
-	};
+    class OpenSSLCertificateFactory : public CertificateFactory {
+        public:
+            OpenSSLCertificateFactory();
+            virtual ~OpenSSLCertificateFactory() override final;
+
+            virtual Certificate* createCertificateFromDER(const ByteArray& der) override final;
+            virtual std::vector<std::shared_ptr<Certificate>> createCertificateChain(const ByteArray& data) override final;
+    };
 }

@@ -16,12 +16,12 @@ class ContactRosterItem;
 class QtScaledAvatarCache;
 
 class RosterTooltip {
-	public:
-		static QString buildDetailedTooltip(ContactRosterItem* contact, QtScaledAvatarCache* cachedImageScaler);
+    public:
+        static QString buildDetailedTooltip(ContactRosterItem* contact, QtScaledAvatarCache* cachedImageScaler);
 
-	private:
-		static QString buildVCardSummary(VCard::ref vcard);
-		static QString buildVCardField(bool preferred, const QString& name, const QString& content);
+    private:
+        static QString buildVCardSummary(VCard::ref vcard);
+        static QString buildVCardField(bool preferred, const QString& name, const QString& content);
 };
 
 }

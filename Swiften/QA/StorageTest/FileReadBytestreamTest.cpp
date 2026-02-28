@@ -15,61 +15,61 @@
 using namespace Swift;
 
 class FileReadBytestreamTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(FileReadBytestreamTest);
-		CPPUNIT_TEST(testRead);
-		CPPUNIT_TEST(testRead_Twice);
-		CPPUNIT_TEST(testIsFinished_NotFinished);
-		CPPUNIT_TEST(testIsFinished_IsFinished);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(FileReadBytestreamTest);
+        CPPUNIT_TEST(testRead);
+        CPPUNIT_TEST(testRead_Twice);
+        CPPUNIT_TEST(testIsFinished_NotFinished);
+        CPPUNIT_TEST(testIsFinished_IsFinished);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void setUp() {
-			pathProvider = new PlatformApplicationPathProvider("FileReadBytestreamTest");
-		}
+    public:
+        void setUp() {
+            pathProvider = new PlatformApplicationPathProvider("FileReadBytestreamTest");
+        }
 
-		void tearDown() {
-			delete pathProvider;
-		}
+        void tearDown() {
+            delete pathProvider;
+        }
 
-		void testRead() {
-			boost::shared_ptr<FileReadBytestream> testling(createTestling());
+        void testRead() {
+            std::shared_ptr<FileReadBytestream> testling(createTestling());
 
-			boost::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
+            std::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
 
-			CPPUNIT_ASSERT(createByteArray("/*\n * Copy") == *result.get());
-		}
+            CPPUNIT_ASSERT(createByteArray("/*\n * Copy") == *result.get());
+        }
 
-		void testRead_Twice() {
-			boost::shared_ptr<FileReadBytestream> testling(createTestling());
+        void testRead_Twice() {
+            std::shared_ptr<FileReadBytestream> testling(createTestling());
 
-			testling->read(10);
-			boost::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
+            testling->read(10);
+            std::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
 
-			CPPUNIT_ASSERT_EQUAL(std::string("right (c) "), byteArrayToString(*result));
-		}
+            CPPUNIT_ASSERT_EQUAL(std::string("right (c) "), byteArrayToString(*result));
+        }
 
-		void testIsFinished_NotFinished() {
-			boost::shared_ptr<FileReadBytestream> testling(createTestling());
+        void testIsFinished_NotFinished() {
+            std::shared_ptr<FileReadBytestream> testling(createTestling());
 
-			testling->read(10);
+            testling->read(10);
 
-			CPPUNIT_ASSERT(!testling->isFinished());
-		}
+            CPPUNIT_ASSERT(!testling->isFinished());
+        }
 
-		void testIsFinished_IsFinished() {
-			boost::shared_ptr<FileReadBytestream> testling(createTestling());
+        void testIsFinished_IsFinished() {
+            std::shared_ptr<FileReadBytestream> testling(createTestling());
 
-			testling->read(4096);
+            testling->read(4096);
 
-			CPPUNIT_ASSERT(testling->isFinished());
-		}
+            CPPUNIT_ASSERT(testling->isFinished());
+        }
 
-	private:
-		FileReadBytestream* createTestling() {
-			return new FileReadBytestream(pathProvider->getExecutableDir() / "FileReadBytestreamTest.cpp");
-		}
+    private:
+        FileReadBytestream* createTestling() {
+            return new FileReadBytestream(pathProvider->getExecutableDir() / "FileReadBytestreamTest.cpp");
+        }
 
-		PlatformApplicationPathProvider* pathProvider;
+        PlatformApplicationPathProvider* pathProvider;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(FileReadBytestreamTest);

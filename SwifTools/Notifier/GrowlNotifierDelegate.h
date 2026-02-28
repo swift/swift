@@ -7,13 +7,13 @@
 #import <Growl/Growl.h>
 
 namespace Swift {
-	class GrowlNotifier;
+    class GrowlNotifier;
 }
 
 @interface GrowlNotifierDelegate : NSObject<GrowlApplicationBridgeDelegate> {
-	Swift::GrowlNotifier* notifier;
-	NSString* name;
-	NSDictionary* registrationDictionary;
+    Swift::GrowlNotifier* notifier;
+    NSString* name;
+    NSDictionary* registrationDictionary;
 }
 
 @property (nonatomic, retain) NSDictionary* registrationDictionary;

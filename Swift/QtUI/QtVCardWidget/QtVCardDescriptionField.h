@@ -4,39 +4,45 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#pragma once
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
-#include <Swiften/Elements/VCard.h>
+#pragma once
 
 #include <QPlainTextEdit>
 
-#include "QtVCardFieldInfo.h"
-#include "QtVCardGeneralField.h"
+#include <Swiften/Elements/VCard.h>
+
+#include <Swift/QtUI/QtVCardWidget/QtVCardFieldInfo.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
 
 namespace Swift {
 
 class QtVCardDescriptionField : public QtVCardGeneralField {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO("Description", 1, QtVCardDescriptionField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("Description"), 1, QtVCardDescriptionField)
 
-		QtVCardDescriptionField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardDescriptionField();
+        QtVCardDescriptionField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
+        virtual ~QtVCardDescriptionField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setDescription(const std::string& description);
-		std::string getDescription() const;
+        void setDescription(const std::string& description);
+        std::string getDescription() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QPlainTextEdit* descriptionPlainTextEdit;
+    private:
+        QPlainTextEdit* descriptionPlainTextEdit;
 };
 
 }

@@ -11,17 +11,17 @@
 namespace Swift {
 
 Component::Component(const JID& jid, const std::string& secret, NetworkFactories* networkFactories) : CoreComponent(jid, secret, networkFactories) {
-	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());
-	softwareVersionResponder->start();
+    softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());
+    softwareVersionResponder->start();
 }
 
 Component::~Component() {
-	softwareVersionResponder->stop();
-	delete softwareVersionResponder;
+    softwareVersionResponder->stop();
+    delete softwareVersionResponder;
 }
 
 void Component::setSoftwareVersion(const std::string& name, const std::string& version) {
-	softwareVersionResponder->setVersion(name, version);
+    softwareVersionResponder->setVersion(name, version);
 }
 
 }

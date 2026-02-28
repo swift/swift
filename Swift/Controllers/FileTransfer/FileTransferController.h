@@ -5,17 +5,17 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/cstdint.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/FileTransfer/FileReadBytestream.h>
 #include <Swiften/FileTransfer/FileTransfer.h>
@@ -32,49 +32,49 @@ class ChatWindow;
 
 class FileTransferController {
 public:
-	/**
-	 * For outgoing file transfers. It'll create a file transfer via FileTransferManager as soon as the descriptive information is available.
-	 */
-	FileTransferController(const JID&, const std::string&, FileTransferManager*);
+    /**
+     * For outgoing file transfers. It'll create a file transfer via FileTransferManager as soon as the descriptive information is available.
+     */
+    FileTransferController(const JID&, const std::string&, FileTransferManager*);
 
-	/**
-	 * For incoming file transfers.
-	 */
-	FileTransferController(IncomingFileTransfer::ref transfer);
-	~FileTransferController();
+    /**
+     * For incoming file transfers.
+     */
+    FileTransferController(IncomingFileTransfer::ref transfer);
+    ~FileTransferController();
 
-	std::string setChatWindow(ChatWindow*, std::string nickname);
-	void setReceipient(const JID& otherParty);
+    std::string setChatWindow(ChatWindow*, const std::string& nickname, const std::string& avatarPath);
+    void setReceipient(const JID& otherParty);
 
-	void start(std::string& description);
-	void accept(std::string& file);
-	void cancel();
+    void start(std::string& description);
+    void accept(std::string& file);
+    void cancel();
 
-	const JID &getOtherParty() const;
-	bool isIncoming() const;
-	FileTransfer::State getState() const;
-	int getProgress() const;
-	boost::uintmax_t getSize() const;
+    const JID &getOtherParty() const;
+    bool isIncoming() const;
+    FileTransfer::State getState() const;
+    int getProgress() const;
+    boost::uintmax_t getSize() const;
 
-	boost::signal<void ()> onStateChanged;
-	boost::signal<void ()> onProgressChange;
-
-private:
-	void handleFileTransferStateChange(FileTransfer::State);
-	void handleProgressPercentageChange(int percentage);
+    boost::signals2::signal<void ()> onStateChanged;
+    boost::signals2::signal<void ()> onProgressChange;
 
 private:
-	bool sending;
-	JID otherParty;
-	std::string filename;
-	FileTransfer::ref transfer;
-	boost::shared_ptr<FileReadBytestream> fileReadStream;
-	boost::shared_ptr<FileWriteBytestream> fileWriteStream;
-	FileTransferManager* ftManager;
-	FileTransferProgressInfo* ftProgressInfo;
-	ChatWindow* chatWindow;
-	std::string uiID;
-	FileTransfer::State currentState;
+    void handleFileTransferStateChange(FileTransfer::State);
+    void handleProgressPercentageChange(int percentage);
+
+private:
+    bool sending;
+    JID otherParty;
+    std::string filename;
+    FileTransfer::ref transfer;
+    std::shared_ptr<FileReadBytestream> fileReadStream;
+    std::shared_ptr<FileWriteBytestream> fileWriteStream;
+    FileTransferManager* ftManager;
+    FileTransferProgressInfo* ftProgressInfo;
+    ChatWindow* chatWindow;
+    std::string uiID;
+    FileTransfer::State currentState;
 };
 
 }

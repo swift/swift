@@ -1,29 +1,28 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-
-#include <Sluift/GenericLuaElementConvertor.h>
 #include <Swiften/Elements/PubSubItems.h>
 
+#include <Sluift/GenericLuaElementConvertor.h>
+
 namespace Swift {
-	class LuaElementConvertors;
+    class LuaElementConvertors;
 
-	class PubSubItemsConvertor : public GenericLuaElementConvertor<PubSubItems> {
-		public:
-			PubSubItemsConvertor(LuaElementConvertors* convertors);
-			virtual ~PubSubItemsConvertor();
+    class PubSubItemsConvertor : public GenericLuaElementConvertor<PubSubItems> {
+        public:
+            PubSubItemsConvertor(LuaElementConvertors* convertors);
+            virtual ~PubSubItemsConvertor() override;
 
-			virtual boost::shared_ptr<PubSubItems> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<PubSubItems>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<PubSubItems> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubItems>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
 
-		private:
-			LuaElementConvertors* convertors;
-	};
+        private:
+            LuaElementConvertors* convertors;
+    };
 }

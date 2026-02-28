@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,15 +7,15 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Parser/GenericStanzaParser.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Parser/GenericStanzaParser.h>
 
 namespace Swift {
-	class SWIFTEN_API MessageParser : public GenericStanzaParser<Message> {
-		public:
-			MessageParser(PayloadParserFactoryCollection* factories);
+    class SWIFTEN_API MessageParser : public GenericStanzaParser<Message> {
+        public:
+            MessageParser(PayloadParserFactoryCollection* factories);
 
-		private:
-			virtual void handleStanzaAttributes(const AttributeMap&);
-	};
+        private:
+            virtual void handleStanzaAttributes(const AttributeMap&);
+    };
 }

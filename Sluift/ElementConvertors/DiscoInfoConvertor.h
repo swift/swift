@@ -1,24 +1,28 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-
-#include <Sluift/GenericLuaElementConvertor.h>
 #include <Swiften/Elements/DiscoInfo.h>
 
-namespace Swift {
-	class DiscoInfoConvertor : public GenericLuaElementConvertor<DiscoInfo> {
-		public:
-			DiscoInfoConvertor();
-			virtual ~DiscoInfoConvertor();
+#include <Sluift/GenericLuaElementConvertor.h>
 
-			virtual boost::shared_ptr<DiscoInfo> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<DiscoInfo>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
-	};
+namespace Swift {
+    class LuaElementConvertors;
+
+    class DiscoInfoConvertor : public GenericLuaElementConvertor<DiscoInfo> {
+        public:
+            DiscoInfoConvertor(LuaElementConvertors* convertors);
+            virtual ~DiscoInfoConvertor() override;
+
+            virtual std::shared_ptr<DiscoInfo> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<DiscoInfo>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
+
+        private:
+            LuaElementConvertors* convertors;
+    };
 }

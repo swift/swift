@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,20 +9,18 @@
 #include <boost/asio/io_service.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/BoostConnection.h>
+#include <Swiften/Network/ConnectionFactory.h>
 
 namespace Swift {
-	class BoostConnection;
+    class SWIFTEN_API BoostConnectionFactory : public ConnectionFactory {
+        public:
+            BoostConnectionFactory(std::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
 
-	class SWIFTEN_API BoostConnectionFactory : public ConnectionFactory {
-		public:
-			BoostConnectionFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
+            virtual std::shared_ptr<Connection> createConnection();
 
-			virtual boost::shared_ptr<Connection> createConnection();
-
-		private:
-			boost::shared_ptr<boost::asio::io_service> ioService;
-			EventLoop* eventLoop;
-	};
+        private:
+            std::shared_ptr<boost::asio::io_service> ioService;
+            EventLoop* eventLoop;
+    };
 }

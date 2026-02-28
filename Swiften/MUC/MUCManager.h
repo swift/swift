@@ -10,21 +10,21 @@
 #include <Swiften/MUC/MUC.h>
 
 namespace Swift {
-	class IQRouter;
-	class StanzaChannel;
-	class DirectedPresenceSender;
-	class MUCRegistry;
+    class IQRouter;
+    class StanzaChannel;
+    class DirectedPresenceSender;
+    class MUCRegistry;
 
-	class SWIFTEN_API MUCManager {
-		public:
-			MUCManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, MUCRegistry* mucRegistry);
+    class SWIFTEN_API MUCManager {
+        public:
+            MUCManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, MUCRegistry* mucRegistry);
 
-			MUC::ref createMUC(const JID&);
+            MUC::ref createMUC(const JID&);
 
-		private:
-			StanzaChannel* stanzaChannel;
-			IQRouter* iqRouter;
-			DirectedPresenceSender* presenceSender;
-			MUCRegistry* mucRegistry;
-	};
+        private:
+            StanzaChannel* stanzaChannel;
+            IQRouter* iqRouter;
+            DirectedPresenceSender* presenceSender;
+            MUCRegistry* mucRegistry;
+    };
 }

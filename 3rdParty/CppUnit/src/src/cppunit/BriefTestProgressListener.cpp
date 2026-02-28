@@ -37,7 +37,7 @@ BriefTestProgressListener::addFailure( const TestFailure &failure )
 
 
 void 
-BriefTestProgressListener::endTest( Test *)
+BriefTestProgressListener::endTest( Test * )
 {
   if ( !m_lastTestFailed )
     stdCOut()  <<  " : OK";

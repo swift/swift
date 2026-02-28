@@ -9,9 +9,9 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class CryptoProvider;
+    class CryptoProvider;
 
-	namespace PlatformCryptoProvider {
-		SWIFTEN_API CryptoProvider* create();
-	}
+    namespace PlatformCryptoProvider {
+        SWIFTEN_API CryptoProvider* create();
+    }
 }

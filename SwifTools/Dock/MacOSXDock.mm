@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <SwifTools/Dock/MacOSXDock.h>
 
+#include <boost/lexical_cast.hpp>
+
 #include <AppKit/AppKit.h>
 #include <Cocoa/Cocoa.h>
-#include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/String.h>
 
@@ -17,12 +18,12 @@ namespace Swift {
 MacOSXDock::MacOSXDock(CocoaApplication*) {
 }
 
-void MacOSXDock::setNumberOfPendingMessages(int i) {
-	std::string label(i > 0 ? boost::lexical_cast<std::string>(i) : "");
-	NSString *labelString = [[NSString alloc] initWithUTF8String: label.c_str()];
-	[[NSApp dockTile] setBadgeLabel: labelString];
-	[labelString release];
-	[NSApp requestUserAttention: NSInformationalRequest];
+void MacOSXDock::setNumberOfPendingMessages(size_t i) {
+    std::string label(i > 0 ? boost::lexical_cast<std::string>(i) : "");
+    NSString *labelString = [[NSString alloc] initWithUTF8String: label.c_str()];
+    [[NSApp dockTile] setBadgeLabel: labelString];
+    [labelString release];
+    [NSApp requestUserAttention: NSInformationalRequest];
 }
 
 }

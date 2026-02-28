@@ -1,6 +1,0 @@
-To cause scons to search for dependencies instead of using cached results, add force-configure=1 to the commandline:
-scons force-configure=1
-
-Swift is usually built with Qt5. If you want to build it against Qt4, add the line
-qt5 = 0
-to your config.py. However, Qt4 support is no longer actively maintained.

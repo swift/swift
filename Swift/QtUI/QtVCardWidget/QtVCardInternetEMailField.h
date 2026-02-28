@@ -4,40 +4,46 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Elements/VCard.h>
 
-#include "QtResizableLineEdit.h"
-#include "QtVCardFieldInfo.h"
-#include "QtVCardGeneralField.h"
-#include "QtVCardHomeWork.h"
+#include <Swift/QtUI/QtVCardWidget/QtResizableLineEdit.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardFieldInfo.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardHomeWork.h>
 
 namespace Swift {
 
 class QtVCardInternetEMailField : public QtVCardGeneralField, public QtVCardHomeWork {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO("E-Mail", UNLIMITED_INSTANCES, QtVCardInternetEMailField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("E-Mail"), UNLIMITED_INSTANCES, QtVCardInternetEMailField)
 
-		QtVCardInternetEMailField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardInternetEMailField();
+        QtVCardInternetEMailField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
+        virtual ~QtVCardInternetEMailField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setInternetEMailAddress(const VCard::EMailAddress& address);
-		VCard::EMailAddress getInternetEMailAddress() const;
+        void setInternetEMailAddress(const VCard::EMailAddress& address);
+        VCard::EMailAddress getInternetEMailAddress() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QtResizableLineEdit* emailLineEdit;
-		QLabel* emailLabel;
+    private:
+        QtResizableLineEdit* emailLineEdit;
+        QLabel* emailLabel;
 };
 
 }

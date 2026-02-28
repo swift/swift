@@ -8,19 +8,19 @@
 
 namespace Swift {
 
-	CarbonsDisableParser::CarbonsDisableParser() : GenericPayloadParser<CarbonsDisable>() {
-	}
+    CarbonsDisableParser::CarbonsDisableParser() : GenericPayloadParser<CarbonsDisable>() {
+    }
 
-	CarbonsDisableParser::~CarbonsDisableParser() {
-	}
+    CarbonsDisableParser::~CarbonsDisableParser() {
+    }
 
-	void CarbonsDisableParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
-	}
+    void CarbonsDisableParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
+    }
 
-	void CarbonsDisableParser::handleEndElement(const std::string&, const std::string&) {
-	}
+    void CarbonsDisableParser::handleEndElement(const std::string&, const std::string&) {
+    }
 
-	void CarbonsDisableParser::handleCharacterData(const std::string&) {
-	}
-	
+    void CarbonsDisableParser::handleCharacterData(const std::string&) {
+    }
+
 }

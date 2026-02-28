@@ -1,12 +1,13 @@
 --[[
-	Copyright (c) 2013-2014 Isode Limited.
+	Copyright (c) 2013-2017 Isode Limited.
 	All rights reserved.
 	See the COPYING file for more information.
 --]]
 
 local sluift = select(1, ...)
 local _G = _G
-local pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack, io = pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack, io
+local pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, io = pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, io
+local unpack = table.unpack or unpack
 local setmetatable, getmetatable = setmetatable, getmetatable
 local string = require "string"
 local table = require "table"
@@ -757,7 +758,7 @@ register_help(Client.process_events)
 --	client:set_command{to = 'alice@wonderland.lit', command = { type = 'execute', node = 'uptime' }}
 --
 local get_set_shortcuts = {
-	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard', 'mam'},
+	get = {'software_version', 'disco_items', 'disco_info', 'xml', 'dom', 'vcard', 'mam'},
 	set = {'command', 'vcard', 'mam'}
 }
 for query_action, query_types in pairs(get_set_shortcuts) do
@@ -961,7 +962,7 @@ register_help(Component.process_events)
 --	component:set_command{to = 'alice@wonderland.lit', command = { type = 'execute', node = 'uptime' }}
 --
 local get_set_shortcuts = {
-	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard'},
+	get = {'software_version', 'disco_items', 'disco_info', 'xml', 'dom', 'vcard'},
 	set = {'command', 'vcard'}
 }
 for query_action, query_types in pairs(get_set_shortcuts) do

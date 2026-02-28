@@ -9,8 +9,8 @@
 #include <Swift/Controllers/SoundPlayer.h>
 
 namespace Swift {
-	class DummySoundPlayer : public SoundPlayer {
-		public:
-			void playSound(SoundEffect /*sound*/, const std::string& /*soundResource*/) {}
-	};
+    class DummySoundPlayer : public SoundPlayer {
+        public:
+            void playSound(SoundEffect /*sound*/, const std::string& /*soundResource*/) {}
+    };
 }

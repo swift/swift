@@ -9,16 +9,16 @@
 #include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
-	class GConfProxyProvider : public ProxyProvider {
-		public:
-			GConfProxyProvider();
-			virtual HostAddressPort getHTTPConnectProxy() const;
-			virtual HostAddressPort getSOCKS5Proxy() const;
-		private:
-			HostAddressPort getFromGConf(const char* gcHost, const char* gcPort);
-			HostAddressPort socksProxy;
-			HostAddressPort httpProxy;
-	};
+    class GConfProxyProvider : public ProxyProvider {
+        public:
+            GConfProxyProvider();
+            virtual HostAddressPort getHTTPConnectProxy() const;
+            virtual HostAddressPort getSOCKS5Proxy() const;
+        private:
+            HostAddressPort getFromGConf(const char* gcHost, const char* gcPort);
+            HostAddressPort socksProxy;
+            HostAddressPort httpProxy;
+    };
 }
 
 

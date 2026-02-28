@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,12 +10,12 @@
 #include <Swiften/Queries/Responder.h>
 
 namespace Swift {
-	template<typename T>
-	class SWIFTEN_API SetResponder : public Responder<T> {
-		public:
-			SetResponder(IQRouter* router) : Responder<T>(router) {}
+    template<typename T>
+    class SWIFTEN_API SetResponder : public Responder<T> {
+        public:
+            SetResponder(IQRouter* router) : Responder<T>(router) {}
 
-		private:
-			virtual bool handleGetRequest(const JID&, const JID&, const std::string&, boost::shared_ptr<T>) { return false; }
-	};
+        private:
+            virtual bool handleGetRequest(const JID&, const JID&, const std::string&, std::shared_ptr<T>) { return false; }
+    };
 }

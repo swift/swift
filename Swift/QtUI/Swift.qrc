@@ -4,7 +4,8 @@
 		<file alias="logo-icon-16.png">../resources/logo/logo-icon-16.png</file>
 		<file alias="logo-icon-16-win.png">../resources/logo/logo-icon-16-win.png</file>
 		<file alias="logo-chat-16.png">../resources/logo/logo-chat-16.png</file>
-		<file alias="logo-shaded-text.256.png">../resources/logo/logo-shaded-text.256.png</file>
+		<file alias="logo-shaded-text.png">../resources/logo/logo-shaded-text.png</file>
+		<file alias="logo-icon.svg">../resources/logo/logo-icon.svg</file>
 		<file alias="icons/online.png">../resources/icons/online.png</file>
 		<file alias="icons/connecting.mng">../resources/icons/connecting.mng</file>
 		<file alias="icons/away.png">../resources/icons/away.png</file>
@@ -16,12 +17,13 @@
 		<file alias="icons/warn.png">../resources/icons/warn.png</file>
 		<file alias="icons/check.png">../resources/icons/check.png</file>
 		<file alias="icons/throbber.gif">../resources/icons/throbber.gif</file>
-		<file alias="icons/avatar.png">../resources/icons/avatar.png</file>
+		<file alias="icons/avatar.svg">../resources/icons/avatar.svg</file>
 		<file alias="icons/no-avatar.png">../resources/icons/no-avatar.png</file>
 		<file alias="icons/tray-standard.png">../resources/icons/tray-standard.png</file>
 		<file alias="icons/new-chat.png">../resources/icons/new-chat.png</file>
 		<file alias="icons/actions.png">../resources/icons/actions.png</file>
 		<file alias="COPYING">COPYING</file>
+		<file alias="ChangeLog.md">../ChangeLog.md</file>
 		<file alias="icons/line.png">../resources/icons/line.png</file>
 		<file alias="icons/rect.png">../resources/icons/rect.png</file>
 		<file alias="icons/circle.png">../resources/icons/circle.png</file>
@@ -43,5 +45,8 @@
 		<file alias="icons/star-unchecked.png">../resources/icons/star-unchecked2.png</file>
 		<file alias="icons/zzz.png">../resources/icons/zzz.png</file>
 		<file alias="icons/stop.png">../resources/icons/stop.png</file>
+		<file alias="icons/delivery-success.svg">../resources/icons/delivery-success.svg</file>
+		<file alias="icons/delivery-failure.svg">../resources/icons/delivery-failure.svg</file>
+		<file alias="icons/delivery-warning.svg">../resources/icons/delivery-warning.svg</file>
 	</qresource>
 </RCC>

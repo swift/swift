@@ -10,8 +10,8 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API Compressed : public ToplevelElement {
-		public:
-			Compressed() {}
-	};
+    class SWIFTEN_API Compressed : public ToplevelElement {
+        public:
+            Compressed() {}
+    };
 }

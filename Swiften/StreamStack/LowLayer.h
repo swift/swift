@@ -10,30 +10,30 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class HighLayer;
+    class HighLayer;
 
-	class SWIFTEN_API LowLayer {
-			friend class StreamStack;
-			friend class DummyStreamLayer;
+    class SWIFTEN_API LowLayer {
+            friend class StreamStack;
+            friend class DummyStreamLayer;
 
-		public:
-			LowLayer();
-			virtual ~LowLayer();
+        public:
+            LowLayer();
+            virtual ~LowLayer();
 
-			virtual void writeData(const SafeByteArray& data) = 0;
-	
-		protected:
-			HighLayer* getParentLayer() {
-				return parentLayer;
-			}
+            virtual void writeData(const SafeByteArray& data) = 0;
 
-			void setParentLayer(HighLayer* parentLayer) {
-				this->parentLayer = parentLayer;
-			}
+        protected:
+            HighLayer* getParentLayer() {
+                return parentLayer;
+            }
 
-			void writeDataToParentLayer(const SafeByteArray& data);
+            void setParentLayer(HighLayer* parentLayer) {
+                this->parentLayer = parentLayer;
+            }
 
-		private:
-			HighLayer* parentLayer;
-	};
+            void writeDataToParentLayer(const SafeByteArray& data);
+
+        private:
+            HighLayer* parentLayer;
+    };
 }

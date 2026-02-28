@@ -1,28 +1,28 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <Swiften/Base/Override.h>
+#include <memory>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Forwarded.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API ForwardedSerializer : public GenericPayloadSerializer<Forwarded> {
-		public:
-			ForwardedSerializer(PayloadSerializerCollection* serializers);
-			virtual ~ForwardedSerializer();
+    class SWIFTEN_API ForwardedSerializer : public GenericPayloadSerializer<Forwarded> {
+        public:
+            ForwardedSerializer(PayloadSerializerCollection* serializers);
+            virtual ~ForwardedSerializer() override;
 
-			virtual std::string serializePayload(boost::shared_ptr<Forwarded>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<Forwarded>) const override;
 
-		private:
-			PayloadSerializerCollection* serializers_;
-	};
+        private:
+            PayloadSerializerCollection* serializers_;
+    };
 }

@@ -1,4 +1,4 @@
 Import("env")
 
 if env["SCONS_STAGE"] == "build" :
-	SConscript(dirs = ["SwiftenDevelopersGuide", "SwiftUserGuide", "API", "SwiftAPI"])
+    SConscript(dirs = ["SwiftenDevelopersGuide", "SwiftUserGuide", "API", "SwiftAPI"])

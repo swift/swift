@@ -17,20 +17,20 @@ namespace Swift {
 class RosterItem;
 
 class SetPresence : public RosterItemOperation {
-	public:
-		SetPresence(Presence::ref presence, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, compareType == JID::WithoutResource ? presence->getFrom().toBare() : presence->getFrom()), presence_(presence), compareType_(compareType) {
-		}
+    public:
+        SetPresence(Presence::ref presence, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, compareType == JID::WithoutResource ? presence->getFrom().toBare() : presence->getFrom()), presence_(presence), compareType_(compareType) {
+        }
 
-		virtual void operator() (RosterItem* item) const {
-			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-			if (contact && contact->getJID().equals(presence_->getFrom(), compareType_)) {
-				contact->applyPresence(presence_);
-			}
-		}
-	
-	private:
-		Presence::ref presence_;
-		JID::CompareType compareType_;
+        virtual void operator() (RosterItem* item) const {
+            ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+            if (contact && contact->getJID().equals(presence_->getFrom(), compareType_)) {
+                contact->applyPresence(presence_);
+            }
+        }
+
+    private:
+        Presence::ref presence_;
+        JID::CompareType compareType_;
 };
 
 }

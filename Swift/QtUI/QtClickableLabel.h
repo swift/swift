@@ -9,14 +9,14 @@
 #include <QLabel>
 
 namespace Swift {
-	class QtClickableLabel : public QLabel {
-			Q_OBJECT
-		public:
-			QtClickableLabel(QWidget* parent);
+    class QtClickableLabel : public QLabel {
+            Q_OBJECT
+        public:
+            QtClickableLabel(QWidget* parent);
 
-			void mousePressEvent(QMouseEvent* event);
+            void mousePressEvent(QMouseEvent* event);
 
-		signals:
-			void clicked();
-	};
+        signals:
+            void clicked();
+    };
 }

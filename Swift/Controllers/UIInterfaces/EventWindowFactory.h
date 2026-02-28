@@ -7,17 +7,17 @@
 #pragma once
 
 namespace Swift {
-	class EventWindow;
+    class EventWindow;
 
-	class EventWindowFactory {
-		public:
-			virtual ~EventWindowFactory() {}
-			/**
-			 * Transfers ownership of result.
-			 */
-			virtual EventWindow* createEventWindow() = 0;
+    class EventWindowFactory {
+        public:
+            virtual ~EventWindowFactory() {}
+            /**
+             * Transfers ownership of result.
+             */
+            virtual EventWindow* createEventWindow() = 0;
 
-	};
+    };
 }
 
 

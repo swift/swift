@@ -4,7 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "ProxyProvider.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
 

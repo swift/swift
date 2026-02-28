@@ -10,20 +10,20 @@
 
 
 namespace Swift {
-	class LoginWindow;
-	
-	class UIEventStream;
-		
-	class LoginWindowFactory {
-		public:
-			virtual ~LoginWindowFactory() {}
+    class LoginWindow;
 
-			/**
-			 * Transfers ownership of result.
-			 */
-			virtual LoginWindow* createLoginWindow(UIEventStream* uiEventStream) = 0;
+    class UIEventStream;
 
-	};
+    class LoginWindowFactory {
+        public:
+            virtual ~LoginWindowFactory() {}
+
+            /**
+             * Transfers ownership of result.
+             */
+            virtual LoginWindow* createLoginWindow(UIEventStream* uiEventStream) = 0;
+
+    };
 }
 #endif
 

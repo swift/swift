@@ -12,17 +12,17 @@
 #include <SwifTools/Idle/IdleQuerier.h>
 
 namespace Swift {
-	class XSSIdleQuerier : public IdleQuerier {
-		public:
-			XSSIdleQuerier();
-			~XSSIdleQuerier();
+    class XSSIdleQuerier : public IdleQuerier {
+        public:
+            XSSIdleQuerier();
+            ~XSSIdleQuerier();
 
-			virtual int getIdleTimeSeconds();
+            virtual int getIdleTimeSeconds();
 
-		private:
-			Display* display;
-			Window rootWindow;
-			bool available;
-			XScreenSaverInfo* info;
-	};
+        private:
+            Display* display;
+            Window rootWindow;
+            bool available;
+            XScreenSaverInfo* info;
+    };
 }

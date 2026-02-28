@@ -14,12 +14,12 @@
 #include <Swiften/Parser/PayloadParsers/MUCItemParser.h>
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
-	class SWIFTEN_API MUCUserPayloadParser : public GenericPayloadTreeParser<MUCUserPayload> {
-		public:
-			MUCUserPayloadParser(PayloadParserFactoryCollection* collection) : factories(collection) {}
-			virtual void handleTree(ParserElement::ref root);
-		private:
-			PayloadParserFactoryCollection* factories;
-	};
+    class PayloadParserFactoryCollection;
+    class SWIFTEN_API MUCUserPayloadParser : public GenericPayloadTreeParser<MUCUserPayload> {
+        public:
+            MUCUserPayloadParser(PayloadParserFactoryCollection* collection) : factories(collection) {}
+            virtual void handleTree(ParserElement::ref root);
+        private:
+            PayloadParserFactoryCollection* factories;
+    };
 }

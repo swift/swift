@@ -1,37 +1,35 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/PubSubEventConvertor.h>
 
-#include <lua.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
+#include <lua.hpp>
 
 #include <Sluift/LuaElementConvertors.h>
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 using namespace Swift;
 
-PubSubEventConvertor::PubSubEventConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<PubSubEvent>("pubsub_event"),
-		convertors(convertors) {
+PubSubEventConvertor::PubSubEventConvertor(LuaElementConvertors* convertors) :
+        GenericLuaElementConvertor<PubSubEvent>("pubsub_event"),
+        convertors(convertors) {
 }
 
 PubSubEventConvertor::~PubSubEventConvertor() {
 }
 
-boost::shared_ptr<PubSubEvent> PubSubEventConvertor::doConvertFromLua(lua_State* L) {
-	boost::shared_ptr<PubSubEvent> result = boost::make_shared<PubSubEvent>();
-	if (boost::shared_ptr<PubSubEventPayload> payload = boost::dynamic_pointer_cast<PubSubEventPayload>(convertors->convertFromLua(L, -1))) {
-		result->setPayload(payload);
-	}
-	return result;
+std::shared_ptr<PubSubEvent> PubSubEventConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubEvent> result = std::make_shared<PubSubEvent>();
+    if (std::shared_ptr<PubSubEventPayload> payload = std::dynamic_pointer_cast<PubSubEventPayload>(convertors->convertFromLua(L, -1))) {
+        result->setPayload(payload);
+    }
+    return result;
 }
 
-void PubSubEventConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubEvent> event) {
-	convertors->convertToLua(L,  event->getPayload());
+void PubSubEventConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubEvent> event) {
+    convertors->convertToLua(L,  event->getPayload());
 }

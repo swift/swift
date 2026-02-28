@@ -6,91 +6,96 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/optional/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class Payload;
+    class Payload;
 
-	class SWIFTEN_API Stanza : public ToplevelElement {
-		public:
-			typedef boost::shared_ptr<Stanza> ref;
+    class SWIFTEN_API Stanza : public ToplevelElement {
+        public:
+            typedef std::shared_ptr<Stanza> ref;
 
-		protected:
-			Stanza();
+        protected:
+            Stanza();
 
-		public:
-			virtual ~Stanza();
-			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Stanza)
+        public:
+            virtual ~Stanza();
+            SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Stanza)
 
-			template<typename T> 
-			boost::shared_ptr<T> getPayload() const {
-				for (size_t i = 0; i < payloads_.size(); ++i) {
-					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(payloads_[i]));
-					if (result) {
-						return result;
-					}
-				}
-				return boost::shared_ptr<T>();
-			}
+            template<typename T>
+            std::shared_ptr<T> getPayload() const {
+                for (const auto& payload : payloads_) {
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(payload));
+                    if (result) {
+                        return result;
+                    }
+                }
+                return std::shared_ptr<T>();
+            }
 
-			template<typename T> 
-			std::vector< boost::shared_ptr<T> > getPayloads() const {
-				std::vector< boost::shared_ptr<T> > results;
-				for (size_t i = 0; i < payloads_.size(); ++i) {
-					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(payloads_[i]));
-					if (result) {
-						results.push_back(result);
-					}
-				}
-				return results;
-			}
+            template<typename T>
+            std::vector< std::shared_ptr<T> > getPayloads() const {
+                std::vector< std::shared_ptr<T> > results;
+                for (const auto& payload : payloads_) {
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(payload));
+                    if (result) {
+                        results.push_back(result);
+                    }
+                }
+                return results;
+            }
 
 
-			const std::vector< boost::shared_ptr<Payload> >& getPayloads() const {
-				return payloads_;
-			}
+            const std::vector< std::shared_ptr<Payload> >& getPayloads() const {
+                return payloads_;
+            }
 
-			void addPayload(boost::shared_ptr<Payload> payload) {
-				payloads_.push_back(payload);
-			}
+            void addPayload(std::shared_ptr<Payload> payload) {
+                payloads_.push_back(payload);
+            }
 
-			template<typename InputIterator>
-			void addPayloads(InputIterator begin, InputIterator end) {
-				payloads_.insert(payloads_.end(), begin, end);
-			}
+            template<typename InputIterator>
+            void addPayloads(InputIterator begin, InputIterator end) {
+                payloads_.insert(payloads_.end(), begin, end);
+            }
 
-			void updatePayload(boost::shared_ptr<Payload> payload);
+            template<typename Container>
+            void addPayloads(const Container& container) {
+                payloads_.insert(payloads_.end(), std::begin(container), std::end(container));
+            }
 
-			void removePayloadOfSameType(boost::shared_ptr<Payload>);
-			boost::shared_ptr<Payload> getPayloadOfSameType(boost::shared_ptr<Payload>) const;
+            void updatePayload(std::shared_ptr<Payload> payload);
 
-			const JID& getFrom() const { return from_; }
-			void setFrom(const JID& from) { from_ = from; }
+            void removePayloadOfSameType(std::shared_ptr<Payload>);
+            std::shared_ptr<Payload> getPayloadOfSameType(std::shared_ptr<Payload>) const;
 
-			const JID& getTo() const { return to_; }
-			void setTo(const JID& to) { to_ = to; }
+            const JID& getFrom() const { return from_; }
+            void setFrom(const JID& from) { from_ = from; }
 
-			const std::string& getID() const { return id_; }
-			void setID(const std::string& id) { id_ = id; }
+            const JID& getTo() const { return to_; }
+            void setTo(const JID& to) { to_ = to; }
 
-			boost::optional<boost::posix_time::ptime> getTimestamp() const;
+            const std::string& getID() const { return id_; }
+            void setID(const std::string& id) { id_ = id; }
 
-			// Falls back to any timestamp if no specific timestamp for the given JID is found.
-			boost::optional<boost::posix_time::ptime> getTimestampFrom(const JID& jid) const;
-	
-		private:
-			std::string id_;
-			JID from_;
-			JID to_;
-			std::vector< boost::shared_ptr<Payload> > payloads_;
-	};
+            boost::optional<boost::posix_time::ptime> getTimestamp() const;
+
+            // Falls back to any timestamp if no specific timestamp for the given JID is found.
+            boost::optional<boost::posix_time::ptime> getTimestampFrom(const JID& jid) const;
+
+        private:
+            std::string id_;
+            JID from_;
+            JID to_;
+            std::vector< std::shared_ptr<Payload> > payloads_;
+    };
 }

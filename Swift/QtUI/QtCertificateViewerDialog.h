@@ -20,25 +20,25 @@ class QtCertificateViewerDialog;
 namespace Swift {
 
 class QtCertificateViewerDialog : public QDialog {
-	Q_OBJECT
-		
-	public:
-		explicit QtCertificateViewerDialog(QWidget* parent = 0);
-		~QtCertificateViewerDialog();
+    Q_OBJECT
 
-		void setCertificateChain(const std::vector<Certificate::ref>& chain);
+    public:
+        explicit QtCertificateViewerDialog(QWidget* parent = 0);
+        ~QtCertificateViewerDialog();
 
-		static void displayCertificateChainAsSheet(QWidget* parent, const std::vector<Certificate::ref>& chain);
+        void setCertificateChain(const std::vector<Certificate::ref>& chain);
 
-	private slots:
-		void currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*);
+        static void displayCertificateChainAsSheet(QWidget* parent, const std::vector<Certificate::ref>& chain);
 
-	private:
-		void setCertificateDetails(const QSslCertificate& cert);
+    private slots:
+        void currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*);
 
-	private:
-		Ui::QtCertificateViewerDialog *ui;
-		QList<QSslCertificate> currentChain;
+    private:
+        void setCertificateDetails(const QSslCertificate& cert);
+
+    private:
+        Ui::QtCertificateViewerDialog *ui;
+        QList<QSslCertificate> currentChain;
 };
 
 }

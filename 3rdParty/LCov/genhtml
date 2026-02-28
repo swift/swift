@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 #
-#   Copyright (c) International Business Machines  Corp., 2002,2010
+#   Copyright (c) International Business Machines  Corp., 2002,2012
 #
 #   This program is free software;  you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -65,16 +65,22 @@
 #
 
 use strict;
-use File::Basename; 
+use File::Basename;
+use File::Temp qw(tempfile);
 use Getopt::Long;
 use Digest::MD5 qw(md5_base64);
+use Cwd qw/abs_path/;
 
 
 # Global constants
 our $title		= "LCOV - code coverage report";
-our $lcov_version	= 'LCOV version 1.9';
+our $tool_dir		= abs_path(dirname($0));
+our $lcov_version	= "LCOV version 1.12";
 our $lcov_url		= "http://ltp.sourceforge.net/coverage/lcov.php";
 our $tool_name		= basename($0);
+
+# Specify coverage rate default precision
+our $default_precision = 1;
 
 # Specify coverage rate limits (in %) for classifying file entries
 # HI:   $hi_limit <= rate <= 100          graph color: green
@@ -145,6 +151,7 @@ our $BR_BRANCH		= 1;
 our $BR_TAKEN		= 2;
 our $BR_VEC_ENTRIES	= 3;
 our $BR_VEC_WIDTH	= 32;
+our $BR_VEC_MAX		= vec(pack('b*', 1 x $BR_VEC_WIDTH), 0, $BR_VEC_WIDTH);
 
 # Additional offsets used when converting branch coverage data to HTML
 our $BR_LEN	= 3;
@@ -154,6 +161,12 @@ our $BR_CLOSE	= 5;
 # Branch data combination types
 our $BR_SUB = 0;
 our $BR_ADD = 1;
+
+# Error classes which users may specify to ignore during processing
+our $ERROR_SOURCE	= 0;
+our %ERROR_ID = (
+	"source" => $ERROR_SOURCE,
+);
 
 # Data related prototypes
 sub print_usage(*);
@@ -165,7 +178,7 @@ sub info(@);
 sub read_info_file($);
 sub get_info_entry($);
 sub set_info_entry($$$$$$$$$;$$$$$$);
-sub get_prefix(@);
+sub get_prefix($@);
 sub shorten_prefix($);
 sub get_dir_list(@);
 sub get_relative_base_path($);
@@ -181,7 +194,7 @@ sub get_affecting_tests($$$);
 sub combine_info_files($$);
 sub merge_checksums($$$);
 sub combine_info_entries($$$);
-sub apply_prefix($$);
+sub apply_prefix($@);
 sub system_no_output($@);
 sub read_config($);
 sub apply_config($);
@@ -198,6 +211,9 @@ sub combine_brcount($$$);
 sub get_br_found_and_hit($);
 sub warn_handler($);
 sub die_handler($);
+sub parse_ignore_errors(@);
+sub parse_dir_prefix(@);
+sub rate($$;$$$);
 
 
 # HTML related prototypes
@@ -244,7 +260,8 @@ sub gen_png($$$@);
 
 # Global variables & initialization
 our %info_data;		# Hash containing all data from .info file
-our $dir_prefix;	# Prefix to remove from all sub directories
+our @opt_dir_prefix;	# Array of prefixes to remove from all sub directories
+our @dir_prefix;
 our %test_description;	# Hash containing test descriptions if available
 our $date = get_date_string();
 
@@ -259,9 +276,9 @@ our $help;		# Help option flag
 our $version;		# Version option flag
 our $show_details;	# If set, generate detailed directory view
 our $no_prefix;		# If set, do not remove filename prefix
-our $func_coverage = 1;	# If set, generate function coverage statistics
+our $func_coverage;	# If set, generate function coverage statistics
 our $no_func_coverage;	# Disable func_coverage
-our $br_coverage = 1;	# If set, generate branch coverage statistics
+our $br_coverage;	# If set, generate branch coverage statistics
 our $no_br_coverage;	# Disable br_coverage
 our $sort = 1;		# If set, provide directory listings with sorted entries
 our $no_sort;		# Disable sort
@@ -279,15 +296,22 @@ our $html_epilog;	# Actual HTML epilog
 our $html_ext = "html";	# Extension for generated HTML files
 our $html_gzip = 0;	# Compress with gzip
 our $demangle_cpp = 0;	# Demangle C++ function names
+our @opt_ignore_errors;	# Ignore certain error classes during processing
+our @ignore;
+our $opt_config_file;	# User-specified configuration file location
+our %opt_rc;
+our $charset = "UTF-8";	# Default charset for HTML pages
 our @fileview_sortlist;
 our @fileview_sortname = ("", "-sort-l", "-sort-f", "-sort-b");
 our @funcview_sortlist;
 our @rate_name = ("Lo", "Med", "Hi");
 our @rate_png = ("ruby.png", "amber.png", "emerald.png");
+our $lcov_func_coverage = 1;
+our $lcov_branch_coverage = 0;
+our $rc_desc_html = 0;	# lcovrc: genhtml_desc_html
 
 our $cwd = `pwd`;	# Current working directory
 chomp($cwd);
-our $tool_dir = dirname($0);	# Directory where genhtml tool is installed
 
 
 #
@@ -297,17 +321,29 @@ our $tool_dir = dirname($0);	# Directory where genhtml tool is installed
 $SIG{__WARN__} = \&warn_handler;
 $SIG{__DIE__} = \&die_handler;
 
-# Prettify version string
-$lcov_version =~ s/\$\s*Revision\s*:?\s*(\S+)\s*\$/$1/;
+# Check command line for a configuration file name
+Getopt::Long::Configure("pass_through", "no_auto_abbrev");
+GetOptions("config-file=s" => \$opt_config_file,
+	   "rc=s%" => \%opt_rc);
+Getopt::Long::Configure("default");
 
-# Add current working directory if $tool_dir is not already an absolute path
-if (! ($tool_dir =~ /^\/(.*)$/))
 {
-	$tool_dir = "$cwd/$tool_dir";
+	# Remove spaces around rc options
+	my %new_opt_rc;
+
+	while (my ($key, $value) = each(%opt_rc)) {
+		$key =~ s/^\s+|\s+$//g;
+		$value =~ s/^\s+|\s+$//g;
+
+		$new_opt_rc{$key} = $value;
+	}
+	%opt_rc = %new_opt_rc;
 }
 
 # Read configuration file if available
-if (defined($ENV{"HOME"}) && (-r $ENV{"HOME"}."/.lcovrc"))
+if (defined($opt_config_file)) {
+	$config = read_config($opt_config_file);
+} elsif (defined($ENV{"HOME"}) && (-r $ENV{"HOME"}."/.lcovrc"))
 {
 	$config = read_config($ENV{"HOME"}."/.lcovrc");
 }
@@ -316,9 +352,9 @@ elsif (-r "/etc/lcovrc")
 	$config = read_config("/etc/lcovrc");
 }
 
-if ($config)
+if ($config || %opt_rc)
 {
-	# Copy configuration file values to variables
+	# Copy configuration file and --rc values to variables
 	apply_config({
 		"genhtml_css_file"		=> \$css_filename,
 		"genhtml_hi_limit"		=> \$hi_limit,
@@ -337,6 +373,7 @@ if ($config)
 		"genhtml_html_epilog"		=> \$html_epilog_file,
 		"genhtml_html_extension"	=> \$html_ext,
 		"genhtml_html_gzip"		=> \$html_gzip,
+		"genhtml_precision"		=> \$default_precision,
 		"genhtml_function_hi_limit"	=> \$fn_hi_limit,
 		"genhtml_function_med_limit"	=> \$fn_med_limit,
 		"genhtml_function_coverage"	=> \$func_coverage,
@@ -345,14 +382,20 @@ if ($config)
 		"genhtml_branch_coverage"	=> \$br_coverage,
 		"genhtml_branch_field_width"	=> \$br_field_width,
 		"genhtml_sort"			=> \$sort,
+		"genhtml_charset"		=> \$charset,
+		"genhtml_desc_html"		=> \$rc_desc_html,
+		"lcov_function_coverage"	=> \$lcov_func_coverage,
+		"lcov_branch_coverage"		=> \$lcov_branch_coverage,
 		});
 }
 
-# Copy limit values if not specified
+# Copy related values if not specified
 $fn_hi_limit	= $hi_limit if (!defined($fn_hi_limit));
 $fn_med_limit	= $med_limit if (!defined($fn_med_limit));
 $br_hi_limit	= $hi_limit if (!defined($br_hi_limit));
 $br_med_limit	= $med_limit if (!defined($br_med_limit));
+$func_coverage	= $lcov_func_coverage if (!defined($func_coverage));
+$br_coverage	= $lcov_branch_coverage if (!defined($br_coverage));
 
 # Parse command line options
 if (!GetOptions("output-directory|o=s"	=> \$output_directory,
@@ -361,7 +404,7 @@ if (!GetOptions("output-directory|o=s"	=> \$output_directory,
 		"keep-descriptions|k"	=> \$keep_descriptions,
 		"css-file|c=s"		=> \$css_filename,
 		"baseline-file|b=s"	=> \$base_filename,
-		"prefix|p=s"		=> \$dir_prefix,
+		"prefix|p=s"		=> \@opt_dir_prefix,
 		"num-spaces=i"		=> \$tab_size,
 		"no-prefix"		=> \$no_prefix,
 		"no-sourceview"		=> \$no_sourceview,
@@ -383,6 +426,10 @@ if (!GetOptions("output-directory|o=s"	=> \$output_directory,
 		"sort"			=> \$sort,
 		"no-sort"		=> \$no_sort,
 		"demangle-cpp"		=> \$demangle_cpp,
+		"ignore-errors=s"	=> \@opt_ignore_errors,
+		"config-file=s"		=> \$opt_config_file,
+		"rc=s%"			=> \%opt_rc,
+		"precision=i"		=> \$default_precision,
 		))
 {
 	print(STDERR "Use $tool_name --help to get usage information\n");
@@ -417,6 +464,12 @@ if ($version)
 	print("$tool_name: $lcov_version\n");
 	exit(0);
 }
+
+# Determine which errors the user wants us to ignore
+parse_ignore_errors(@opt_ignore_errors);
+
+# Split the list of prefixes if needed
+parse_dir_prefix(@opt_dir_prefix);
 
 # Check for info filename
 if (!@info_filenames)
@@ -471,11 +524,11 @@ if ($no_sourceview && defined($frames))
 }
 
 # Issue a warning if --no-prefix is enabled together with --prefix
-if ($no_prefix && defined($dir_prefix))
+if ($no_prefix && @dir_prefix)
 {
 	warn("WARNING: option --prefix disabled because --no-prefix was ".
 	     "specified!\n");
-	$dir_prefix = undef;
+	@dir_prefix = undef;
 }
 
 @fileview_sortlist = ($SORT_FILE);
@@ -502,6 +555,13 @@ if ($demangle_cpp)
 		    "--demangle-cpp\n");
 	}
 }
+
+# Make sure precision is within valid range
+if ($default_precision < 1 || $default_precision > 4)
+{
+	die("ERROR: specified precision is out of range (1 to 4)\n");
+}
+
 
 # Make sure output_directory exists, create it if necessary
 if ($output_directory)
@@ -541,6 +601,9 @@ Misc:
   -h, --help                        Print this help, then exit
   -v, --version                     Print version number, then exit
   -q, --quiet                       Do not print progress messages
+      --config-file FILENAME        Specify configuration file location
+      --rc SETTING=VALUE            Override configuration file setting
+      --ignore-errors ERRORS        Continue after ERRORS (source)
 
 Operation:
   -o, --output-directory OUTDIR     Write HTML output to OUTDIR
@@ -567,6 +630,7 @@ HTML output:
       --html-gzip                   Use gzip to compress HTML
       --(no-)sort                   Enable (disable) sorted coverage views
       --demangle-cpp                Demangle C++ function names
+      --precision NUM               Set precision of coverage rate
 
 For more information see: $lcov_url
 END_OF_USAGE
@@ -607,8 +671,7 @@ sub get_overall_line($$$$)
 
 	return "no data found" if (!defined($found) || $found == 0);
 	$name = ($found == 1) ? $name_sn : $name_pl;
-	return sprintf("%.1f%% (%d of %d %s)", $hit * 100 / $found, $hit,
-		       $found, $name);
+	return rate($hit, $found, "% ($hit of $found $name)");
 }
 
 
@@ -636,6 +699,116 @@ sub print_overall_rate($$$$$$$$$)
 		if ($br_do);
 }
 
+sub get_fn_list($)
+{
+	my ($info) = @_;
+	my %fns;
+	my @result;
+
+	foreach my $filename (keys(%{$info})) {
+		my $data = $info->{$filename};
+		my $funcdata = $data->{"func"};
+		my $sumfnccount = $data->{"sumfnc"};
+
+		if (defined($funcdata)) {
+			foreach my $func_name (keys(%{$funcdata})) {
+				$fns{$func_name} = 1;
+			}
+		}
+
+		if (defined($sumfnccount)) {
+			foreach my $func_name (keys(%{$sumfnccount})) {
+				$fns{$func_name} = 1;
+			}
+		}
+	}
+
+	@result = keys(%fns);
+
+	return \@result;
+}
+
+#
+# rename_functions(info, conv)
+#
+# Rename all function names in INFO according to CONV: OLD_NAME -> NEW_NAME.
+# In case two functions demangle to the same name, assume that they are
+# different object code implementations for the same source function.
+#
+
+sub rename_functions($$)
+{
+	my ($info, $conv) = @_;
+
+	foreach my $filename (keys(%{$info})) {
+		my $data = $info->{$filename};
+		my $funcdata;
+		my $testfncdata;
+		my $sumfnccount;
+		my %newfuncdata;
+		my %newsumfnccount;
+		my $f_found;
+		my $f_hit;
+
+		# funcdata: function name -> line number
+		$funcdata = $data->{"func"};
+		foreach my $fn (keys(%{$funcdata})) {
+			my $cn = $conv->{$fn};
+
+			# Abort if two functions on different lines map to the
+			# same demangled name.
+			if (defined($newfuncdata{$cn}) &&
+			    $newfuncdata{$cn} != $funcdata->{$fn}) {
+				die("ERROR: Demangled function name $cn ".
+				    "maps to different lines (".
+				    $newfuncdata{$cn}." vs ".
+				    $funcdata->{$fn}.") in $filename\n");
+			}
+			$newfuncdata{$cn} = $funcdata->{$fn};
+		}
+		$data->{"func"} = \%newfuncdata;
+
+		# testfncdata: test name -> testfnccount
+		# testfnccount: function name -> execution count
+		$testfncdata = $data->{"testfnc"};
+		foreach my $tn (keys(%{$testfncdata})) {
+			my $testfnccount = $testfncdata->{$tn};
+			my %newtestfnccount;
+
+			foreach my $fn (keys(%{$testfnccount})) {
+				my $cn = $conv->{$fn};
+
+				# Add counts for different functions that map
+				# to the same name.
+				$newtestfnccount{$cn} +=
+					$testfnccount->{$fn};
+			}
+			$testfncdata->{$tn} = \%newtestfnccount;
+		}
+
+		# sumfnccount: function name -> execution count
+		$sumfnccount = $data->{"sumfnc"};
+		foreach my $fn (keys(%{$sumfnccount})) {
+			my $cn = $conv->{$fn};
+
+			# Add counts for different functions that map
+			# to the same name.
+			$newsumfnccount{$cn} += $sumfnccount->{$fn};
+		}
+		$data->{"sumfnc"} = \%newsumfnccount;
+
+		# Update function found and hit counts since they may have
+		# changed
+		$f_found = 0;
+		$f_hit = 0;
+		foreach my $fn (keys(%newsumfnccount)) {
+			$f_found++;
+			$f_hit++ if ($newsumfnccount{$fn} > 0);
+		}
+		$data->{"f_found"} = $f_found;
+		$data->{"f_hit"} = $f_hit;
+	}
+}
 
 #
 # gen_html()
@@ -701,14 +874,16 @@ sub gen_html()
 		# User requested that we leave filenames alone
 		info("User asked not to remove filename prefix\n");
 	}
-	elsif (!defined($dir_prefix))
+	elsif (! @dir_prefix)
 	{
 		# Get prefix common to most directories in list
-		$dir_prefix = get_prefix(@dir_list);
+		my $prefix = get_prefix(1, keys(%info_data));
 
-		if ($dir_prefix)
+		if ($prefix)
 		{
-			info("Found common filename prefix \"$dir_prefix\"\n");
+			info("Found common filename prefix \"$prefix\"\n");
+			$dir_prefix[0] = $prefix;
+
 		}
 		else
 		{
@@ -718,9 +893,16 @@ sub gen_html()
 	}
 	else
 	{
-		info("Using user-specified filename prefix \"".
-		     "$dir_prefix\"\n");
+		my $msg = "Using user-specified filename prefix ";
+		for my $i (0 .. $#dir_prefix)
+		{
+				$dir_prefix[$i] =~ s/\/+$//;
+				$msg .= ", " unless 0 == $i;
+				$msg .= "\"" . $dir_prefix[$i] . "\"";
+		}
+		info($msg . "\n");
 	}
+
 
 	# Read in test description file if specified
 	if ($desc_filename)
@@ -763,11 +945,14 @@ sub gen_html()
 		 $br_found, $br_hit)
 			= process_dir($dir_name);
 
+		# Handle files in root directory gracefully
+		$dir_name = "root" if ($dir_name eq "");
+
 		# Remove prefix if applicable
-		if (!$no_prefix && $dir_prefix)
+		if (!$no_prefix && @dir_prefix)
 		{
-			# Match directory names beginning with $dir_prefix
-			$dir_name = apply_prefix($dir_name, $dir_prefix);
+			# Match directory names beginning with one of @dir_prefix
+			$dir_name = apply_prefix($dir_name,@dir_prefix);
 		}
 
 		# Generate name for directory overview HTML page
@@ -832,13 +1017,13 @@ sub html_create($$)
 
 	if ($html_gzip)
 	{
-		open($handle, "|gzip -c >$filename")
+		open($handle, "|-", "gzip -c >'$filename'")
 			or die("ERROR: cannot open $filename for writing ".
 			       "(gzip)!\n");
 	}
 	else
 	{
-		open($handle, ">$filename")
+		open($handle, ">", $filename)
 			or die("ERROR: cannot open $filename for writing!\n");
 	}
 }
@@ -855,6 +1040,7 @@ sub write_dir_page($$$$$$$$$$$$$$$$$)
 	if (!defined($trunc_dir)) {
 		$trunc_dir = "";
 	}
+	$title .= " - " if ($trunc_dir ne "");
 	write_html_prolog(*HTML_HANDLE, $base_dir, "LCOV - $title$trunc_dir");
 	write_header(*HTML_HANDLE, $view_type, $trunc_dir, $rel_dir,
 		     $overall_found, $overall_hit, $total_fn_found,
@@ -904,8 +1090,8 @@ sub process_dir($)
 	# Remove prefix if applicable
 	if (!$no_prefix)
 	{
-		# Match directory name beginning with $dir_prefix
-		$rel_dir = apply_prefix($rel_dir, $dir_prefix);
+		# Match directory name beginning with one of @dir_prefix
+		$rel_dir = apply_prefix($rel_dir,@dir_prefix);
 	}
 
 	$trunc_dir = $rel_dir;
@@ -915,6 +1101,10 @@ sub process_dir($)
 	{
 		$rel_dir = substr($rel_dir, 1);
 	}
+
+	# Handle files in root directory gracefully
+	$rel_dir = "root" if ($rel_dir eq "");
+	$trunc_dir = "root" if ($trunc_dir eq "");
 
 	$base_dir = get_relative_base_path($rel_dir);
 
@@ -1083,7 +1273,7 @@ sub write_function_page($$$$$$$$$$$$$$$$$$)
 
 sub process_file($$$)
 {
-	info("Processing file ".apply_prefix($_[2], $dir_prefix)."\n");
+	info("Processing file ".apply_prefix($_[2], @dir_prefix)."\n");
 
 	my $trunc_dir = $_[0];
 	my $rel_dir = $_[1];
@@ -1195,6 +1385,10 @@ sub process_file($$$)
 #        "func"  -> \%funcdata
 #        "found" -> $lines_found (number of instrumented lines found in file)
 #	 "hit"   -> $lines_hit (number of executed lines in file)
+#        "f_found" -> $fn_found (number of instrumented functions found in file)
+#	 "f_hit"   -> $fn_hit (number of executed functions in file)
+#        "b_found" -> $br_found (number of instrumented branches found in file)
+#	 "b_hit"   -> $br_hit (number of executed branches in file)
 #        "check" -> \%checkdata
 #        "testfnc" -> \%testfncdata
 #        "sumfnc"  -> \%sumfnccount
@@ -1251,6 +1445,7 @@ sub read_info_file($)
 	my $line_checksum;		# Checksum of current line
 	my $br_found;
 	my $br_hit;
+	my $notified_about_relative_paths;
 	local *INFO_HANDLE;		# Filehandle for .info file
 
 	info("Reading data file $tracefile\n");
@@ -1281,14 +1476,14 @@ sub read_info_file($)
 				"compressed file $_[0]!\n");
 
 		# Open compressed file
-		open(INFO_HANDLE, "gunzip -c $_[0]|")
+		open(INFO_HANDLE, "-|", "gunzip -c '$_[0]'")
 			or die("ERROR: cannot start gunzip to decompress ".
 			       "file $_[0]!\n");
 	}
 	else
 	{
 		# Open decompressed file
-		open(INFO_HANDLE, $_[0])
+		open(INFO_HANDLE, "<", $_[0])
 			or die("ERROR: cannot read file $_[0]!\n");
 	}
 
@@ -1317,7 +1512,16 @@ sub read_info_file($)
 			{
 				# Filename information found
 				# Retrieve data for new entry
-				$filename = $1;
+				$filename = File::Spec->rel2abs($1, Cwd::cwd());
+
+				if (!File::Spec->file_name_is_absolute($1) &&
+				    !$notified_about_relative_paths)
+				{
+					info("Resolved relative source file ".
+					     "path \"$1\" with CWD to ".
+					     "\"$filename\".\n");
+					$notified_about_relative_paths = 1;
+				}
 
 				$data = $result{$filename};
 				($testdata, $sumcount, $funcdata, $checkdata,
@@ -1379,6 +1583,8 @@ sub read_info_file($)
 
 			/^FN:(\d+),([^,]+)/ && do
 			{
+				last if (!$func_coverage);
+
 				# Function data found, add to structure
 				$funcdata->{$2} = $1;
 
@@ -1397,6 +1603,7 @@ sub read_info_file($)
 
 			/^FNDA:(\d+),([^,]+)/ && do
 			{
+				last if (!$func_coverage);
 				# Function call count found, add to structure
 				# Add summary counts
 				$sumfnccount->{$2} += $1;
@@ -1414,6 +1621,7 @@ sub read_info_file($)
 				my ($line, $block, $branch, $taken) =
 				   ($1, $2, $3, $4);
 
+				last if (!$br_coverage);
 				$sumbrcount->{$line} =
 					br_ivec_push($sumbrcount->{$line},
 						     $block, $branch, $taken);
@@ -1614,8 +1822,8 @@ sub set_info_entry($$$$$$$$$;$$$$$$)
 
 sub add_counts($$)
 {
-	my %data1 = %{$_[0]};	# Hash 1
-	my %data2 = %{$_[1]};	# Hash 2
+	my $data1_ref = $_[0];	# Hash 1
+	my $data2_ref = $_[1];	# Hash 2
 	my %result;		# Resulting hash
 	my $line;		# Current line iteration scalar
 	my $data1_count;	# Count of line in hash1
@@ -1623,10 +1831,10 @@ sub add_counts($$)
 	my $found = 0;		# Total number of lines found
 	my $hit = 0;		# Number of lines with a count > 0
 
-	foreach $line (keys(%data1))
+	foreach $line (keys(%$data1_ref))
 	{
-		$data1_count = $data1{$line};
-		$data2_count = $data2{$line};
+		$data1_count = $data1_ref->{$line};
+		$data2_count = $data2_ref->{$line};
 
 		# Add counts if present in both hashes
 		if (defined($data2_count)) { $data1_count += $data2_count; }
@@ -1638,14 +1846,14 @@ sub add_counts($$)
 		if ($data1_count > 0) { $hit++; }
 	}
 
-	# Add lines unique to data2
-	foreach $line (keys(%data2))
+	# Add lines unique to data2_ref
+	foreach $line (keys(%$data2_ref))
 	{
-		# Skip lines already in data1
-		if (defined($data1{$line})) { next; }
+		# Skip lines already in data1_ref
+		if (defined($data1_ref->{$line})) { next; }
 
-		# Copy count from data2
-		$result{$line} = $data2{$line};
+		# Copy count from data2_ref
+		$result{$line} = $data2_ref->{$line};
 
 		$found++;
 		if ($result{$line} > 0) { $hit++; }
@@ -2110,16 +2318,17 @@ sub combine_info_files($$)
 
 
 #
-# get_prefix(filename_list)
+# get_prefix(min_dir, filename_list)
 #
 # Search FILENAME_LIST for a directory prefix which is common to as many
 # list entries as possible, so that removing this prefix will minimize the
-# sum of the lengths of all resulting shortened filenames.
+# sum of the lengths of all resulting shortened filenames while observing
+# that no filename has less than MIN_DIR parent directories.
 #
 
-sub get_prefix(@)
+sub get_prefix($@)
 {
-	my @filename_list = @_;		# provided list of filenames
+	my ($min_dir, @filename_list) = @_;
 	my %prefix;			# mapping: prefix -> sum of lengths
 	my $current;			# Temporary iteration variable
 
@@ -2128,18 +2337,34 @@ sub get_prefix(@)
 	{
 		# Need explicit assignment to get a copy of $_ so that
 		# shortening the contained prefix does not affect the list
-		$current = shorten_prefix($_);
+		$current = $_;
 		while ($current = shorten_prefix($current))
 		{
+			$current .= "/";
+
 			# Skip rest if the remaining prefix has already been
 			# added to hash
-			if ($prefix{$current}) { last; }
+			if (exists($prefix{$current})) { last; }
 
 			# Initialize with 0
 			$prefix{$current}="0";
 		}
 
 	}
+
+	# Remove all prefixes that would cause filenames to have less than
+	# the minimum number of parent directories
+	foreach my $filename (@filename_list) {
+		my $dir = dirname($filename);
+
+		for (my $i = 0; $i < $min_dir; $i++) {
+			delete($prefix{$dir."/"});
+			$dir = shorten_prefix($dir);
+		}
+	}
+
+	# Check if any prefix remains
+	return undef if (!%prefix);
 
 	# Calculate sum of lengths for all prefixes
 	foreach $current (keys(%prefix))
@@ -2168,6 +2393,8 @@ sub get_prefix(@)
 			$current = $_;
 		}
 	}
+
+	$current =~ s/\/$//;
 
 	return($current);
 }
@@ -2260,7 +2487,7 @@ sub read_testfile($)
 	my $changed_testname;
 	local *TEST_HANDLE;
 
-	open(TEST_HANDLE, "<".$_[0])
+	open(TEST_HANDLE, "<", $_[0])
 		or die("ERROR: cannot open $_[0]!\n");
 
 	while (<TEST_HANDLE>)
@@ -2281,6 +2508,9 @@ sub read_testfile($)
 		# Match lines beginning with TD:<whitespace(s)>
 		if (/^TD:\s+(.*?)\s*$/)
 		{
+			if (!defined($test_name)) {
+				die("ERROR: Found test description without prior test name in $_[0]:$.\n");
+			}
 			# Check for empty line
 			if ($1)
 			{
@@ -2348,10 +2578,15 @@ sub get_date_string()
 	my $year;
 	my $month;
 	my $day;
+	my $hour;
+	my $min;
+	my $sec;
 
-	($year, $month, $day) = (localtime())[5, 4, 3];
+	($year, $month, $day, $hour, $min, $sec) =
+		(localtime())[5, 4, 3, 2, 1, 0];
 
-	return sprintf("%d-%02d-%02d", $year+1900, $month+1, $day);
+	return sprintf("%d-%02d-%02d %02d:%02d:%02d", $year+1900, $month+1,
+		       $day, $hour, $min, $sec);
 }
 
 
@@ -2408,8 +2643,10 @@ sub write_description_file($$$$$$$)
 
 	foreach $test_name (sort(keys(%description)))
 	{
-		write_test_table_entry(*HTML_HANDLE, $test_name,
-				       escape_html($description{$test_name}));
+		my $desc = $description{$test_name};
+
+		$desc = escape_html($desc) if (!$rc_desc_html);
+		write_test_table_entry(*HTML_HANDLE, $test_name, $desc);
 	}
 
 	write_test_table_epilog(*HTML_HANDLE);
@@ -2531,7 +2768,7 @@ sub write_png_files()
 		 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82] if ($sort);
 	foreach (keys(%data))
 	{
-		open(PNG_HANDLE, ">".$_)
+		open(PNG_HANDLE, ">", $_)
 			or die("ERROR: cannot create $_!\n");
 		binmode(PNG_HANDLE);
 		print(PNG_HANDLE map(chr,@{$data{$_}}));
@@ -2549,7 +2786,7 @@ sub write_htaccess_file()
 	local *HTACCESS_HANDLE;
 	my $htaccess_data;
 
-	open(*HTACCESS_HANDLE, ">.htaccess")
+	open(*HTACCESS_HANDLE, ">", ".htaccess")
 		or die("ERROR: cannot open .htaccess for writing!\n");
 
 	$htaccess_data = (<<"END_OF_HTACCESS")
@@ -2582,7 +2819,7 @@ sub write_css_file()
 		return;
 	}
 
-	open(CSS_HANDLE, ">gcov.css")
+	open(CSS_HANDLE, ">", "gcov.css")
 		or die ("ERROR: cannot open gcov.css for writing!\n");
 
 
@@ -3132,6 +3369,7 @@ END_OF_CSS
 
 sub get_bar_graph_code($$$)
 {
+	my ($base_dir, $found, $hit) = @_;
 	my $rate;
 	my $alt;
 	my $width;
@@ -3142,13 +3380,12 @@ sub get_bar_graph_code($$$)
 	# Check number of instrumented lines
 	if ($_[1] == 0) { return ""; }
 
-	$rate		= $_[2] * 100 / $_[1];
-	$alt		= sprintf("%.1f", $rate)."%";
-	$width		= sprintf("%.0f", $rate);
-	$remainder	= sprintf("%d", 100-$width);
+	$alt		= rate($hit, $found, "%");
+	$width		= rate($hit, $found, undef, 0);
+	$remainder	= 100 - $width;
 
 	# Decide which .png file to use
-	$png_name = $rate_png[classify_rate($_[1], $_[2], $med_limit,
+	$png_name = $rate_png[classify_rate($found, $hit, $med_limit,
 					    $hi_limit)];
 
 	if ($width == 0)
@@ -3197,7 +3434,7 @@ sub classify_rate($$$$)
 	if ($found == 0) {
 		return 2;
 	}
-	$rate = $hit * 100 / $found;
+	$rate = rate($hit, $found);
 	if ($rate < $med) {
 		return 0;
 	} elsif ($rate < $hi) {
@@ -3415,12 +3652,13 @@ sub write_file_table_entry(*$$$@)
 	my ($handle, $base_dir, $filename, $page_link, @entries) = @_;
 	my $file_code;
 	my $entry;
+	my $esc_filename = escape_html($filename);
 
 	# Add link to source if provided
 	if (defined($page_link) && $page_link ne "") {
-		$file_code = "<a href=\"$page_link\">$filename</a>";
+		$file_code = "<a href=\"$page_link\">$esc_filename</a>";
 	} else {
-		$file_code = $filename;
+		$file_code = $esc_filename;
 	}
 
 	# First column: filename
@@ -3450,7 +3688,7 @@ END_OF_HTML
 			$rate = "-";
 			$class = "Hi";
 		} else {
-			$rate = sprintf("%.1f&nbsp;%%", $hit * 100 / $found);
+			$rate = rate($hit, $found, "&nbsp;%");
 			$class = $rate_name[classify_rate($found, $hit,
 					    $med, $hi)];
 		}
@@ -3490,11 +3728,8 @@ END_OF_HTML
 	# Test data
 	foreach $entry (@entries) {
 		my ($found, $hit) = @{$entry};
-		my $rate = "-";
+		my $rate = rate($hit, $found, "&nbsp;%");
 
-		if ($found > 0) {
-			$rate = sprintf("%.1f&nbsp;%%", $hit * 100 / $found);
-		}
 		write_html($handle, <<END_OF_HTML);
 	      <td class="testPer">$rate</td>
 	      <td class="testNum">$hit&nbsp;/&nbsp;$found</td>
@@ -4010,7 +4245,7 @@ sub write_frameset(*$$$)
 	<html lang="en">
 
 	<head>
-	  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	  <meta http-equiv="Content-Type" content="text/html; charset=$charset">
 	  <title>$_[3]</title>
 	  <link rel="stylesheet" type="text/css" href="$_[1]gcov.css">
 	</head>
@@ -4073,7 +4308,7 @@ sub write_overview(*$$$$)
 
 	<head>
 	  <title>$_[3]</title>
-	  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	  <meta http-equiv="Content-Type" content="text/html; charset=$charset">
 	  <link rel="stylesheet" type="text/css" href="$_[1]gcov.css">
 	</head>
 
@@ -4120,17 +4355,6 @@ END_OF_HTML
 }
 
 
-# format_rate(found, hit)
-#
-# Return formatted percent string for coverage rate.
-#
-
-sub format_rate($$)
-{	
-	return $_[0] == 0 ? "-" : sprintf("%.1f", $_[1] * 100 / $_[0])." %";
-}
-
-
 sub max($$)
 {
 	my ($a, $b) = @_;
@@ -4172,6 +4396,7 @@ sub write_header(*$$$$$$$$$$)
 	my @row_right;
 	my $num_rows;
 	my $i;
+	my $esc_trunc_name = escape_html($trunc_name);
 
 	$base_name = basename($rel_filename);
 
@@ -4187,12 +4412,14 @@ sub write_header(*$$$$$$$$$$)
 		# Directory overview
 		$base_dir = get_relative_base_path($rel_filename);
 		$view = "<a href=\"$base_dir"."index.$html_ext\">".
-			"$overview_title</a> - $trunc_name";
+			"$overview_title</a> - $esc_trunc_name";
 	}
 	elsif ($type == $HDR_SOURCE || $type == $HDR_FUNC)
 	{
 		# File view
 		my $dir_name = dirname($rel_filename);
+		my $esc_base_name = escape_html($base_name);
+		my $esc_dir_name = escape_html($dir_name);
 
 		$base_dir = get_relative_base_path($dir_name);
 		if ($frames)
@@ -4202,21 +4429,25 @@ sub write_header(*$$$$$$$$$$)
 			$view = "<a href=\"$base_dir"."index.$html_ext\" ".
 				"target=\"_parent\">$overview_title</a> - ".
 				"<a href=\"index.$html_ext\" target=\"_parent\">".
-				"$dir_name</a> - $base_name";
+				"$esc_dir_name</a> - $esc_base_name";
 		}
 		else
 		{
 			$view = "<a href=\"$base_dir"."index.$html_ext\">".
 				"$overview_title</a> - ".
 				"<a href=\"index.$html_ext\">".
-				"$dir_name</a> - $base_name";
+				"$esc_dir_name</a> - $esc_base_name";
 		}
 
 		# Add function suffix
 		if ($func_coverage) {
 			$view .= "<span style=\"font-size: 80%;\">";
 			if ($type == $HDR_SOURCE) {
-				$view .= " (source / <a href=\"$base_name.func.$html_ext\">functions</a>)";
+				if ($sort) {
+					$view .= " (source / <a href=\"$base_name.func-sort-c.$html_ext\">functions</a>)";
+				} else {
+					$view .= " (source / <a href=\"$base_name.func.$html_ext\">functions</a>)";
+				}
 			} elsif ($type == $HDR_FUNC) {
 				$view .= " (<a href=\"$base_name.gcov.$html_ext\">source</a> / functions)";
 			}
@@ -4303,7 +4534,7 @@ END_OF_HTML
 	# Line coverage
 	$style = $rate_name[classify_rate($lines_found, $lines_hit,
 					  $med_limit, $hi_limit)];
-	$rate = format_rate($lines_found, $lines_hit);
+	$rate = rate($lines_hit, $lines_found, " %");
 	push(@row_right, [[undef, "headerItem", "Lines:"],
 			  [undef, "headerCovTableEntry", $lines_hit],
 			  [undef, "headerCovTableEntry", $lines_found],
@@ -4313,7 +4544,7 @@ END_OF_HTML
 	if ($func_coverage) {
 		$style = $rate_name[classify_rate($fn_found, $fn_hit,
 						  $fn_med_limit, $fn_hi_limit)];
-		$rate = format_rate($fn_found, $fn_hit);
+		$rate = rate($fn_hit, $fn_found, " %");
 		push(@row_right, [[undef, "headerItem", "Functions:"],
 				  [undef, "headerCovTableEntry", $fn_hit],
 				  [undef, "headerCovTableEntry", $fn_found],
@@ -4324,7 +4555,7 @@ END_OF_HTML
 	if ($br_coverage) {
 		$style = $rate_name[classify_rate($br_found, $br_hit,
 						  $br_med_limit, $br_hi_limit)];
-		$rate = format_rate($br_found, $br_hit);
+		$rate = rate($br_hit, $br_found, " %");
 		push(@row_right, [[undef, "headerItem", "Branches:"],
 				  [undef, "headerCovTableEntry", $br_hit],
 				  [undef, "headerCovTableEntry", $br_found],
@@ -4795,6 +5026,7 @@ sub br_ivec_get($$)
 
 	# Retrieve data from vector
 	$block	= vec($vec, $offset + $BR_BLOCK, $BR_VEC_WIDTH);
+	$block = -1 if ($block == $BR_VEC_MAX);
 	$branch = vec($vec, $offset + $BR_BRANCH, $BR_VEC_WIDTH);
 	$taken	= vec($vec, $offset + $BR_TAKEN, $BR_VEC_WIDTH);
 
@@ -4820,10 +5052,12 @@ sub br_ivec_push($$$$)
 	my $i;
 
 	$vec = "" if (!defined($vec));
+	$block = $BR_VEC_MAX if $block < 0;
 
 	# Check if branch already exists in vector
 	for ($i = 0; $i < $num; $i++) {
 		my ($v_block, $v_branch, $v_taken) = br_ivec_get($vec, $i);
+		$v_block = $BR_VEC_MAX if $v_block < 0;
 
 		next if ($v_block != $block || $v_branch != $branch);
 
@@ -4958,19 +5192,43 @@ sub write_source($$$$$$$)
 	my $sumbrcount = $_[6];
 	my $datafunc = get_hash_reverse($funcdata);
 	my $add_anchor;
+	my @file;
 
 	if ($_[2])
 	{
 		%count_data = %{$_[2]};
 	}
 
-	open(SOURCE_HANDLE, "<".$source_filename)
-		or die("ERROR: cannot open $source_filename for reading!\n");
+	if (!open(SOURCE_HANDLE, "<", $source_filename)) {
+		my @lines;
+		my $last_line = 0;
+
+		if (!$ignore[$ERROR_SOURCE]) {
+			die("ERROR: cannot read $source_filename\n");
+		}
+
+		# Continue without source file
+		warn("WARNING: cannot read $source_filename!\n");
+
+		@lines = sort( { $a <=> $b }  keys(%count_data));
+		if (@lines) {
+			$last_line = $lines[scalar(@lines) - 1];
+		}
+		return ( ":" ) if ($last_line < 1);
+
+		# Simulate gcov behavior
+		for ($line_number = 1; $line_number <= $last_line;
+		     $line_number++) {
+			push(@file, "/* EOF */");
+		}
+	} else {
+		@file = <SOURCE_HANDLE>;
+	}
 	
 	write_source_prolog(*HTML_HANDLE);
-
-	for ($line_number = 1; <SOURCE_HANDLE> ; $line_number++)
-	{
+	$line_number = 0;
+	foreach (@file) {
+		$line_number++;
 		chomp($_);
 
 		# Also remove CR from line-end
@@ -5055,8 +5313,51 @@ sub funcview_get_sorted($$$)
 	if ($type == 0) {
 		return sort(keys(%{$funcdata}));
 	}
-	return sort({$sumfncdata->{$b} <=> $sumfncdata->{$a}}
-		    keys(%{$sumfncdata}));
+	return sort({
+		$sumfncdata->{$b} == $sumfncdata->{$a} ?
+			$a cmp $b : $sumfncdata->{$a} <=> $sumfncdata->{$b}
+		} keys(%{$sumfncdata}));
+}
+
+sub demangle_list($)
+{
+	my ($list) = @_;
+	my $tmpfile;
+	my $handle;
+	my %demangle;
+	my %versions;
+
+	# Write function names to file
+	($handle, $tmpfile) = tempfile();
+	die("ERROR: could not create temporary file") if (!defined($tmpfile));
+	print($handle join("\n", @$list));
+	close($handle);
+
+	# Build translation hash from c++filt output
+	open($handle, "-|", "c++filt < $tmpfile") or
+		die("ERROR: could not run c++filt: $!\n");
+	foreach my $func (@$list) {
+		my $translated = <$handle>;
+		my $version;
+
+		last if (!defined($translated));
+		chomp($translated);
+
+		$version = ++$versions{$translated};
+		$translated .= ".$version" if ($version > 1);
+		$demangle{$func} = $translated;
+	}
+	close($handle);
+
+	if (scalar(keys(%demangle)) != scalar(@$list)) {
+		die("ERROR: c++filt output not as expected (".
+		    scalar(keys(%demangle))." vs ".scalar(@$list).") lines\n");
+	}
+
+	unlink($tmpfile) or
+		warn("WARNING: could not remove temporary file $tmpfile: $!\n");
+
+	return \%demangle;
 }
 
 #
@@ -5086,6 +5387,7 @@ sub write_function_table(*$$$$$$$$$$)
 	my $func;
 	my $func_code;
 	my $count_code;
+	my $demangle;
 
 	# Get HTML code for headings
 	$func_code = funcview_get_func_code($name, $base, $type);
@@ -5100,7 +5402,12 @@ sub write_function_table(*$$$$$$$$$$)
 	    </tr>
 END_OF_HTML
 	;
-	
+
+	# Get demangle translation hash
+	if ($demangle_cpp) {
+		$demangle = demangle_list([ sort(keys(%{$funcdata})) ]);
+	}
+
 	# Get a sorted table
 	foreach $func (funcview_get_sorted($funcdata, $sumfncdata, $type)) {
 		if (!defined($funcdata->{$func}))
@@ -5113,12 +5420,10 @@ END_OF_HTML
 		my $count = $sumfncdata->{$name};
 		my $countstyle;
 
-		# Demangle C++ function names if requested
-		if ($demangle_cpp) {
-			$name = `c++filt "$name"`;
-			chomp($name);
-		}
-		# Escape any remaining special characters
+		# Replace function name with demangled version if available
+		$name = $demangle->{$name} if (exists($demangle->{$name}));
+
+		# Escape special characters
 		$name = escape_html($name);
 		if ($startline < 1) {
 			$startline = 1;
@@ -5412,22 +5717,25 @@ sub remove_unused_descriptions()
 
 
 #
-# apply_prefix(filename, prefix)
+# apply_prefix(filename, PREFIXES)
 #
-# If FILENAME begins with PREFIX, remove PREFIX from FILENAME and return
-# resulting string, otherwise return FILENAME.
+# If FILENAME begins with PREFIX from PREFIXES, remove PREFIX from FILENAME
+# and return resulting string, otherwise return FILENAME.
 #
 
-sub apply_prefix($$)
+sub apply_prefix($@)
 {
-	my $filename = $_[0];
-	my $prefix = $_[1];
+	my $filename = shift;
+	my @dir_prefix = @_;
 
-	if (defined($prefix) && ($prefix ne ""))
+	if (@dir_prefix)
 	{
-		if ($filename =~ /^\Q$prefix\E\/(.*)$/)
+		foreach my $prefix (@dir_prefix)
 		{
-			return substr($filename, length($prefix) + 1);
+			if ($prefix ne "" && $filename =~ /^\Q$prefix\E\/(.*)$/)
+			{
+				return substr($filename, length($prefix) + 1);
+			}
 		}
 	}
 
@@ -5455,12 +5763,12 @@ sub system_no_output($@)
 	local *OLD_STDOUT;
 
 	# Save old stdout and stderr handles
-	($mode & 1) && open(OLD_STDOUT, ">>&STDOUT");
-	($mode & 2) && open(OLD_STDERR, ">>&STDERR");
+	($mode & 1) && open(OLD_STDOUT, ">>&", "STDOUT");
+	($mode & 2) && open(OLD_STDERR, ">>&", "STDERR");
 
 	# Redirect to /dev/null
-	($mode & 1) && open(STDOUT, ">/dev/null");
-	($mode & 2) && open(STDERR, ">/dev/null");
+	($mode & 1) && open(STDOUT, ">", "/dev/null");
+	($mode & 2) && open(STDERR, ">", "/dev/null");
 
 	system(@_);
 	$result = $?;
@@ -5470,8 +5778,8 @@ sub system_no_output($@)
 	($mode & 2) && close(STDERR);
 
 	# Restore old handles
-	($mode & 1) && open(STDOUT, ">>&OLD_STDOUT");
-	($mode & 2) && open(STDERR, ">>&OLD_STDERR");
+	($mode & 1) && open(STDOUT, ">>&", "OLD_STDOUT");
+	($mode & 2) && open(STDERR, ">>&", "OLD_STDERR");
 
 	return $result;
 }
@@ -5492,7 +5800,7 @@ sub read_config($)
 	my $value;
 	local *HANDLE;
 
-	if (!open(HANDLE, "<$filename"))
+	if (!open(HANDLE, "<", $filename))
 	{
 		warn("WARNING: cannot read configuration file $filename\n");
 		return undef;
@@ -5531,8 +5839,8 @@ sub read_config($)
 #   key_string => var_ref
 #
 # where KEY_STRING is a keyword and VAR_REF is a reference to an associated
-# variable. If the global configuration hash CONFIG contains a value for
-# keyword KEY_STRING, VAR_REF will be assigned the value for that keyword. 
+# variable. If the global configuration hashes CONFIG or OPT_RC contain a value
+# for keyword KEY_STRING, VAR_REF will be assigned the value for that keyword. 
 #
 
 sub apply_config($)
@@ -5541,8 +5849,9 @@ sub apply_config($)
 
 	foreach (keys(%{$ref}))
 	{
-		if (defined($config->{$_}))
-		{
+		if (defined($opt_rc{$_})) {
+			${$ref->{$_}} = $opt_rc{$_};
+		} elsif (defined($config->{$_})) {
 			${$ref->{$_}} = $config->{$_};
 		}
 	}
@@ -5565,7 +5874,7 @@ sub get_html_prolog($)
 	{
 		local *HANDLE;
 
-		open(HANDLE, "<".$filename)
+		open(HANDLE, "<", $filename)
 			or die("ERROR: cannot open html prolog $filename!\n");
 		while (<HANDLE>)
 		{
@@ -5581,7 +5890,7 @@ sub get_html_prolog($)
 <html lang="en">
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=$charset">
   <title>\@pagetitle\@</title>
   <link rel="stylesheet" type="text/css" href="\@basedir\@gcov.css">
 </head>
@@ -5611,7 +5920,7 @@ sub get_html_epilog($)
 	{
 		local *HANDLE;
 
-		open(HANDLE, "<".$filename)
+		open(HANDLE, "<", $filename)
 			or die("ERROR: cannot open html epilog $filename!\n");
 		while (<HANDLE>)
 		{
@@ -5645,4 +5954,97 @@ sub die_handler($)
 	my ($msg) = @_;
 
 	die("$tool_name: $msg");
+}
+
+#
+# parse_ignore_errors(@ignore_errors)
+#
+# Parse user input about which errors to ignore.
+#
+
+sub parse_ignore_errors(@)
+{
+	my (@ignore_errors) = @_;
+	my @items;
+	my $item;
+
+	return if (!@ignore_errors);
+
+	foreach $item (@ignore_errors) {
+		$item =~ s/\s//g;
+		if ($item =~ /,/) {
+			# Split and add comma-separated parameters
+			push(@items, split(/,/, $item));
+		} else {
+			# Add single parameter
+			push(@items, $item);
+		}
+	}
+	foreach $item (@items) {
+		my $item_id = $ERROR_ID{lc($item)};
+
+		if (!defined($item_id)) {
+			die("ERROR: unknown argument for --ignore-errors: ".
+			    "$item\n");
+		}
+		$ignore[$item_id] = 1;
+	}
+}
+
+#
+# parse_dir_prefix(@dir_prefix)
+#
+# Parse user input about the prefix list
+#
+
+sub parse_dir_prefix(@)
+{
+	my (@opt_dir_prefix) = @_;
+	my $item;
+
+	return if (!@opt_dir_prefix);
+
+	foreach $item (@opt_dir_prefix) {
+		if ($item =~ /,/) {
+			# Split and add comma-separated parameters
+			push(@dir_prefix, split(/,/, $item));
+		} else {
+			# Add single parameter
+			push(@dir_prefix, $item);
+		}
+	}
+}
+
+#
+# rate(hit, found[, suffix, precision, width])
+#
+# Return the coverage rate [0..100] for HIT and FOUND values. 0 is only
+# returned when HIT is 0. 100 is only returned when HIT equals FOUND.
+# PRECISION specifies the precision of the result. SUFFIX defines a
+# string that is appended to the result if FOUND is non-zero. Spaces
+# are added to the start of the resulting string until it is at least WIDTH
+# characters wide.
+#
+
+sub rate($$;$$$)
+{
+        my ($hit, $found, $suffix, $precision, $width) = @_;
+        my $rate; 
+
+	# Assign defaults if necessary
+	$precision	= $default_precision if (!defined($precision));
+	$suffix		= ""	if (!defined($suffix));
+	$width		= 0	if (!defined($width));
+        
+        return sprintf("%*s", $width, "-") if (!defined($found) || $found == 0);
+        $rate = sprintf("%.*f", $precision, $hit * 100 / $found);
+
+	# Adjust rates if necessary
+        if ($rate == 0 && $hit > 0) {
+		$rate = sprintf("%.*f", $precision, 1 / 10 ** $precision);
+        } elsif ($rate == 100 && $hit != $found) {
+		$rate = sprintf("%.*f", $precision, 100 - 1 / 10 ** $precision);
+	}
+
+	return sprintf("%*s", $width, $rate.$suffix);
 }

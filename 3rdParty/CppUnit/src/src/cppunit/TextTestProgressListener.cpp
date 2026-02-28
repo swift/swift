@@ -20,6 +20,7 @@ void
 TextTestProgressListener::startTest( Test * )
 {
   stdCOut() << ".";
+  stdCOut().flush();
 }
 
 
@@ -27,6 +28,7 @@ void
 TextTestProgressListener::addFailure( const TestFailure &failure )
 {
   stdCOut() << ( failure.isError() ? "E" : "F" );
+  stdCOut().flush();
 }
 
 

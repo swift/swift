@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,13 +9,13 @@
 #include <SwifTools/Dock/Dock.h>
 
 namespace Swift {
-	
-	class CocoaApplication;
 
-	class MacOSXDock : public Dock {
-		public:
-			MacOSXDock(CocoaApplication* application);
+    class CocoaApplication;
 
-			virtual void setNumberOfPendingMessages(int i);
-	};
+    class MacOSXDock : public Dock {
+        public:
+            MacOSXDock(CocoaApplication* application);
+
+            virtual void setNumberOfPendingMessages(size_t i);
+    };
 }

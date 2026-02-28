@@ -10,8 +10,8 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API UnknownElement : public ToplevelElement {
-		public:
-			UnknownElement() {}
-	};
+    class SWIFTEN_API UnknownElement : public ToplevelElement {
+        public:
+            UnknownElement() {}
+    };
 }

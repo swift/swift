@@ -1,32 +1,32 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include "ui_QtBookmarkDetailWindow.h"
-
 #include <boost/optional.hpp>
 
 #include <QDialog>
 
-#include "Swiften/MUC/MUCBookmark.h"
+#include <Swiften/MUC/MUCBookmark.h>
+
+#include <Swift/QtUI/ui_QtBookmarkDetailWindow.h>
 
 namespace Swift {
-	class QtBookmarkDetailWindow : public QDialog, protected Ui::QtBookmarkDetailWindow {
-		Q_OBJECT
-		public:
-			QtBookmarkDetailWindow(QWidget* parent = NULL);
-			virtual bool commit() = 0;
-			boost::optional<MUCBookmark> createBookmarkFromForm();
+    class QtBookmarkDetailWindow : public QDialog, protected Ui::QtBookmarkDetailWindow {
+        Q_OBJECT
+        public:
+            QtBookmarkDetailWindow(QWidget* parent = nullptr);
+            virtual bool commit() = 0;
+            boost::optional<MUCBookmark> createBookmarkFromForm();
 
-		protected:
-			void createFormFromBookmark(const MUCBookmark& bookmark);
+        protected:
+            void createFormFromBookmark(const MUCBookmark& bookmark);
 
-		public slots:
-			void accept();
-	};
+        public slots:
+            void accept();
+    };
 }
 

@@ -1,0 +1,12 @@
+app: Swift
+
+# ingredients:
+#   script:
+#     - cp -r /build/* usr/
+script:
+  - cp -r /build/* usr/
+  - strip usr/bin/*
+  - cp /build/share/applications/swift.desktop .
+  - cp /build/share/pixmaps/swift.xpm .
+# post:
+#   - cp -r /build/lib/* usr/lib/

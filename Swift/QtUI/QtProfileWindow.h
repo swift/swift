@@ -20,44 +20,44 @@
 #include <Swift/Controllers/UIInterfaces/ProfileWindow.h>
 
 namespace Ui {
-	class QtProfileWindow;
+    class QtProfileWindow;
 }
 
 namespace Swift {
 
 class QtProfileWindow : public QWidget, public ProfileWindow {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		QtProfileWindow();
-		virtual ~QtProfileWindow();
+    public:
+        QtProfileWindow();
+        virtual ~QtProfileWindow();
 
-		virtual void setJID(const JID& jid);
-		virtual void setVCard(VCard::ref vcard);
+        virtual void setJID(const JID& jid);
+        virtual void setVCard(VCard::ref vcard);
 
-		virtual void setEnabled(bool b);
-		virtual void setProcessing(bool processing);
-		virtual void setError(const std::string& error);
-		virtual void setEditable(bool b);
+        virtual void setEnabled(bool b);
+        virtual void setProcessing(bool processing);
+        virtual void setError(const std::string& error);
+        virtual void setEditable(bool b);
 
-		virtual void show();
-		virtual void hide();
+        virtual void show();
+        virtual void hide();
 
-		virtual QSize sizeHint() const;
+        virtual QSize sizeHint() const;
 
-	private:
-		void updateTitle();
-		void updateWindowSize();
-		virtual void closeEvent(QCloseEvent* event);
+    private:
+        void updateTitle();
+        void updateWindowSize();
+        virtual void closeEvent(QCloseEvent* event);
 
-	private slots:
-		void handleSave();
-		void handleAdjustSizeTimeout();
+    private slots:
+        void handleSave();
+        void handleAdjustSizeTimeout();
 
-	private:
-		Ui::QtProfileWindow* ui;
-		JID jid;
-		QTimer adjustSizeTimer;
+    private:
+        Ui::QtProfileWindow* ui;
+        JID jid;
+        QTimer adjustSizeTimer;
 };
 
 }

@@ -11,12 +11,12 @@
 #include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
-	class CertificateStorage {
-		public:
-			virtual ~CertificateStorage();
+    class CertificateStorage {
+        public:
+            virtual ~CertificateStorage();
 
-			virtual bool hasCertificate(Certificate::ref certificate) const = 0;
-			virtual void addCertificate(Certificate::ref certificate) = 0;
-	};
+            virtual bool hasCertificate(Certificate::ref certificate) const = 0;
+            virtual void addCertificate(Certificate::ref certificate) = 0;
+    };
 
 }

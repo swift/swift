@@ -1,58 +1,58 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 
+#include <boost/optional.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubOptions.h>
 #include <Swiften/Elements/PubSubPayload.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubSubscribe : public PubSubPayload {
-		public:
-			
-			PubSubSubscribe();
-			
-			virtual ~PubSubSubscribe();
+    class SWIFTEN_API PubSubSubscribe : public PubSubPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubSubscribe();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubSubscribe();
 
-			const JID& getJID() const {
-				return jid;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			void setJID(const JID& value) {
-				this->jid = value ;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			boost::shared_ptr<PubSubOptions> getOptions() const {
-				return options;
-			}
+            const JID& getJID() const {
+                return jid;
+            }
 
-			void setOptions(boost::shared_ptr<PubSubOptions> value) {
-				this->options = value ;
-			}
+            void setJID(const JID& value) {
+                this->jid = value ;
+            }
+
+            std::shared_ptr<PubSubOptions> getOptions() const {
+                return options;
+            }
+
+            void setOptions(std::shared_ptr<PubSubOptions> value) {
+                this->options = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			JID jid;
-			boost::shared_ptr<PubSubOptions> options;
-	};
+        private:
+            boost::optional< std::string > node;
+            JID jid;
+            std::shared_ptr<PubSubOptions> options;
+    };
 }

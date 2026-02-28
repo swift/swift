@@ -13,23 +13,23 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class VCardManager;
+    class VCardManager;
 
-	class NickManagerImpl : public NickManager {
-		public:
-			NickManagerImpl(const JID& ownJID, VCardManager* vcardManager);
-			virtual ~NickManagerImpl();
+    class NickManagerImpl : public NickManager {
+        public:
+            NickManagerImpl(const JID& ownJID, VCardManager* vcardManager);
+            virtual ~NickManagerImpl();
 
-			std::string getOwnNick() const;
-			void setOwnNick(const std::string& nick);
+            std::string getOwnNick() const;
+            void setOwnNick(const std::string& nick);
 
-		private:
-			void handleVCardReceived(const JID& jid, VCard::ref vCard);
-			void updateOwnNickFromVCard(VCard::ref vcard);
+        private:
+            void handleVCardReceived(const JID& jid, VCard::ref vCard);
+            void updateOwnNickFromVCard(VCard::ref vcard);
 
-		private:
-			JID ownJID;
-			VCardManager* vcardManager;
-			std::string ownNick;
-	};
+        private:
+            JID ownJID;
+            VCardManager* vcardManager;
+            std::string ownNick;
+    };
 }

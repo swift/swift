@@ -4,83 +4,89 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
-#include "Swiften/Base/String.h"
-#include "Swiften/TLS/Certificate.h"
-#include "Swiften/TLS/Schannel/SchannelUtil.h"
+#include <Swiften/Base/String.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/Schannel/SchannelUtil.h>
 
-namespace Swift 
+namespace Swift
 {
-	class SchannelCertificate : public Certificate 
-	{
-	public:
-		typedef boost::shared_ptr<SchannelCertificate> ref;
+    class SchannelCertificate : public Certificate
+    {
+    public:
+        typedef std::shared_ptr<SchannelCertificate> ref;
 
-	public:
-		SchannelCertificate(const ScopedCertContext& certCtxt);
-		SchannelCertificate(const ByteArray& der);
+    public:
+        SchannelCertificate(const ScopedCertContext& certCtxt);
+        SchannelCertificate(const ByteArray& der);
 
-		std::string getSubjectName() const 
-		{
-			return m_subjectName;
-		}
+        std::string getSubjectName() const
+        {
+            return m_subjectName;
+        }
 
-		std::vector<std::string> getCommonNames() const 
-		{
-			return m_commonNames;
-		}
+        std::vector<std::string> getCommonNames() const
+        {
+            return m_commonNames;
+        }
 
-		std::vector<std::string> getSRVNames() const 
-		{
-			return m_srvNames;
-		}
+        std::vector<std::string> getSRVNames() const
+        {
+            return m_srvNames;
+        }
 
-		std::vector<std::string> getDNSNames() const 
-		{
-			return m_dnsNames;
-		}
+        std::vector<std::string> getDNSNames() const
+        {
+            return m_dnsNames;
+        }
 
-		std::vector<std::string> getXMPPAddresses() const 
-		{
-			return m_xmppAddresses;
-		}
+        std::vector<std::string> getXMPPAddresses() const
+        {
+            return m_xmppAddresses;
+        }
 
-		ScopedCertContext getCertContext() const
-		{
-			return m_cert;
-		}
+        ScopedCertContext getCertContext() const
+        {
+            return m_cert;
+        }
 
-		ByteArray toDER() const;
-		
-	private:
-		void parse();
-		std::string wstrToStr(const std::wstring& wstr);
+        ByteArray toDER() const;
 
-		void addSRVName(const std::string& name) 
-		{
-			m_srvNames.push_back(name);
-		}
+    private:
+        void parse();
+        std::string wstrToStr(const std::wstring& wstr);
 
-		void addDNSName(const std::string& name) 
-		{
-			m_dnsNames.push_back(name);
-		}
+        void addSRVName(const std::string& name)
+        {
+            m_srvNames.push_back(name);
+        }
 
-		void addXMPPAddress(const std::string& addr) 
-		{
-			m_xmppAddresses.push_back(addr);
-		}
+        void addDNSName(const std::string& name)
+        {
+            m_dnsNames.push_back(name);
+        }
 
-	private:
-		ScopedCertContext		 m_cert;
+        void addXMPPAddress(const std::string& addr)
+        {
+            m_xmppAddresses.push_back(addr);
+        }
 
-		std::string				 m_subjectName;
-		std::vector<std::string> m_commonNames;
-		std::vector<std::string> m_dnsNames;
-		std::vector<std::string> m_xmppAddresses;
-		std::vector<std::string> m_srvNames;
-	};
+    private:
+        ScopedCertContext         m_cert;
+
+        std::string                 m_subjectName;
+        std::vector<std::string> m_commonNames;
+        std::vector<std::string> m_dnsNames;
+        std::vector<std::string> m_xmppAddresses;
+        std::vector<std::string> m_srvNames;
+    };
 }

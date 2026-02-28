@@ -1,3 +1,3 @@
 @echo off
 
-python 3rdParty/SCons/scons-2.4.0/script/scons %*
+python 3rdParty/SCons/scons-3.0.1/script/scons.py %*

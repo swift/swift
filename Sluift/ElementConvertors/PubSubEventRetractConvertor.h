@@ -1,29 +1,25 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-
-#include <Sluift/GenericLuaElementConvertor.h>
 #include <Swiften/Elements/PubSubEventRetract.h>
 
+#include <Sluift/GenericLuaElementConvertor.h>
+
 namespace Swift {
-	class LuaElementConvertors;
+    class LuaElementConvertors;
 
-	class PubSubEventRetractConvertor : public GenericLuaElementConvertor<PubSubEventRetract> {
-		public:
-			PubSubEventRetractConvertor(LuaElementConvertors* convertors);
-			virtual ~PubSubEventRetractConvertor();
+    class PubSubEventRetractConvertor : public GenericLuaElementConvertor<PubSubEventRetract> {
+        public:
+            PubSubEventRetractConvertor();
+            virtual ~PubSubEventRetractConvertor() override;
 
-			virtual boost::shared_ptr<PubSubEventRetract> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<PubSubEventRetract>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
-
-		private:
-			LuaElementConvertors* convertors;
-	};
+            virtual std::shared_ptr<PubSubEventRetract> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubEventRetract>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
+    };
 }

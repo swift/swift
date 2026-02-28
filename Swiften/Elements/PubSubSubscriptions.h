@@ -1,53 +1,53 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubPayload.h>
 #include <Swiften/Elements/PubSubSubscription.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubSubscriptions : public PubSubPayload {
-		public:
-			
-			PubSubSubscriptions();
-			PubSubSubscriptions(const std::string& node) : node(node) {}
-			virtual ~PubSubSubscriptions();
+    class SWIFTEN_API PubSubSubscriptions : public PubSubPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubSubscriptions();
+            PubSubSubscriptions(const std::string& node) : node(node) {}
+            virtual ~PubSubSubscriptions();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			const std::vector< boost::shared_ptr<PubSubSubscription> >& getSubscriptions() const {
-				return subscriptions;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			void setSubscriptions(const std::vector< boost::shared_ptr<PubSubSubscription> >& value) {
-				this->subscriptions = value ;
-			}
+            const std::vector< std::shared_ptr<PubSubSubscription> >& getSubscriptions() const {
+                return subscriptions;
+            }
 
-			void addSubscription(boost::shared_ptr<PubSubSubscription> value) {
-				this->subscriptions.push_back(value);
-			}
+            void setSubscriptions(const std::vector< std::shared_ptr<PubSubSubscription> >& value) {
+                this->subscriptions = value ;
+            }
+
+            void addSubscription(std::shared_ptr<PubSubSubscription> value) {
+                this->subscriptions.push_back(value);
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			std::vector< boost::shared_ptr<PubSubSubscription> > subscriptions;
-	};
+        private:
+            boost::optional< std::string > node;
+            std::vector< std::shared_ptr<PubSubSubscription> > subscriptions;
+    };
 }

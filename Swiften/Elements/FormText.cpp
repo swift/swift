@@ -14,11 +14,11 @@ FormText::~FormText() {
 }
 
 void FormText::setTextString(const std::string& text) {
-	text_ = text;
+    text_ = text;
 }
 
 const std::string& FormText::getTextString() const {
-	return text_;
+    return text_;
 }
 
 }

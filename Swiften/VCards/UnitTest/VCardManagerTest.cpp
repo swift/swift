@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <vector>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -23,189 +23,290 @@
 using namespace Swift;
 
 class VCardManagerTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(VCardManagerTest);
-		CPPUNIT_TEST(testGet_NewVCardRequestsVCard);
-		CPPUNIT_TEST(testGet_ExistingVCard);
-		CPPUNIT_TEST(testRequest_RequestsVCard);
-		CPPUNIT_TEST(testRequest_ReceiveEmitsNotification);
-		CPPUNIT_TEST(testRequest_Error);
-		CPPUNIT_TEST(testRequest_VCardAlreadyRequested);
-		CPPUNIT_TEST(testRequest_AfterPreviousRequest);
-		CPPUNIT_TEST(testRequestOwnVCard);
-		CPPUNIT_TEST(testCreateSetVCardRequest);
-		CPPUNIT_TEST(testCreateSetVCardRequest_Error);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(VCardManagerTest);
+        CPPUNIT_TEST(testGet_NewVCardRequestsVCard);
+        CPPUNIT_TEST(testGet_ExistingVCard);
+        CPPUNIT_TEST(testRequest_RequestsVCard);
+        CPPUNIT_TEST(testRequest_ReceiveEmitsNotification);
+        CPPUNIT_TEST(testRequest_Error);
+        CPPUNIT_TEST(testRequest_VCardAlreadyRequested);
+        CPPUNIT_TEST(testRequest_AfterPreviousRequest);
 
-	public:
-		void setUp() {
-			changes.clear();
-			ownChanges.clear();
-			ownJID = JID("baz@fum.com/dum");
-			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
-			stanzaChannel = new DummyStanzaChannel();
-			iqRouter = new IQRouter(stanzaChannel);
-			vcardStorage = new VCardMemoryStorage(crypto.get());
-		}
+        CPPUNIT_TEST(testRequestVCard_ReturnFullVCard);
+        CPPUNIT_TEST(testRequestVCard_ReturnEmptyVCard);
+        CPPUNIT_TEST(testRequestVCard_ReturnItemNotFoundError);
+        CPPUNIT_TEST(testRequestVCard_ReturnFeatureNotImplementedError);
 
-		void tearDown() {
-			delete vcardStorage;
-			delete iqRouter;
-			delete stanzaChannel;
-		}
+        CPPUNIT_TEST(testRequestOwnVCard_ReturnFullVCard);
+        CPPUNIT_TEST(testRequestOwnVCard_ReturnEmptyVCard);
+        CPPUNIT_TEST(testRequestOwnVCard_ReturnItemNotFoundError);
+        CPPUNIT_TEST(testRequestOwnVCard_ReturnFeatureNotImplementedError);
 
-		void testGet_NewVCardRequestsVCard() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
+        CPPUNIT_TEST(testCreateSetVCardRequest);
+        CPPUNIT_TEST(testCreateSetVCardRequest_Error);
+        CPPUNIT_TEST_SUITE_END();
 
-			CPPUNIT_ASSERT(!result);
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
-		}
+    public:
+        void setUp() {
+            changes.clear();
+            ownChanges.clear();
+            ownJID = JID("baz@fum.com/dum");
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            stanzaChannel = new DummyStanzaChannel();
+            iqRouter = new IQRouter(stanzaChannel);
+            vcardStorage = new VCardMemoryStorage(crypto.get());
+        }
 
-		void testGet_ExistingVCard() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			VCard::ref vcard(new VCard());
-			vcard->setFullName("Foo Bar");
-			vcardStorage->setVCard(JID("foo@bar.com/baz"), vcard);
+        void tearDown() {
+            delete vcardStorage;
+            delete iqRouter;
+            delete stanzaChannel;
+        }
 
-			VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
+        void testGet_NewVCardRequestsVCard() {
+            auto testling = createManager();
+            VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), result->getFullName());
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
-		}
+            CPPUNIT_ASSERT(!result);
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+        }
 
-		void testRequest_RequestsVCard() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			testling->requestVCard(JID("foo@bar.com/baz"));
+        void testGet_ExistingVCard() {
+            auto testling = createManager();
+            VCard::ref vcard(new VCard());
+            vcard->setFullName("Foo Bar");
+            vcardStorage->setVCard(JID("foo@bar.com/baz"), vcard);
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
-		}
+            VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
 
-		void testRequest_ReceiveEmitsNotification() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			testling->requestVCard(JID("foo@bar.com/baz"));
-			stanzaChannel->onIQReceived(createVCardResult());
+            CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), result->getFullName());
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
+        }
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
-			CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), changes[0].second->getFullName());
-			CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), vcardStorage->getVCard(JID("foo@bar.com/baz"))->getFullName());
+        void testRequest_RequestsVCard() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
 
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(ownChanges.size()));
-		}
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+        }
 
-		void testRequest_Error() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			testling->requestVCard(JID("foo@bar.com/baz"));
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
+        void testRequest_ReceiveEmitsNotification() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+            stanzaChannel->onIQReceived(createVCardResult());
 
-			// On error, cached vCards should not be changed.
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
-		}
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
+            CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), changes[0].second->getFullName());
+            CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), vcardStorage->getVCard(JID("foo@bar.com/baz"))->getFullName());
 
-		void testRequest_VCardAlreadyRequested() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			testling->requestVCard(JID("foo@bar.com/baz"));
-			VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(ownChanges.size()));
+        }
 
-			CPPUNIT_ASSERT(!result);
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
-		}
+        void testRequest_Error() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+            stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 
-		void testRequest_AfterPreviousRequest() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			testling->requestVCard(JID("foo@bar.com/baz"));
-			stanzaChannel->onIQReceived(createVCardResult());
-			testling->requestVCard(JID("foo@bar.com/baz"));
+            // On error, cached vCards should not be changed.
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
+        }
 
-			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(1, JID("foo@bar.com/baz"), IQ::Get));
-		}
+        void testRequest_VCardAlreadyRequested() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+            VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
 
-		void testRequestOwnVCard() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			testling->requestVCard(ownJID);
-			stanzaChannel->onIQReceived(createOwnVCardResult());
+            CPPUNIT_ASSERT(!result);
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+        }
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(ownJID.toBare(), changes[0].first);
-			CPPUNIT_ASSERT_EQUAL(std::string("Myself"), changes[0].second->getFullName());
-			CPPUNIT_ASSERT_EQUAL(std::string("Myself"), vcardStorage->getVCard(ownJID.toBare())->getFullName());
+        void testRequest_AfterPreviousRequest() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+            stanzaChannel->onIQReceived(createVCardResult());
+            testling->requestVCard(JID("foo@bar.com/baz"));
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(ownChanges.size()));
-			CPPUNIT_ASSERT_EQUAL(std::string("Myself"), ownChanges[0]->getFullName());
-		}
+            CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(1, JID("foo@bar.com/baz"), IQ::Get));
+        }
 
-		void testCreateSetVCardRequest() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			VCard::ref vcard = boost::make_shared<VCard>();
-			vcard->setFullName("New Name");
-			SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
-			request->send();
+        void testRequestVCard_ReturnFullVCard() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+            stanzaChannel->onIQReceived(createVCardResult());
 
-			stanzaChannel->onIQReceived(createSetVCardResult());
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
+            CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), changes[0].second->getFullName());
+            CPPUNIT_ASSERT_EQUAL(false, changes[0].second->isEmpty());
+        }
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(ownJID.toBare(), changes[0].first);
-			CPPUNIT_ASSERT_EQUAL(std::string("New Name"), changes[0].second->getFullName());
-		}
+        void testRequestVCard_ReturnEmptyVCard() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+                  stanzaChannel->onIQReceived([&](){
+                    auto vcard = std::make_shared<VCard>();
+                    return IQ::createResult(JID("foo@bar.com/baz"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
+            }());
 
-		void testCreateSetVCardRequest_Error() {
-			boost::shared_ptr<VCardManager> testling = createManager();
-			VCard::ref vcard = boost::make_shared<VCard>();
-			vcard->setFullName("New Name");
-			SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
-			request->send();
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(true, changes[0].second->isEmpty());
+        }
 
-			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+        void testRequestVCard_ReturnItemNotFoundError() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+                  stanzaChannel->onIQReceived([&](){
+                    return IQ::createError(JID("foo@bar.com/baz"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), ErrorPayload::ItemNotFound);
+            }());
 
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
-		}
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(true, changes[0].second->isEmpty());
+        }
 
-	private:
-		boost::shared_ptr<VCardManager> createManager() {
-			boost::shared_ptr<VCardManager> manager(new VCardManager(ownJID, iqRouter, vcardStorage));
-			manager->onVCardChanged.connect(boost::bind(&VCardManagerTest::handleVCardChanged, this, _1, _2));
-			manager->onOwnVCardChanged.connect(boost::bind(&VCardManagerTest::handleOwnVCardChanged, this, _1));
-			return manager;
-		}
+        void testRequestVCard_ReturnFeatureNotImplementedError() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+                  stanzaChannel->onIQReceived([&](){
+                    return IQ::createError(JID("foo@bar.com/baz"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), ErrorPayload::FeatureNotImplemented);
+            }());
 
-		void handleVCardChanged(const JID& jid, VCard::ref vcard) {
-			changes.push_back(std::pair<JID, VCard::ref>(jid, vcard));
-		}
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
+        }
 
-		void handleOwnVCardChanged(VCard::ref vcard) {
-			ownChanges.push_back(vcard);
-		}
+        void testRequestOwnVCard_ReturnFullVCard() {
+            auto testling = createManager();
+            testling->requestVCard(ownJID);
+            stanzaChannel->onIQReceived(createOwnVCardResult());
 
-		IQ::ref createVCardResult() {
-			VCard::ref vcard(new VCard());
-			vcard->setFullName("Foo Bar");
-			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
-		}
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(ownJID.toBare(), changes[0].first);
+            CPPUNIT_ASSERT_EQUAL(std::string("Myself"), changes[0].second->getFullName());
+            CPPUNIT_ASSERT_EQUAL(std::string("Myself"), vcardStorage->getVCard(ownJID.toBare())->getFullName());
 
-		IQ::ref createOwnVCardResult() {
-			VCard::ref vcard(new VCard());
-			vcard->setFullName("Myself");
-			return IQ::createResult(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
-		}
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(ownChanges.size()));
+            CPPUNIT_ASSERT_EQUAL(std::string("Myself"), ownChanges[0]->getFullName());
+        }
 
-		IQ::ref createSetVCardResult() {
-			return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), VCard::ref());
-		}
+        void testRequestOwnVCard_ReturnEmptyVCard() {
+            auto testling = createManager();
+            testling->requestVCard(ownJID);
+            stanzaChannel->onIQReceived([&](){
+                    auto vcard = std::make_shared<VCard>();
+                    return IQ::createResult(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(true, changes[0].second->isEmpty());
+        }
+
+        void testRequestOwnVCard_ReturnItemNotFoundError() {
+            auto testling = createManager();
+            testling->requestVCard(ownJID);
+            stanzaChannel->onIQReceived([&](){
+                    return IQ::createError(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), ErrorPayload::ItemNotFound);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(true, changes[0].second->isEmpty());
+        }
+
+        void testRequestOwnVCard_ReturnFeatureNotImplementedError() {
+            auto testling = createManager();
+            testling->requestVCard(ownJID);
+            stanzaChannel->onIQReceived([&](){
+                    return IQ::createError(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), ErrorPayload::FeatureNotImplemented);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
+        }
+
+        void testCreateSetVCardRequest() {
+            auto testling = createManager();
+            VCard::ref vcard = std::make_shared<VCard>();
+            vcard->setFullName("New Name");
+            SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
+            request->send();
+
+            stanzaChannel->onIQReceived(createSetVCardResult());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(ownJID.toBare(), changes[0].first);
+            CPPUNIT_ASSERT_EQUAL(std::string("New Name"), changes[0].second->getFullName());
+        }
+
+        void testCreateSetVCardRequest_Error() {
+            auto testling = createManager();
+            VCard::ref vcard = std::make_shared<VCard>();
+            vcard->setFullName("New Name");
+            SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
+            request->send();
+
+            stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getID()));
+
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
+        }
+
+    private:
+        std::shared_ptr<VCardManager> createManager() {
+            std::shared_ptr<VCardManager> manager(new VCardManager(ownJID, iqRouter, vcardStorage));
+            manager->onVCardChanged.connect(boost::bind(&VCardManagerTest::handleVCardChanged, this, _1, _2));
+            manager->onOwnVCardChanged.connect(boost::bind(&VCardManagerTest::handleOwnVCardChanged, this, _1));
+            return manager;
+        }
+
+        void handleVCardChanged(const JID& jid, VCard::ref vcard) {
+            changes.push_back(std::pair<JID, VCard::ref>(jid, vcard));
+        }
+
+        void handleOwnVCardChanged(VCard::ref vcard) {
+            ownChanges.push_back(vcard);
+        }
+
+        IQ::ref createVCardResult() {
+            VCard::ref vcard(new VCard());
+            vcard->setFullName("Foo Bar");
+            return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
+        }
+
+        IQ::ref createOwnVCardResult() {
+            VCard::ref vcard(new VCard());
+            vcard->setFullName("Myself");
+            return IQ::createResult(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
+        }
+
+        IQ::ref createSetVCardResult() {
+            return IQ::createResult(JID("baz@fum.com/dum"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), VCard::ref());
+        }
 
 
-	private:
-		JID ownJID;
-		DummyStanzaChannel* stanzaChannel;
-		IQRouter* iqRouter;
-		VCardMemoryStorage* vcardStorage;
-		std::vector< std::pair<JID, VCard::ref> > changes;
-		std::vector<VCard::ref> ownChanges;
-		boost::shared_ptr<CryptoProvider> crypto;
+    private:
+        JID ownJID;
+        DummyStanzaChannel* stanzaChannel;
+        IQRouter* iqRouter;
+        VCardMemoryStorage* vcardStorage;
+        std::vector< std::pair<JID, VCard::ref> > changes;
+        std::vector<VCard::ref> ownChanges;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(VCardManagerTest);

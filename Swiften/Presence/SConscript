@@ -1,11 +1,11 @@
 Import("swiften_env")
 
 objects = swiften_env.SwiftenObject([
-			"PresenceOracle.cpp",
-			"PresenceSender.cpp",
-			"DirectedPresenceSender.cpp",
-			"PayloadAddingPresenceSender.cpp",
-			"StanzaChannelPresenceSender.cpp",
-			"SubscriptionManager.cpp",
-		])
+            "PresenceOracle.cpp",
+            "PresenceSender.cpp",
+            "DirectedPresenceSender.cpp",
+            "PayloadAddingPresenceSender.cpp",
+            "StanzaChannelPresenceSender.cpp",
+            "SubscriptionManager.cpp",
+        ])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

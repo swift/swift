@@ -1,81 +1,81 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/optional.hpp>
 #include <string>
 
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/optional.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubEventPayload.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEventSubscription : public PubSubEventPayload {
-		public:
-			enum SubscriptionType {
-				None,
-				Pending,
-				Subscribed,
-				Unconfigured
-			};
+    class SWIFTEN_API PubSubEventSubscription : public PubSubEventPayload {
+        public:
+            enum SubscriptionType {
+                None,
+                Pending,
+                Subscribed,
+                Unconfigured
+            };
 
-			PubSubEventSubscription();
-			
-			virtual ~PubSubEventSubscription();
+            PubSubEventSubscription();
 
-			const std::string& getNode() const {
-				return node;
-			}
+            virtual ~PubSubEventSubscription();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			const JID& getJID() const {
-				return jid;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void setJID(const JID& value) {
-				this->jid = value ;
-			}
+            const JID& getJID() const {
+                return jid;
+            }
 
-			SubscriptionType getSubscription() const {
-				return subscription;
-			}
+            void setJID(const JID& value) {
+                this->jid = value ;
+            }
 
-			void setSubscription(SubscriptionType value) {
-				this->subscription = value ;
-			}
+            SubscriptionType getSubscription() const {
+                return subscription;
+            }
 
-			const boost::optional< std::string >& getSubscriptionID() const {
-				return subscriptionID;
-			}
+            void setSubscription(SubscriptionType value) {
+                this->subscription = value ;
+            }
 
-			void setSubscriptionID(const boost::optional< std::string >& value) {
-				this->subscriptionID = value ;
-			}
+            const boost::optional< std::string >& getSubscriptionID() const {
+                return subscriptionID;
+            }
 
-			const boost::posix_time::ptime& getExpiry() const {
-				return expiry;
-			}
+            void setSubscriptionID(const boost::optional< std::string >& value) {
+                this->subscriptionID = value ;
+            }
 
-			void setExpiry(const boost::posix_time::ptime& value) {
-				this->expiry = value ;
-			}
+            const boost::posix_time::ptime& getExpiry() const {
+                return expiry;
+            }
+
+            void setExpiry(const boost::posix_time::ptime& value) {
+                this->expiry = value ;
+            }
 
 
-		private:
-			std::string node;
-			JID jid;
-			SubscriptionType subscription;
-			boost::optional< std::string > subscriptionID;
-			boost::posix_time::ptime expiry;
-	};
+        private:
+            std::string node;
+            JID jid;
+            SubscriptionType subscription;
+            boost::optional< std::string > subscriptionID;
+            boost::posix_time::ptime expiry;
+    };
 }

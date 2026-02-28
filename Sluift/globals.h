@@ -9,7 +9,7 @@
 #include <Sluift/SluiftGlobals.h>
 
 namespace Swift {
-	namespace Sluift {
-		extern SluiftGlobals globals;
-	}
+    namespace Sluift {
+        extern SluiftGlobals globals;
+    }
 }

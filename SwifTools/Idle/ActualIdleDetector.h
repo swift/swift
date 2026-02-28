@@ -1,30 +1,30 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <SwifTools/Idle/IdleDetector.h>
 
 namespace Swift {
-	class IdleQuerier;
-	class TimerFactory;
-	class Timer;
+    class IdleQuerier;
+    class TimerFactory;
+    class Timer;
 
-	class ActualIdleDetector : public IdleDetector, public boost::bsignals::trackable {
-		public:
-			ActualIdleDetector(IdleQuerier*, TimerFactory*, int refreshRateMilliseconds);
-			~ActualIdleDetector();
+    class ActualIdleDetector : public IdleDetector, public boost::signals2::trackable {
+        public:
+            ActualIdleDetector(IdleQuerier*, TimerFactory*, int refreshRateMilliseconds);
+            ~ActualIdleDetector();
 
-		private:
-			void handleTimerTick();
+        private:
+            void handleTimerTick();
 
-		private:
-			IdleQuerier* querier;
-			boost::shared_ptr<Timer> timer;
-	};
+        private:
+            IdleQuerier* querier;
+            std::shared_ptr<Timer> timer;
+    };
 }

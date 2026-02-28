@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,18 +8,19 @@
 
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class JID;
+    class JID;
 
-	class SWIFTEN_API AvatarProvider {
-		public:
-			virtual ~AvatarProvider();
+    class SWIFTEN_API AvatarProvider {
+        public:
+            virtual ~AvatarProvider();
 
-			virtual boost::optional<std::string> getAvatarHash(const JID&) const = 0;
+            virtual boost::optional<std::string> getAvatarHash(const JID&) const = 0;
 
-			boost::signal<void (const JID&)> onAvatarChanged;
-	};
+            boost::signals2::signal<void (const JID&)> onAvatarChanged;
+    };
 }

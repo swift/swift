@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <boost/filesystem/operations.hpp>
 
 #include <SwifTools/SpellChecker.h>
@@ -23,18 +29,12 @@ SpellCheckerFactory::SpellCheckerFactory() {
 }
 
 #ifdef HAVE_HUNSPELL
-SpellChecker* SpellCheckerFactory::createSpellChecker(const std::string& dictFile) {
-	std::string affixFile(dictFile);
-	boost::replace_all(affixFile, ".dic", ".aff");
-	if ((boost::filesystem::exists(dictFile)) && (boost::filesystem::exists(affixFile))) {
-		return new HunspellChecker(affixFile.c_str(), dictFile.c_str());
-	}
-	// If dictionaries don't exist disable the checker
-	return NULL;
+SpellChecker* SpellCheckerFactory::createSpellChecker() {
+    return new HunspellChecker();
 }
 #elif defined(SWIFTEN_PLATFORM_MACOSX)
-SpellChecker* SpellCheckerFactory::createSpellChecker(const std::string& /*dictFile*/) {
-	return new MacOSXChecker();
+SpellChecker* SpellCheckerFactory::createSpellChecker() {
+    return new MacOSXChecker();
 }
 #endif
 

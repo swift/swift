@@ -1,33 +1,29 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <deque>
-
-#include <boost/thread/locks.hpp>
-#include <boost/thread/mutex.hpp>
+#include <atomic>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	class SWIFTEN_API DummyEventLoop : public EventLoop {
-		public:
-			DummyEventLoop();
-			virtual ~DummyEventLoop();
+    class SWIFTEN_API DummyEventLoop : public EventLoop {
+        public:
+            DummyEventLoop();
+            virtual ~DummyEventLoop();
 
-			void processEvents();
+            void processEvents();
 
-			bool hasEvents();
+            bool hasEvents();
 
-			virtual void eventPosted();
+            virtual void eventPosted();
 
-		private:
-			bool hasEvents_;
-			boost::mutex hasEventsMutex_;
-	};
+        private:
+            std::atomic<bool> hasEvents_ = ATOMIC_VAR_INIT(false);
+    };
 }

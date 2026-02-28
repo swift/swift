@@ -11,5 +11,5 @@ import sys, re, os.path
 ################################################################################
 
 if "doc" in ARGUMENTS :
-	env.DocBook("Swift Users Guide.xml")
+    env.DocBook("Swift Users Guide.xml")
 

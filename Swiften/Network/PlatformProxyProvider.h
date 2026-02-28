@@ -11,16 +11,16 @@
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include <Swiften/Network/MacOSXProxyProvider.h>
 namespace Swift {
-	typedef MacOSXProxyProvider PlatformProxyProvider;
+    typedef MacOSXProxyProvider PlatformProxyProvider;
 }
 #elif defined(SWIFTEN_PLATFORM_WIN32)
 #include <Swiften/Network/WindowsProxyProvider.h>
 namespace Swift {
-	typedef WindowsProxyProvider PlatformProxyProvider;
+    typedef WindowsProxyProvider PlatformProxyProvider;
 }
 #else
 #include <Swiften/Network/UnixProxyProvider.h>
 namespace Swift {
-	typedef UnixProxyProvider PlatformProxyProvider;
+    typedef UnixProxyProvider PlatformProxyProvider;
 }
 #endif

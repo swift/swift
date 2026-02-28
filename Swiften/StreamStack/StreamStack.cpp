@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,31 +8,30 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
-#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/StreamStack/HighLayer.h>
 #include <Swiften/StreamStack/LowLayer.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 
 namespace Swift {
 
-StreamStack::StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer) : xmppLayer_(xmppLayer), physicalLayer_(physicalLayer) {
-	physicalLayer_->setParentLayer(xmppLayer_);
-	xmppLayer_->setChildLayer(physicalLayer_);
+StreamStack::StreamStack(std::unique_ptr<HighLayer> topLayer, std::unique_ptr<LowLayer> bottomLayer) : topLayer_(std::move(topLayer)), bottomLayer_(std::move(bottomLayer)) {
+    bottomLayer_->setParentLayer(topLayer_.get());
+    topLayer_->setChildLayer(bottomLayer_.get());
 }
 
 StreamStack::~StreamStack() {
 }
 
-void StreamStack::addLayer(StreamLayer* newLayer) {
-	LowLayer* lowLayer = layers_.empty() ? physicalLayer_ : *layers_.rbegin();
+void StreamStack::addLayer(std::unique_ptr<StreamLayer> streamLayer) {
+    auto* lowLayer = layers_.empty() ? bottomLayer_.get() : layers_.rbegin()->get();
 
-	xmppLayer_->setChildLayer(newLayer);
-	newLayer->setParentLayer(xmppLayer_);
-	
-	lowLayer->setParentLayer(newLayer);
-	newLayer->setChildLayer(lowLayer);
+    topLayer_->setChildLayer(streamLayer.get());
+    streamLayer->setParentLayer(topLayer_.get());
 
-	layers_.push_back(newLayer);
+    lowLayer->setParentLayer(streamLayer.get());
+    streamLayer->setChildLayer(lowLayer);
+
+    layers_.emplace_back(std::move(streamLayer));
 }
 
 }

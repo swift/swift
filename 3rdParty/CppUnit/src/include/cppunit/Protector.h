@@ -84,6 +84,8 @@ public:
   ~ProtectorGuard();
 
 private:
+  ProtectorGuard( const ProtectorGuard& ); /* not copyable */
+  ProtectorGuard& operator=( const ProtectorGuard& ); /* not assignable */
   TestResult *m_result;
 };
 

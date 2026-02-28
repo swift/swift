@@ -8,16 +8,12 @@
 #pragma warning( disable: 4251 )  // X needs to have dll-interface to be used by clients of class Z
 #endif
 
-#include <cppunit/portability/CppUnitDeque.h>
+#include <deque>
 #include <string>
 
 
 CPPUNIT_NS_BEGIN
 
-
-#if CPPUNIT_NEED_DLL_DECL
-//  template class CPPUNIT_API std::deque<std::string>;
-#endif
 
 /*! \brief Message associated to an Exception.
  * \ingroup CreatingNewAssertions
@@ -38,7 +34,7 @@ CPPUNIT_NS_BEGIN
 class CPPUNIT_API Message
 {
 public:
-  Message();
+  Message() {};
 
   // Ensure thread-safe copy by detaching the string.
   Message( const Message &other );
@@ -56,6 +52,8 @@ public:
            const std::string &detail1,
            const std::string &detail2,
            const std::string &detail3 );
+
+  virtual ~Message();
 
   Message &operator =( const Message &other );
 
@@ -141,7 +139,7 @@ public:
 private:
   std::string m_shortDescription;
 
-  typedef CppUnitDeque<std::string> Details;
+  typedef std::deque<std::string> Details;
   Details m_details;
 };
 

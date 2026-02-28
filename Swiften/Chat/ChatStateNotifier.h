@@ -1,51 +1,58 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/ChatState.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class StanzaChannel;
-	class EntityCapsProvider;
+    class StanzaChannel;
+    class EntityCapsProvider;
+    class TimerFactory;
+    class Timer;
 
-	class SWIFTEN_API ChatStateNotifier {
-		public:
-			ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager);
-			~ChatStateNotifier();
 
-			void setContact(const JID& contact);
+    class SWIFTEN_API ChatStateNotifier {
+        public:
+            ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager, TimerFactory* timerFactory, int idleTimeInMilliSecs);
+            ~ChatStateNotifier();
 
-			void addChatStateRequest(Message::ref message);
+            void setContact(const JID& contact);
 
-			void setUserIsTyping();
-			void userSentMessage();
-			void userCancelledNewMessage();
+            void addChatStateRequest(Message::ref message);
 
-			void receivedMessageFromContact(bool hasActiveElement);
-			void setContactIsOnline(bool online);
+            void setUserIsTyping();
+            void userSentMessage();
+            void userCancelledNewMessage();
 
-		private:
-			bool contactShouldReceiveStates();
-			void changeState(ChatState::ChatStateType type);
-			void handleCapsChanged(const JID& contact);
+            void receivedMessageFromContact(bool hasActiveElement);
+            void setContactIsOnline(bool online);
 
-		private:
-			StanzaChannel* stanzaChannel_;
-			EntityCapsProvider* entityCapsManager_;
-			JID contact_;
-			bool contactHas85Caps_;
-			bool contactHasSentActive_;
-			bool userIsTyping_;
-			bool contactIsOnline_;
-	};
+        private:
+            void userBecameIdleWhileTyping();
+            bool contactShouldReceiveStates();
+            void changeState(ChatState::ChatStateType type);
+            void handleCapsChanged(const JID& contact);
+
+        private:
+            StanzaChannel* stanzaChannel_;
+            EntityCapsProvider* entityCapsManager_;
+            JID contact_;
+            bool contactHas85Caps_;
+            bool contactHasSentActive_;
+            bool userIsTyping_;
+            bool contactIsOnline_;
+            std::shared_ptr<Timer> idleTimer_;
+
+    };
 }

@@ -4,11 +4,17 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 
 namespace Swift {
 
@@ -18,18 +24,18 @@ class FileTransferOverview;
 
 class FileTransferListController {
 public:
-	FileTransferListController(UIEventStream* uiEventStream, FileTransferListWidgetFactory* fileTransferListWidgetFactory);
-	~FileTransferListController();
+    FileTransferListController(UIEventStream* uiEventStream, FileTransferListWidgetFactory* fileTransferListWidgetFactory);
+    ~FileTransferListController();
 
-	void setFileTransferOverview(FileTransferOverview* overview);
-
-private:
-	void handleUIEvent(boost::shared_ptr<UIEvent> event);
+    void setFileTransferOverview(FileTransferOverview* overview);
 
 private:
-	FileTransferListWidgetFactory* fileTransferListWidgetFactory;
-	FileTransferListWidget* fileTransferListWidget;
-	FileTransferOverview* fileTransferOverview;
+    void handleUIEvent(std::shared_ptr<UIEvent> event);
+
+private:
+    FileTransferListWidgetFactory* fileTransferListWidgetFactory;
+    FileTransferListWidget* fileTransferListWidget;
+    FileTransferOverview* fileTransferOverview;
 };
 
 }
